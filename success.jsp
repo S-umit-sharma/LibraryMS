@@ -8,7 +8,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
     </head>
+vgvgvgvg
 
+
+
+
+bvhcjdbhvvd
     <body>
         <div class="container">
             <div class="row">
@@ -20,8 +25,8 @@
                 <div class="col-6 m-auto">
                     <h1 class="alert ${param.color} fs-3 fw-bold ">
                         ${param.message}
-                    </h1>
-                </div>
+           vdvfg         </h1>
+                <tbody></tbody></div>
             </div>
             <c:if test="${param.status_id == 1}">
                 <div class="row">
@@ -34,5 +39,6 @@
 
         </div>
     </body>
+grgtre
 
     </html>
