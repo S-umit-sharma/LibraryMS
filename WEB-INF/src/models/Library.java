@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Time;
 
 
@@ -26,6 +27,10 @@ public class Library extends User{
     
     public Library(){
 
+    }
+
+    public Library(Integer libraryId){
+        this.libraryId = libraryId;
     }
 
     public Library(String email,String password){
@@ -79,15 +84,25 @@ public class Library extends User{
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
-                String query = "select * from libraries where user_id  = ?";
+                String query = "select library_id, details, website, open_timing, close_timing, book_issue_days, late_fine, deposit_amount from libraries where user_id  = ?";
 
                 PreparedStatement ps = con.prepareStatement(query);
 
                 ps.setInt(1,getUserId());
 
-                ps.executeQuery();
+                ResultSet rs = ps.executeQuery();
 
-                // System.out.println(ps);
+                while(rs.next()){
+                    libraryId = rs.getInt(1);
+                    details = rs.getString(2);
+                    website = rs.getString(3);
+                    openingTime = rs.getTime(4);
+                    closingTime = rs.getTime(5);
+                    bookIssueDays = rs.getInt(6);
+                    lateFine = rs.getInt(7);
+                    depositAmount = rs.getInt(8);
+                }
+
 
                 con.close();
             }catch(ClassNotFoundException|SQLException e){

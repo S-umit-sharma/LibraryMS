@@ -22,6 +22,10 @@ public class Book {
     public Book(){
         
     }
+    public Book(String title){
+        this.title = title;
+    }
+
     public Book(Category category){
         this.category=category;
     }
@@ -86,15 +90,16 @@ public class Book {
         return path;
     }
     // -----------------------------------------------------------------------------
-        public ArrayList<Book> searchByCategory(){
+        public ArrayList<Book> searchByTitle(){
             ArrayList<Book> books = new ArrayList<>();
 
             try{
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-                String query = "select * from books where category_id=?";
+                String query = "select * from books where title=?";
                 PreparedStatement ps = con.prepareStatement(query);
-                ps.setInt(1,category.getCategoryId());
+                ps.setString(1,title);
+                
                 ResultSet rs = ps.executeQuery();
                 while(rs.next()){
                     books.add(new Book(rs.getInt(1),rs.getString(2),new Category(rs.getInt(3)),new Publisher(rs.getInt(4)),rs.getString(5)));

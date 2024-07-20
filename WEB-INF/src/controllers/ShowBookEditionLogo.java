@@ -20,7 +20,7 @@ public class ShowBookEditionLogo extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         String path = request.getParameter("path");
-        System.out.println(path);
+        
         ServletContext context = getServletContext();
 
         InputStream is = context.getResourceAsStream("/WEB-INF/uploads/publishers/" + path);

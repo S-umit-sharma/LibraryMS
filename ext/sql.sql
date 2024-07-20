@@ -857,3 +857,5 @@ select book_id,title,c.category_id,name from books as b inner join categories as
 select book_edition_id,edition,published_on,price,isbn_no,details,book_edition_pic from book_editions where book_id=?
 update book_editions set book_edition_pic=? where book_edition_id=?;
 
+--library_edition
+insert into library_books (library_id, book_edition_id, copies) values(?,?,?);

@@ -47,7 +47,7 @@ public class BookEdition {
         this.details = details;
     }
     public BookEdition(Integer bookEditionId,Integer edition, Date publishedOn,
-            Integer price, Integer isbnNo, String details,String bookEditionPic) {
+            Integer price, Integer isbnNo, String details,String bookEditionPic,Book book) {
         this.bookEditionId = bookEditionId;
         this.isbnNo = isbnNo;
         this.edition = edition;
@@ -55,6 +55,7 @@ public class BookEdition {
         this.price = price;
         this.details = details;
         this.bookEditionPic = bookEditionPic;
+        this.book = book;
     }
 
     public BookEdition(Integer isbnNo,Book book,Integer edition,Date publishedOn,Integer price,String details){
@@ -163,14 +164,14 @@ public class BookEdition {
     public ArrayList<BookEdition> collectAllEditions(){
         ArrayList<BookEdition> list = new ArrayList<>();
         try{Class.forName("com.mysql.cj.jdbc.Driver");}catch(ClassNotFoundException e){e.printStackTrace();}
-        String query = "select book_edition_id,edition,published_on,price,isbn_no,details,book_edition_pic from book_editions where book_id=?";
+        String query = "select book_edition_id,edition,published_on,price,isbn_no,details,book_edition_pic,book_id from book_editions where book_id=?";
         try(Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234")){
             PreparedStatement ps = con.prepareStatement(query);  
             ps.setInt(1,book.getBookId());
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                list.add(new BookEdition(rs.getInt(1),rs.getInt(2),rs.getDate(3),rs.getInt(4),rs.getInt(5),rs.getString(6),rs.getString(7)));
+                list.add(new BookEdition(rs.getInt(1),rs.getInt(2),rs.getDate(3),rs.getInt(4),rs.getInt(5),rs.getString(6),rs.getString(7),new Book(rs.getInt(8))));
             }
         }catch(SQLException e){
             e.printStackTrace();

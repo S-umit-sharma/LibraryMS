@@ -11,19 +11,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
+import models.Book;
 import models.Category;
 
-@WebServlet("/show_category.do")
-public class ShowCategoryServlet extends HttpServlet{
+@WebServlet("/search_title.do")
+public class SearchBookByTitle extends HttpServlet {
     public void doGet(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException{
-        ArrayList<Category> list = Category.showCategories();
+        String title = request.getParameter("title");
+        // System.out.println(title);
 
-        Gson gson = new Gson();
+        Book book = new Book(title);
+        ArrayList<Book> books = (ArrayList<Book>)book.searchByTitle();
+        System.out.println(books + "####");
         
-        String json = gson.toJson(list);
+        request.setAttribute("books", books);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().print(json);
+        request.getRequestDispatcher("library_dashboard.jsp").forward(request,response);
     }
 }
