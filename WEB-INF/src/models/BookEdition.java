@@ -27,7 +27,17 @@ public class BookEdition {
     public BookEdition(){
         
     }
-
+    // --------------------
+    public BookEdition(Integer bookEditionId,Integer edition,Date publishedOn,Integer price,String details,String bookEditionPic,Book book){
+        this.bookEditionId = bookEditionId;
+        this.edition = edition;
+        this.publishedOn = publishedOn;
+        this.price = price;
+        this.details = details;
+        this.bookEditionPic = bookEditionPic;
+        this.book = book;
+    }
+    // --------------------
     public BookEdition(Integer bookEditionId){
         this.bookEditionId = bookEditionId;
     }
@@ -71,6 +81,10 @@ public class BookEdition {
     // ################ methods ################
 
     // -----------------------------------------------------------------------------------------------------------------------------
+        
+    
+
+        // -----------------------------------------------------------------------------------------------------------------------------
         public void updateBookEdition(){
             try{
                 Class.forName("com.mysql.cj.jdbc.Driver");

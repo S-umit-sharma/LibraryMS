@@ -37,8 +37,8 @@ public class BookEditionLogoUploadServlet extends HttpServlet {
 
                 for(FileItem fileItem : fileItems){
                     if(fileItem.isFormField()){
-                        String fieldName = fileItem.getFieldName();
-                        Integer fieldValue = Integer.parseInt(fileItem.getString());
+                            String fieldName = fileItem.getFieldName();
+                            Integer fieldValue = Integer.parseInt(fileItem.getString());
 
                         switch(fieldName){
                             case "edition_id":

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MemberShip extends User {
@@ -17,6 +18,9 @@ public class MemberShip extends User {
 
     }
 
+    public MemberShip(Integer membershipId){
+        this.membershipId = membershipId;
+    }
     public MemberShip(String email, String password) {
         super(email, password);
     }
@@ -26,27 +30,6 @@ public class MemberShip extends User {
     
     public int login(){
         int result = super.login();
-
-        if(result == 3 && getStatus().getStatusId() == Status.ACTIVE){
-            try{
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-
-                String query = "select * from memberships where user_id  = ?";
-
-                PreparedStatement ps = con.prepareStatement(query);
-
-                ps.setInt(1,getUserId());
-
-                ps.executeQuery();
-
-                System.out.println(ps);
-
-                con.close();
-            }catch(ClassNotFoundException|SQLException e){
-                e.printStackTrace();
-            }
-        }
 
         return result; 
     }

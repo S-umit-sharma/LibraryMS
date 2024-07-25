@@ -22,19 +22,19 @@ public class LogoServlet extends HttpServlet {
         HttpSession session = request.getSession();
         ServletContext context = getServletContext();
         User user = (User)session.getAttribute("user");
-        Integer userTypeId = Integer.parseInt(request.getParameter("user_type_id"));
+        String path = request.getParameter("path");
         
-        String path=null;
+        String p = null;
         if(user != null){
             try{
-                path = context.getRealPath("/WEB-INF/uploads/"+UserType.userTypes[userTypeId - 1].toLowerCase()+"/"+user.getEmail()+"/logo");
+                p = context.getRealPath("/WEB-INF/uploads/"+path);
             }catch(Exception e){
                 e.printStackTrace();
             }
             File file = new File(path);
             String[] list = file.list();
 
-            InputStream is = context.getResourceAsStream("/WEB-INF/uploads/"+UserType.userTypes[userTypeId-1].toLowerCase()+"/"+user.getEmail()+"/logo/"+list[0]);
+            InputStream is = context.getResourceAsStream("/WEB-INF/uploads/"+path);
 
             OutputStream os = response.getOutputStream();
 

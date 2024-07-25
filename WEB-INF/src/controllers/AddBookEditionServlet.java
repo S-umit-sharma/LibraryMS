@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import models.Book;
 import models.BookEdition;
+import models.Publisher;
+
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +20,7 @@ import javax.servlet.annotation.WebServlet;
 
 @WebServlet("/book_edition.do")
 public class AddBookEditionServlet extends HttpServlet {
-    public void doPost(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException{
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         Boolean flag = Boolean.parseBoolean(request.getParameter("flag"));
         Integer isbnNo = Integer.parseInt(request.getParameter("isbn_no"));
@@ -26,20 +28,21 @@ public class AddBookEditionServlet extends HttpServlet {
         Integer num = Integer.parseInt(request.getParameter("num"));
         Integer edition = Integer.parseInt(request.getParameter("edition"));
         Date publishDate = Date.valueOf(request.getParameter("publish_date"));
-        Integer price =  Integer.parseInt(request.getParameter("price"));
+        Integer price = Integer.parseInt(request.getParameter("price"));
         String details = request.getParameter("more_details");
 
-        if(flag){
-           doGet(request, response); 
-        }else{
-            BookEdition bookEdition = new BookEdition(isbnNo,new Book(bookId),edition,publishDate,price,details);
+        if (flag) {
+            doGet(request, response);
+        } else {
+            BookEdition bookEdition = new BookEdition(isbnNo, new Book(bookId), edition, publishDate, price, details);
             bookEdition.saveBookEdition();
-            doGet(request,response);
+            doGet(request, response);
         }
 
     }
 
-    public void doGet(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException{
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         Integer bookId = Integer.parseInt(request.getParameter("book_id"));
         Integer num = Integer.parseInt(request.getParameter("num"));
 
@@ -47,14 +50,16 @@ public class AddBookEditionServlet extends HttpServlet {
 
         ArrayList<BookEdition> editions = bookEdition.collectAllEditions();
 
-        request.setAttribute("book_editions",editions);
+        request.setAttribute("book_editions", editions);
 
-        if(num == 1){
-            request.getRequestDispatcher("book_edition.jsp").forward(request, response);;
-        }else{
-            request.getRequestDispatcher("library_book_edition.jsp").forward(request, response);;
-        }
+        if (num == 1) {
+            request.getRequestDispatcher("book_edition.jsp").forward(request, response);
+            ;
+        } else {
+            String title = request.getParameter("title");
+            request.getRequestDispatcher("library_book_edition.jsp?title=" + title).forward(request, response);
             
+        }
 
     }
 }

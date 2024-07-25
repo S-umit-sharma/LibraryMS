@@ -1,50 +1,100 @@
 package models;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class LibraryBooks {
-    
+
     // ################# porperties #################
     private Integer libraryBookId;
     private Library library;
     private BookEdition bookEdition;
     private Integer copies;
     private Integer bookIssued = 0;
-    private Boolean scraped = false;
-    
+    private Integer scraped = 0;
+
     // ################# constructor #################
-    
-    public LibraryBooks(){
-        
+
+    public LibraryBooks() {
+
     }
 
-    public LibraryBooks(Library library){
+    public LibraryBooks(Integer libraryBookId, Integer bookIssued) {
+        this.libraryBookId = libraryBookId;
+        this.bookIssued = bookIssued;
+    }
+
+    public LibraryBooks(Integer libraryBookId, Integer copies, Integer bookIssued, Integer scraped,
+            BookEdition bookEdition) {
+        this.libraryBookId = libraryBookId;
+        this.copies = copies;
+        this.bookIssued = bookIssued;
+        this.scraped = scraped;
+        this.bookEdition = bookEdition;
+    }
+
+    public LibraryBooks(Library library) {
         this.library = library;
     }
-    
-    public LibraryBooks(BookEdition bookEdition,Integer copies,Library library){
+
+    public LibraryBooks(BookEdition bookEdition, Integer copies, Library library) {
         this.bookEdition = bookEdition;
         this.copies = copies;
         this.library = library;
     }
-    // ----------------------------Method for getting all books-----------------------------------------
-    // public ArrayList<LibraryBooks> fetchAllLibrayBooks(){
-    //     ArrayList<LibraryBooks> list = new ArrayList<>();
 
-    //     try{
-    //         Class.forName("com.mysql.cj.jdbc.Driver");
-    //         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-    //         String query = "select ";
-    //     }
-    // }
-    // ----------------------------Method for savin librayr books-----------------------------------------
-    public boolean saveLibraryBooks(){
+    // ----------------------------Method for updating the issued
+    // books-----------------------------------------
+    public void numberOfBooksIssued() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "update library_books set books_issued=? where  library_book_id=? ";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1,bookIssued);
+            ps.setInt(2,libraryBookId);
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ----------------------------Method for getting all
+    // books-----------------------------------------
+    public void searchIsbnNo(Integer isbnNo) {
+        // ArrayList<LibraryBooks> list = new ArrayList<>();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select library_book_id,copies,books_issued,scraped,lb.book_edition_id,edition,published_on,price,details,book_edition_pic,be.book_id,title from library_books as lb inner join book_editions as be inner join books as b where lb.book_edition_id=be.book_edition_id and be.book_id=b.book_id and lb.library_id=? and be.isbn_no=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, library.getLibraryId());
+            ps.setInt(2, isbnNo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                libraryBookId = rs.getInt(1);
+                copies = rs.getInt(2);
+                bookIssued = rs.getInt(3);
+                scraped = rs.getInt(4);
+                bookEdition = new BookEdition(rs.getInt(5), rs.getInt(6), rs.getDate(7), rs.getInt(8), rs.getString(9),
+                        rs.getString(10), new Book(rs.getInt(11), rs.getString(12)));
+
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // ----------------------------Method for savin librayr
+    // books-----------------------------------------
+    public boolean saveLibraryBooks() {
         boolean flag = false;
-        try{
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
@@ -52,15 +102,15 @@ public class LibraryBooks {
 
             PreparedStatement ps = con.prepareStatement(query);
 
-            ps.setInt(1,library.getLibraryId());
-            ps.setInt(2,bookEdition.getBookEditionId());
-            ps.setInt(3,copies);
+            ps.setInt(1, library.getLibraryId());
+            ps.setInt(2, bookEdition.getBookEditionId());
+            ps.setInt(3, copies);
 
             int val = ps.executeUpdate();
 
-            if(val==1)
+            if (val == 1)
                 flag = true;
-        }catch(SQLException|ClassNotFoundException e){
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -70,7 +120,7 @@ public class LibraryBooks {
     // ---------------------------------------------------------------------
 
     // ################# get/set #################
-    
+
     public Integer getLibraryBookId() {
         return libraryBookId;
     }
@@ -111,15 +161,12 @@ public class LibraryBooks {
         this.bookIssued = bookIssued;
     }
 
-    public Boolean getScraped() {
+    public Integer getScraped() {
         return scraped;
     }
 
-    public void setScraped(Boolean scraped) {
+    public void setScraped(Integer scraped) {
         this.scraped = scraped;
     }
 
-
-
-    
 }

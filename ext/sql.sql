@@ -859,3 +859,26 @@ update book_editions set book_edition_pic=? where book_edition_id=?;
 
 --library_edition
 insert into library_books (library_id, book_edition_id, copies) values(?,?,?);
+
+select library_book_id,
+copies,
+books_issued,
+scraped,
+lb.book_edition_id,
+edition,
+published_on,
+price,
+details,
+book_edition_pic,
+be.book_id,
+title
+ from library_books as lb inner join 
+ book_editions as be inner join 
+ books as b where lb.book_edition_id=be.book_edition_id and be.book_id=b.book_id and lb.library_id=? and be.isbn_no=?";
+
+ list.add(new LibraryBooks(
+ rs.getInt(1),
+ rs.getInt(2),rs.getInt(3),rs.getInt(4),new BookEdition(rs.getInt(5),rs.getInt(6),rs.getDate(7),rs.getInt(8),
+ rs.getString(9),rs.getString(10),new Book(rs.getInt(11),rs.getString(12)))));
+            
+            

@@ -25,7 +25,10 @@ public class Book {
     public Book(String title){
         this.title = title;
     }
-
+    public Book(Integer bookId,String title){
+            this.bookId = bookId;
+            this.title = title;
+    }
     public Book(Category category){
         this.category=category;
     }
@@ -71,6 +74,7 @@ public class Book {
     }
 
 
+    
     // ################ get/set ################
     // -----------------------------------------------------------------------------
     public String getImagePath(){

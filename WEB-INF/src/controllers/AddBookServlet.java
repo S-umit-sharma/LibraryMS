@@ -39,6 +39,7 @@ public class AddBookServlet extends HttpServlet {
 
     // add books
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        
         if (Boolean.parseBoolean(request.getParameter("flag"))) {
             doGet(request, response);
         } else {

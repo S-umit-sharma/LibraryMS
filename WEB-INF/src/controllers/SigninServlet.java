@@ -21,7 +21,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/signin.do")
 public class SigninServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.setAttribute("user_type_id",request.getParameter("user_type_id"));
+        
+        request.setAttribute("user_type_id", request.getParameter("user_type_id"));
         request.getRequestDispatcher("signin.jsp").forward(request, response);
     }
 
@@ -33,15 +34,16 @@ public class SigninServlet extends HttpServlet {
         Integer userTypeId = Integer.parseInt(request.getParameter("user_type_id"));
         
         String nextPage = "signin.jsp";
-
+        
         if (userTypeId == 1) {
             Library lib = new Library(email, password);
             int res = lib.login();
-
+            
             if (res == 1) {
                 request.setAttribute("err_email_message", MessageTemplate.getIncorrectEmailMessage());
             } else if (res == 2) {
                 request.setAttribute("err_password_message", MessageTemplate.getIncorrectPasswordMessage());
+                
             } else if (res == 3) {
                 Integer statusId = lib.getStatus().getStatusId();
                 if (statusId == Status.ACTIVE) {
@@ -109,25 +111,35 @@ public class SigninServlet extends HttpServlet {
                 request.setAttribute("err_email_message", MessageTemplate.getIncorrectEmailMessage());
             } else if (res == 2)
                 request.setAttribute("err_password_message", MessageTemplate.getIncorrectPasswordMessage());
-            else if (res == 3){
-                session.setAttribute("user", member);
-                nextPage = "candidate_dashboard.jsp";
-            }
+            else if (res == 3) {
+                Integer statusId = member.getStatus().getStatusId();
+                if (Status.ACTIVE == statusId) {
+                    session.setAttribute("user", member);
+                    nextPage = "candidate_dashboard.jsp";
 
-        } else {
-            Librarian librarian = new Librarian(email, password);
-            int res = librarian.login();
-            if (res == 1) {
-                request.setAttribute("err_email_message", MessageTemplate.getIncorrectEmailMessage());
-            } else if (res == 2)
-                request.setAttribute("err_password_message", MessageTemplate.getIncorrectPasswordMessage());
-            else if (res == 3){
-                session.setAttribute("user", librarian);
-                nextPage = "librarian_dashboard.jsp";
+                } else if (statusId == Status.INACTIVE) {
+                    String msg = MessageTemplate.getIncompleteEmailVerificationMessage(email);
+                    nextPage = "success.jsp?color=alert-secondary&message=" + msg;
+                } else if (statusId == Status.MANUAL_VERIFIED) {
+                    session.setAttribute("member",member);
+                    nextPage = "candidate_upload_pic.jsp";
+                }
+
+            } else {
+                Librarian librarian = new Librarian(email, password);
+                int res1 = librarian.login();
+                if (res1 == 1) {
+                    request.setAttribute("err_email_message", MessageTemplate.getIncorrectEmailMessage());
+                } else if (res1 == 2)
+                    request.setAttribute("err_password_message", MessageTemplate.getIncorrectPasswordMessage());
+                else if (res1 == 3) {
+                    session.setAttribute("user", librarian);
+                    nextPage = "librarian_dashboard.jsp";
+                }
+
             }
 
         }
-
-        request.getRequestDispatcher(nextPage).forward(request, response);
+            request.getRequestDispatcher(nextPage).forward(request, response);
     }
 }

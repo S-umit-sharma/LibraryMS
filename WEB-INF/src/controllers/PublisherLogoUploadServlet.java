@@ -39,7 +39,7 @@ public class PublisherLogoUploadServlet extends HttpServlet {
                     
                     String fileName = "logo." + item.getName().split("\\.")[1];
 
-                    publisher.setProfilePic(fileName);
+                    publisher.setProfilePic("publishers/"+publisher.getEmail()+"/logo/"+fileName);
                     String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/"+ publisher.getEmail()+"/logo");
                     File folder = new File(uploadPath);
                     folder.mkdir();

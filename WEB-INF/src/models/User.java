@@ -34,9 +34,10 @@ public class User {
 
     }
 
-    public User(String name){
-        this.name = name;
+    public User (String email){
+        this.email = email; 
     }
+
 
     public User(String name, String email, String password, Date dob, City city, String contact,
             String address, Gender gender, UserType userType, String verificationCode) {
@@ -60,6 +61,28 @@ public class User {
     }
 
     // ########################## Methods #######################
+
+
+    // -----------------------------------------------------------------
+    public void searchEmail(){
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select name,profile_pic,user_id from users where email=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1,email);
+            System.out.println(email);
+            ResultSet rs = ps.executeQuery();
+            System.out.println(rs);
+            if(rs.next()){
+                name = rs.getString(1);
+                profilePic = rs.getString(2);
+                userId = rs.getInt(3);
+            }
+        }catch(SQLException|ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    } 
     // -----------------------------------------------------------------
     
     public void saveProfilePic(){
@@ -70,7 +93,7 @@ public class User {
             PreparedStatement ps = con.prepareStatement(query);
             
             ps.setString(1,profilePic);
-            System.out.println(profilePic);
+            
             ps.setInt(2,Status.ACTIVE);
             ps.setInt(3,userId);
             

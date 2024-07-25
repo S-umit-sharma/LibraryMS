@@ -48,7 +48,7 @@
             <form id="index_form1" >
               <input type="hidden" name="user_type_id" id="signup_input">
             </form>
-            <form id="index_form2" >
+            <form id="index_form2" method="post">
               <input type="hidden" name="user_type_id" id="signin_input">
             </form>
               
