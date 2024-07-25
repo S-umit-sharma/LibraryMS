@@ -19,6 +19,10 @@ public class City {
     public City(){
         
     }
+
+    public City(String city){
+        this.city = city;
+    }
     
     public City(String city,State state){
         this.city=city;

@@ -79,8 +79,20 @@
 
     <body>
 
-        <!-- ----------------------------Issued book message modal----------------------------------- -->
-
+        <!-- ----------------------------delete member modal----------------------------------- -->
+        <div class="modal" id="delete_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1>Press ok to remove Member</h1>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">OK</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="modal_close">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
@@ -241,7 +253,7 @@
                 </div>
                 <!-- ============================================================================================================ -->
                 <div class="tab-pane fade" id="add_candidate">
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col">
 
                             <div class="row">
@@ -253,24 +265,88 @@
                                     <button type="button" class="btn btn-primary" id="email_search_btn">Search</button>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="alert alert-danger" id="not_registered_msg" style="display:none;">Not
+                                        Registered</div>
+                                </div>
+                            </div>
                             <div class="row mt-4">
                                 <div class="col">
-                                    <img src="static/media/images/profile.jpg" id="img_show" width="381" height="469">
+                                    <img src="static/media/images/profile.jpg" id="img_show" width="321" height="409">
                                 </div>
                             </div>
                         </div>
                         <div class="col-md">
-                            <div class="row">
-                                <div class="col-md">
-                                    <h3>Member Form</h3>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md">
-                                    <input type="text" class="form-control">
+                            <div class="row mt-4">
+                                <div class="col-md text-center">
+                                    <h3
+                                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">
+                                        Member Form</h3>
                                 </div>
                             </div>
 
+                            <div class="row mt-4">
+                                <div class="col-md">
+                                    <input type="text" class="form-control" placeholder="name of the member........" id="input_name" name="name">
+                                    <input type="hidden" class="form-control" placeholder="enter" id="user_id"
+                                        name="user_id">
+                                </div>
+                                <div class="col-md">
+                                    <button type="button" class="btn btn-primary" id="add_candidate_btn">&plus;
+                                        Add</button>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <div class="alert alert-success"
+                                        style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
+                                        id="candidate_success_msg">Candidate Become a Member
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="alert alert-success"
+                                        style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
+                                        id="member_id_msg">Your Member ID is&nbsp;<span id="member_id"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" placeholder="enter the member ID........" search="enter the member Id" name="delete_member" id="delete_member" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger" id="delete_member_btn">delete</button>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md">
+                            <button class="btn btn-primary" id="show_member">Show members</button>
+                        </div>
+
+                        <div class="col-12">
+                            <table  border="1px solid red">
+                                <thead style = "border:1px solid red;">
+                                    <tr >
+                                        <th colspan="1">Sr No.</th>
+                                        <th colspan="2">Joined On</th>
+                                        <th colspan="2">Member ID</th>
+                                        <th colspan="4">Name</th>
+                                        <th colspan="2">left On</th>
+                                        <th colspan="3">Dues</th>
+                                    </tr>
+                                </thead >
+
+                                <tbody id="table">
+                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -380,6 +456,11 @@
             let email_input = document.querySelector("#email_input");
             let email_search_btn = document.querySelector("#email_search_btn");
             let img_show = document.querySelector("#img_show");
+            let not_registered_msg = document.querySelector("#not_registered_msg");
+            let input_name = document.querySelector("#input_name");
+            let user_id = document.querySelector("#user_id");
+
+
 
             email_search_btn.addEventListener('click', () => {
                 let req = new XMLHttpRequest();
@@ -393,8 +474,17 @@
 
                     if (req.readyState == 4 && req.status == 200) {
                         let arr = JSON.parse(req.responseText);
-                        arr.name;
-                        img_show.src = "logo.do?path="+arr.profilePic;
+                        if (arr == true) {
+                            not_registered_msg.style.display = 'block';
+                            setTimeout(() => {
+                                not_registered_msg.style.display = 'none';
+                            }, 3000);
+                        } else {
+                            input_name.value = arr.name;
+                            user_id.value = arr.userId;
+                            img_show.src = "logo.do?path=" + arr.profilePic;
+                        }
+
 
                     }
                 });
@@ -402,6 +492,89 @@
                 req.send();
             });
         </script>
+        <script>
+            let add_candidate_btn = document.querySelector("#add_candidate_btn");
+            let candidate_success_msg = document.querySelector("#candidate_success_msg");
+            let member_id_msg = document.querySelector("#member_id_msg");
+            let member_id = document.querySelector("#member_id");
+
+            add_candidate_btn.addEventListener('click', () => {
+                let req = new XMLHttpRequest();
+
+                let param = "user_id=" + user_id.value;
+
+                req.open('GET', 'add_candidate.do?' + param, true);
+
+                req.addEventListener('readystatechange', () => {
+
+                    if (req.readyState == 4 && req.status == 200) {
+                        let json = JSON.parse(req.responseText);
+
+                        candidate_success_msg.style.display = 'block';
+                        input_name.value = input_name.defaultValue;
+                        setTimeout(() => {
+                            candidate_success_msg.style.display = 'none';
+                            member_id.innerText = json.memberId; 
+                            member_id_msg.style.display = 'block';
+                            setTimeout( () => {
+                                member_id_msg.style.display = 'none';
+                            },10000);
+
+                        }, 3000);
+
+
+                    }
+                });
+
+                req.send();
+            })
+        </script>
+        <script>
+            let delete_member = document.querySelector("#delete_member");
+            let delete_member_btn = document.querySelector("#delete_member_btn");
+            let delete_modal = document.querySelector("#delete_modal");
+            let modal_close = document.querySelector("#modal_close");
+
+            delete_member_btn.addEventListener('click', () => {
+                delete_modal.style.display = 'block';
+            });
+            modal_close.addEventListener('click', () => {
+                delete_modal.style.display = 'none';
+            });
+
+
+        </script>
+        <script>
+            let show_member = document.querySelector("#show_member");
+            let table = document.querySelector("#table");
+
+            show_member.addEventListener('click', () => {
+                let req = new XMLHttpRequest();
+
+                req.open('GET','collect_all_member.do',true);
+                req.addEventListener('readystatechange', () => {
+                    if(req.readyState == 4 && req.status == 200){
+                        let arr = JSON.parse(req.responseText);
+                        let i = 0;
+                        // console.log(arr);
+
+                        for(let obj of arr){
+                            console.log(obj);
+                            let row = table.insertRow(i++);
+                            let j = 0;
+                            row.innerText = i;
+                            for(let prop in obj){
+                                let cell = row.insertCell(j++);
+                                cell.innerText = obj[prop];
+                            }
+                        }
+                    }
+                });
+
+                req.send();
+            });
+        </script>
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

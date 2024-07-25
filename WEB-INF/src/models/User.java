@@ -34,8 +34,20 @@ public class User {
 
     }
 
+    public User(Integer userId){
+        this.userId = userId;
+    }
+
     public User (String email){
         this.email = email; 
+    }
+
+    public User(String name,String contact,City city,String address,String profilePic){
+        this.name=name;
+        this.contact = contact;
+        this.city = city;
+        this.address = address;
+        this.profilePic = profilePic;
     }
 
 
@@ -68,16 +80,16 @@ public class User {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select name,profile_pic,user_id from users where email=?";
+            String query = "select name,profile_pic,user_id,user_type_id from users where email=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1,email);
-            System.out.println(email);
             ResultSet rs = ps.executeQuery();
-            System.out.println(rs);
             if(rs.next()){
                 name = rs.getString(1);
                 profilePic = rs.getString(2);
                 userId = rs.getInt(3);
+                userType = new UserType(rs.getInt(4));
+
             }
         }catch(SQLException|ClassNotFoundException e){
             e.printStackTrace();
