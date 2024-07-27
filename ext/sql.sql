@@ -714,10 +714,6 @@ create table users(
      
 );
 
-alter table users change column status_id status_id int not null default 2;
-
-
-
 create table libraries(
     library_id int not null auto_increment primary key,
     user_id int not null,
@@ -753,6 +749,7 @@ create table books(
     title varchar(100) not null,
     category_id int not null,
     publisher_id int not null,
+    book_pic varchar(255) null,
     constraint fk_books_category foreign key (category_id) references categories(category_id),
     constraint fk_books_publisher foreign key (publisher_id) references publisher(publisher_id)
 
@@ -765,6 +762,8 @@ create table book_editions(
     published_on date not null,
     price int not null,
     details varchar(2000) not null,
+    isbn_no int not null,
+    book_edition_pic varchar(255) null,
     constraint fk_books_edition_book foreign key (book_id) references books(book_id)
 
 );
@@ -808,16 +807,18 @@ create table memberships(
     library_id int not null,
     joined_on date not null,
     left_on date null,
-    current_dues int not null default 0
+    current_dues int not null default 0,
+    member_id varchar(2000) not null unique
 );
 
 create table issued_books(
     issued_book_id int not null auto_increment primary key,
     book_edition_id int not null,
-    membership_id int not null,
+    member_id int not null,
     issue_date datetime not null,
     return_date datetime null,
-    fine int not null default 0
+    fine int not null default 0,
+    status varchar(10) null
 );
 
 
@@ -874,6 +875,19 @@ be.book_id,
 title
  from library_books as lb inner join 
  book_editions as be inner join 
- books as b where lb.book_edition_id=be.book_edition_id and be.book_id=b.book_id and lb.library_id=? and be.isbn_no=?";
+ books as b where lb.book_edition_id=be.book_edition_id and be.book_id=b.book_id and lb.library_id=? and be.isbn_no=?
 
--- membershipsselect name,contact,city,address,profile_pic,joined_on,left_on,current_dues,member_id from memberships m join users u join cities c on u.user_id=m.user_id and c.city_id=u.city_id where m.library_id=7;
+-- memberships
+select name,contact,city,address,profile_pic,joined_on,left_on,current_dues,member_id from memberships m join users u join cities c on u.user_id=m.user_id and c.city_id=u.city_id where m.library_id=7;
+
+-- issued_books
+select issued_book_id,issue_date,return_date,fine,status,late_fine from issued_books as ib inner join libraries as l where member_id = 7203;
+insert into issued_books(book_edition_id,membership_id,issue_date,return_date,status) values(?,?,?,?,?)
+
+select issued_book_id,issue_date,return_date,status,title,name 
+from issued_books as ib 
+inner join users as u 
+inner join book_editions be
+inner join books as b 
+inner join memberships as m 
+where ib.member_id=m.member_id and be.book_edition_id=ib.book_edition_id;

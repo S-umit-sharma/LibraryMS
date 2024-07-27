@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,27 +8,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.MemberShip;
 import com.google.gson.Gson;
 
-import models.Book;
-
-@WebServlet("/search_title.do")
-public class SearchBookByTitle extends HttpServlet {
+@WebServlet("/member_photo_find.do")
+public class FindMemberPhotoServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String title = request.getParameter("title");
+        String memberId = request.getParameter("member_id");
 
-        Book book = new Book(title);
-        ArrayList<Book> books = (ArrayList<Book>) book.searchByTitle();
+        MemberShip member = new MemberShip(memberId);
+
+        member.collectPhoto();
 
         Gson gson = new Gson();
 
-        String json = gson.toJson(books);
+        String json = gson.toJson(member);
 
         response.getWriter().print(json);
-
-    }
-
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
     }
 }

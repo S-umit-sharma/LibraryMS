@@ -33,12 +33,11 @@ public class BookIssueServlet extends HttpServlet{
         String status = "issued";
         
         // ----------------------------------------------------
-        String currentDate = DateUtil.getCurrentDate();
-        Date issueDate = Date.valueOf(currentDate);
+
         // ----------------------------------------------------
         
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(issueDate);
+        calendar.setTime(DateUtil.getCurrentDate());
         calendar.add(Calendar.DATE,lib.getBookIssueDays());
         
         java.util.Date date = calendar.getTime();
@@ -46,7 +45,7 @@ public class BookIssueServlet extends HttpServlet{
         
         // ----------------------------------------------------
         
-        IssuedBook issuedBook = new IssuedBook(new BookEdition(editionId),new MemberShip(membershipId),issueDate,returnDate,status);
+        IssuedBook issuedBook = new IssuedBook(new BookEdition(editionId),new MemberShip(membershipId),DateUtil.getCurrentDate(),returnDate,status);
         
         boolean flag = issuedBook.issueBook();
         if(flag){

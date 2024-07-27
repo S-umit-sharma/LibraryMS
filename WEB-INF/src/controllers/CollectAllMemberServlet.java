@@ -28,7 +28,7 @@ public class CollectAllMemberServlet extends HttpServlet{
         MemberShip member = new MemberShip(library);
 
         ArrayList<MemberShip> list = member.collectAllMembers();
-        System.out.println(list);
+
 
         Gson gson = new Gson();
 

@@ -5,6 +5,9 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+
+import java.util.ArrayList;
 
 public class IssuedBook {
 
@@ -13,28 +16,136 @@ public class IssuedBook {
     private MemberShip memberShip;
     private Date issueDate;
     private Date returnDate;
-    private Integer fine = 0;
+    private Integer fine ;
     private String status;
 
     public IssuedBook() {
 
     }
 
-    public IssuedBook(BookEdition bookEdition, MemberShip memberShip, Date issueDate, Date returnDate,String status) {
+    public IssuedBook(MemberShip memberShip, BookEdition bookEdition) {
+        this.memberShip = memberShip;
+        this.bookEdition = bookEdition;
+    }
+
+    public IssuedBook(BookEdition bookEdition, MemberShip memberShip, Date issueDate, Date returnDate, String status) {
         this.bookEdition = bookEdition;
         this.memberShip = memberShip;
         this.issueDate = issueDate;
         this.returnDate = returnDate;
         this.status = status;
     }
+    // ------------------------History book method--------------------------------
+    public void collectAllIssuedBooks() {
 
-    // ------------------------method--------------------------------
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select issued_book_id,issue_date,return_date,status from issued_books as ib inner join libraries as l inner join user as u inner join book_editions be inner join books as b where ib.user_id=";
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                issuedBookId = rs.getInt(1);
+                issueDate = rs.getDate(2);
+                System.out.println(rs.getDate(3)+"############");
+                returnDate = rs.getDate(3);
+                fine = rs.getInt(4);
+                status = rs.getString(5);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+    // ------------------------delete book record--------------------------------
+    public boolean deleteIssuedBook(){
+        boolean flag = false;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+
+            String query = "delete from issued_books where member_id=? and book_edition_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setString(1, memberShip.getMemberId());
+            ps.setInt(2, bookEdition.getBookEditionId());
+
+            int val = ps.executeUpdate();
+
+            if(val == 1){
+                flag = true; 
+            }
+
+            con.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return flag;
+    }
+    // ------------------------update fine--------------------------------
+    public void updateFine() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+
+            String query = "update issued_books as bi inner join memberships as m set bi.fine=?,m.current_dues=bi.fine where m.member_id=bi.member_id and bi.member_id=? and book_edition_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, fine);
+            ps.setString(2, memberShip.getMemberId());
+            ps.setInt(3, bookEdition.getBookEditionId());
+
+            ps.executeUpdate();
+
+            con.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ------------------------return book--------------------------------
+    public void returnBook() {
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select issued_book_id,issue_date,return_date,fine,status from issued_books where member_id=? and book_edition_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, memberShip.getMemberId());
+            ps.setInt(2, bookEdition.getBookEditionId());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                issuedBookId = rs.getInt(1);
+                issueDate = rs.getDate(2);
+                System.out.println(rs.getDate(3)+"############");
+                returnDate = rs.getDate(3);
+                fine = rs.getInt(4);
+                status = rs.getString(5);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // ------------------------issue book--------------------------------
     public boolean issueBook() {
         boolean flag = false;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "insert into issued_books(book_edition_id,membership_id,issue_date,return_date,status) values(?,?,?,?,?)";
+            String query = "insert into issued_books(book_edition_id,member_id,issue_date,return_date,status) values(?,?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookEdition.getBookEditionId());
             ps.setInt(2, memberShip.getMembershipId());

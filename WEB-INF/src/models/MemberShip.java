@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 public class MemberShip extends User {
     private Integer membershipId;
     private Library library;
@@ -15,9 +17,13 @@ public class MemberShip extends User {
     private Date leftOn;
     private Integer currentDues = 0;
     private String memberId;
-
+    private Status status;
     public MemberShip() {
 
+    }
+
+    public MemberShip(String memberId){
+        this.memberId = memberId;
     }
 
     public MemberShip(Library library){
@@ -47,6 +53,30 @@ public class MemberShip extends User {
         super(email, password);
     }
 
+    // -------------------- return book method--------------------------------------
+    // -------------------- collect photo by member id--------------------------------------
+    public void collectPhoto(){
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select u.profile_pic,u.name from memberships m join users u where u.user_id=m.user_id and m.member_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1,memberId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                this.setProfilePic(rs.getString(1));
+                this.setName(rs.getString(2));
+                
+            }
+
+            con.close();
+            
+        }catch(SQLException|ClassNotFoundException e){
+            e.printStackTrace();
+        }
+
+        
+    }
     // -------------------- collect all record from the member table of the specific library --------------------------------------
     public ArrayList<MemberShip> collectAllMembers(){
         ArrayList<MemberShip> list = new ArrayList<>();
@@ -95,13 +125,14 @@ public class MemberShip extends User {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
-            String query = "insert into memberships(library_id,user_id,joined_on,member_id) values(?,?,?,?)";
+            String query = "insert into memberships(library_id,user_id,joined_on,member_id,status_id) values(?,?,?,?,?)";
 
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, library.getLibraryId());
             ps.setInt(2, getUserId());
             ps.setDate(3, joinedOn);
             ps.setString(4, memberId);
+            ps.setInt(5,Status.ACTIVE);
 
             ps.executeUpdate();
 
@@ -160,4 +191,11 @@ public class MemberShip extends User {
         this.currentDues = currentDues;
     }
 
+    public void setMemberId(String memberId){
+        this.memberId = memberId;
+    }
+
+    public String getMemberId(){
+        return memberId;
+    }
 }

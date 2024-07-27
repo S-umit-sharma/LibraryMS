@@ -25,10 +25,10 @@ public class AddCandidateServlet extends HttpServlet {
         Library lib = (Library) session.getAttribute("user");
         Integer libraryId = lib.getLibraryId();
         Integer userId = Integer.parseInt(request.getParameter("user_id"));
-        Date currentDate = Date.valueOf(DateUtil.getCurrentDate());
+        Date currentDate = DateUtil.getCurrentDate();
         num += 1;
         String memberId = libraryId +""+ userId + "" + num;
-        System.out.println(memberId);
+
 
         MemberShip member = new MemberShip(new Library(libraryId), userId, currentDate, memberId);
 

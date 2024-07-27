@@ -44,13 +44,13 @@
                 <%@ include file="Navbar.jsp" %>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col">
                 <a href="search_title.do?title=${param.title}">
                     <img src="static/media/images/previous.png" width="35px">
                 </a>
             </div>
-        </div>
+        </div> -->
 
         <div class="tab-content">
             <div class="tab-pane fade show active" id="book_edition_pane">

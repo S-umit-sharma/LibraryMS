@@ -22,6 +22,11 @@ public class LibraryBooks {
 
     }
 
+    public LibraryBooks(BookEdition bookEdition, Integer bookIssued) {
+        this.bookEdition = bookEdition;
+        this.bookIssued = bookIssued;
+    }
+
     public LibraryBooks(Integer libraryBookId, Integer bookIssued) {
         this.libraryBookId = libraryBookId;
         this.bookIssued = bookIssued;
@@ -46,6 +51,21 @@ public class LibraryBooks {
         this.library = library;
     }
 
+    // -------------------updating copies----------------------
+    public void updateBookCopies() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "update library_books set books_issued=? where  book_edition_id=? ";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, bookIssued - 1);
+            ps.setInt(2, bookEdition.getBookEditionId());
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     // ----------------------------Method for updating the issued
     // books-----------------------------------------
     public void numberOfBooksIssued() {
@@ -54,8 +74,8 @@ public class LibraryBooks {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
             String query = "update library_books set books_issued=? where  library_book_id=? ";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1,bookIssued);
-            ps.setInt(2,libraryBookId);
+            ps.setInt(1, bookIssued);
+            ps.setInt(2, libraryBookId);
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

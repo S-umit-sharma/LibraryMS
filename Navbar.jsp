@@ -112,7 +112,7 @@
                       <img src="static/media/images/profile.jpg" style="width:100px">
                     </c:when>
                     <c:otherwise>
-                      <img src="logo.do?user_type_id=${param.user_type_id}" width="100px">
+                      <img src="logo.do?path=${user.profilePic}" width="100px">
 
                     </c:otherwise>
                   </c:choose>
