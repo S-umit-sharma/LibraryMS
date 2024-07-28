@@ -17,7 +17,7 @@ public class IssuedBook {
     private Date issueDate;
     private Date returnDate;
     private Integer fine ;
-    private String status;
+    private Integer status;
 
     public IssuedBook() {
 
@@ -28,12 +28,11 @@ public class IssuedBook {
         this.bookEdition = bookEdition;
     }
 
-    public IssuedBook(BookEdition bookEdition, MemberShip memberShip, Date issueDate, Date returnDate, String status) {
+    public IssuedBook(BookEdition bookEdition, MemberShip memberShip, Date issueDate, Date returnDate) {
         this.bookEdition = bookEdition;
         this.memberShip = memberShip;
         this.issueDate = issueDate;
         this.returnDate = returnDate;
-        this.status = status;
     }
     // ------------------------History book method--------------------------------
     public void collectAllIssuedBooks() {
@@ -52,7 +51,7 @@ public class IssuedBook {
                 System.out.println(rs.getDate(3)+"############");
                 returnDate = rs.getDate(3);
                 fine = rs.getInt(4);
-                status = rs.getString(5);
+                status = rs.getInt(5);
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -60,18 +59,18 @@ public class IssuedBook {
 
     }
     // ------------------------delete book record--------------------------------
-    public boolean deleteIssuedBook(){
+    public boolean updateIssuedBook(){
         boolean flag = false;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
-            String query = "delete from issued_books where member_id=? and book_edition_id=?";
+            String query = "update issued_books set status='returned' where member_id=? and book_edition_id=?";
 
             PreparedStatement ps = con.prepareStatement(query);
 
-            ps.setString(1, memberShip.getMemberId());
+            ps.setInt(1, memberShip.getMemberId());
             ps.setInt(2, bookEdition.getBookEditionId());
 
             int val = ps.executeUpdate();
@@ -100,7 +99,7 @@ public class IssuedBook {
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, fine);
-            ps.setString(2, memberShip.getMemberId());
+            ps.setInt(2, memberShip.getMemberId());
             ps.setInt(3, bookEdition.getBookEditionId());
 
             ps.executeUpdate();
@@ -120,7 +119,7 @@ public class IssuedBook {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
             String query = "select issued_book_id,issue_date,return_date,fine,status from issued_books where member_id=? and book_edition_id=?";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, memberShip.getMemberId());
+            ps.setInt(1, memberShip.getMemberId());
             ps.setInt(2, bookEdition.getBookEditionId());
 
             ResultSet rs = ps.executeQuery();
@@ -131,7 +130,7 @@ public class IssuedBook {
                 System.out.println(rs.getDate(3)+"############");
                 returnDate = rs.getDate(3);
                 fine = rs.getInt(4);
-                status = rs.getString(5);
+                status = rs.getInt(5);
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -151,7 +150,7 @@ public class IssuedBook {
             ps.setInt(2, memberShip.getMembershipId());
             ps.setDate(3, issueDate);
             ps.setDate(4, returnDate);
-            ps.setString(5, status);
+            ps.setInt(5, 1);
             int val = ps.executeUpdate();
             if (val == 1) {
                 flag = true;
@@ -212,11 +211,11 @@ public class IssuedBook {
         this.fine = fine;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

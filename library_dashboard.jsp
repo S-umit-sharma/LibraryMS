@@ -116,7 +116,7 @@
                         <h1>Press ok to remove Member</h1>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" id="delete_ok">OK</button>
+                        <button type="button" class="btn btn-danger" id="delete_ok_btn">OK</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
                             id="modal_close">Close</button>
                     </div>
@@ -258,7 +258,7 @@
                                         <input type="text" class="form-control" id="Member"
                                             placeholder="enter the member ID" name="membership_id" required>
                                     </div>
-                                    <div class="col-md ">
+                                    <div class="col-md mt-2">
                                         <button class="btn btn-primary" id="find_img">Find</button>
                                     </div>
                                 </div>
@@ -267,7 +267,7 @@
                                         <img src="static/media/images/student.gif" width="140" id="member_photo"
                                             class="shadow p-3 bg-body-tertiary rounded">
                                     </div>
-                                    <div class="col-md shadow mr-3 p-1 bg-body-tertiary rounded">
+                                    <div class="col-md ">
                                         Name:<h5 id="member_name"></h5>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                             <div class="row mt-4">
                                 <div class="col-md">
                                     <input type="text" id="email_input" name="member_email" class="form-control"
-                                        placeholder="enter the email....">
+                                        placeholder="enter the email to search member....">
                                 </div>
                                 <div class="col-md">
                                     <button type="button" class="btn btn-primary" id="email_search_btn">Search</button>
@@ -334,7 +334,7 @@
                             <div class="row mt-4">
                                 <div class="col">
                                     <input type="number" placeholder="enter the member ID........"
-                                        search="enter the member Id" name="delete_member" id="delete_member"
+                                        search="enter the member Id" name="delete_member" id="delete_member_input"
                                         class="form-control">
                                 </div>
                                 <div class="col">
@@ -353,12 +353,16 @@
                                 <div class="col-md">
                                     <div class="alert alert-success"
                                         style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
-                                        id="candidate_success_msg">Candidate Become a Member
+                                        id="candidate_success_msg">
                                     </div>
 
                                     <div class="alert alert-success"
                                         style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
                                         id="member_id_msg">Your Member ID is&nbsp;<span id="member_id"></span>
+                                    </div>
+                                    <div class="alert alert-success"
+                                        style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
+                                        id="member_removed_success">Member Removed SuccessFully
                                     </div>
                                 </div>
                             </div>
@@ -393,14 +397,14 @@
                     </div>
 
                 </div>
+                <!-- ============================================================================================================ -->
             </div>
 
+            <!-- ============================================================================================================ -->
         </div>
 
 
-        <!-- ============================================================================================================ -->
         </div>
-        <!-- ============================================================================================================ -->
 
 
         </div>
@@ -560,6 +564,7 @@
                     if (req.readyState == 4 && req.status == 200) {
                         let arr = JSON.parse(req.responseText);
                         if (arr == true) {
+                            console.log(arr);
                             not_registered_msg.style.display = 'block';
                             setTimeout(() => {
                                 not_registered_msg.style.display = 'none';
@@ -582,7 +587,7 @@
             let candidate_success_msg = document.querySelector("#candidate_success_msg");
             let member_id_msg = document.querySelector("#member_id_msg");
             let member_id = document.querySelector("#member_id");
-            
+
             add_candidate_btn.addEventListener('click', () => {
 
                 img_show.src = "static/media/images/student.gif";
@@ -597,19 +602,31 @@
 
                     if (req.readyState == 4 && req.status == 200) {
                         let json = JSON.parse(req.responseText);
-
-                        candidate_success_msg.style.display = 'block';
-                        input_name.value = input_name.defaultValue;
-                        setTimeout(() => {
-                            candidate_success_msg.style.display = 'none';
-                            member_id.innerText = json.memberId;
-                            member_id_msg.style.display = 'block';
+                        console.log(json.member);
+                        if(json.flag){
+                            candidate_success_msg.innerText = 'Candidate Become a Member';
+                            candidate_success_msg.style.display = 'block';
+                            input_name.value = input_name.defaultValue;
                             setTimeout(() => {
-                                member_id_msg.style.display = 'none';
-                            }, 10000);
+                                candidate_success_msg.style.display = 'none';
+                                member_id.innerText = json.member.memberId;
+                                member_id_msg.style.display = 'block';
+                                setTimeout(() => {
+                                    member_id_msg.style.display = 'none';
+                                }, 10000);
+                                
+                            }, 3000);
+                            show_candidate();
+                        }else{
+                            candidate_success_msg.innerHTML = "Candiate already is a Library member Member ID : <h1>"+json.member.memberId+"</h1>";
+                            candidate_success_msg.style.display = 'block';
+                            setTimeout(() => {
+                                candidate_success_msg.style.display = 'none';
+                            },10000);
+                            
+                            show_candidate();
 
-                        }, 3000);
-                        show_candidate();
+                        }
 
 
                     }
@@ -619,28 +636,48 @@
             })
         </script>
         <script>
-            let delete_member = document.querySelector("#delete_member");
+            let delete_member_input = document.querySelector("#delete_member_input");
             let delete_member_btn = document.querySelector("#delete_member_btn");
             let delete_modal = document.querySelector("#delete_modal");
             let modal_close = document.querySelector("#modal_close");
             let delete_ok = document.querySelector("#delete_ok");
+            let member_removed_success = document.querySelector("#member_removed_success");
 
             delete_member_btn.addEventListener('click', () => {
                 delete_modal.style.display = 'block';
+                img_show.src = 'static/media/images/student.gif';
+                input_name.value = input_name.defaultValue;
+                email_input.value = email_input.defaultValue;
+
             });
             modal_close.addEventListener('click', () => {
                 delete_modal.style.display = 'none';
             });
 
             delete_ok_btn.addEventListener('click', () => {
+                delete_member_input.value = delete_member_input.defaultValue;
                 let req = new XMLHttpRequest();
 
-                let param = '?member_id='+delete_membere.value;
+                let param = '?member_id=' + delete_member_input.value;
 
-                req.open('GET','remove_member.do'+param,true);
+                req.open('GET', 'remove_member.do' + param, true);
 
                 req.addEventListener('readystatechange', () => {
-                    console.log(req.responseText);
+                    let json = JSON.parse(req.responseText);
+                    delete_modal.style.display = 'none';
+                    member_removed_success.style.display = 'block';
+                    if (json == 0) {
+                        member_removed_success.innerText = 'Member Removed SuccessFully';
+                        setTimeout(() => {
+                            member_removed_success.style.display = 'none';
+                        }, 5000);
+                    } else {
+                        member_removed_success.innerHTML = '<strong>Member Have<h3>' + json + '</h3>books</strong>';
+                        setTimeout(() => {
+                            member_removed_success.style.display = 'none';
+                        }, 10000);
+
+                    }
                 });
 
                 req.send();

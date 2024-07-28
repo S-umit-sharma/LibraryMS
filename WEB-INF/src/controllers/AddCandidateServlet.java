@@ -2,6 +2,8 @@ package controllers;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
@@ -20,24 +22,49 @@ import com.google.gson.Gson;
 @WebServlet("/add_candidate.do")
 public class AddCandidateServlet extends HttpServlet {
     static Integer num = 0;
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
         HttpSession session = request.getSession();
         Library lib = (Library) session.getAttribute("user");
         Integer libraryId = lib.getLibraryId();
         Integer userId = Integer.parseInt(request.getParameter("user_id"));
-        Date currentDate = DateUtil.getCurrentDate();
-        num += 1;
-        String memberId = libraryId +""+ userId + "" + num;
 
-
-        MemberShip member = new MemberShip(new Library(libraryId), userId, currentDate, memberId);
-
-        member.saveMemberShip();
-        member.collectMember();
+        MemberShip member = new MemberShip();
+        member.setUserId(userId);
+        boolean flag = member.checkUserAvailabilityForAdd();
         Gson gson = new Gson();
+        String json = "";
 
-        String json = gson.toJson(member);
-        response.getWriter().print(json);
+        if (flag) {
+            Date currentDate = DateUtil.getCurrentDate();
+
+            num += 1;
+
+            Integer memberId = Integer.parseInt(libraryId + "" + userId + "" + num);
+
+            member.setLibrary(new Library(libraryId));
+
+            member.setMemberId(memberId);
+
+            member.setJoinedOn(currentDate);
+
+            member.saveMemberShip();
+
+            member.collectMember();
+
+            json = gson.toJson(member);
+
+        } else  {
+
+            Map<String, Object> obj = new HashMap<>();
+            obj.put("flag", flag);
+            obj.put("member", member);
+
+            json = gson.toJson(obj);
+        }
+
+        response.getWriter().write(json);
 
     }
 }

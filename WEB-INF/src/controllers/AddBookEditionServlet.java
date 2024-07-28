@@ -6,11 +6,9 @@ import java.sql.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpSession;
 
 import models.Book;
 import models.BookEdition;
-import models.Publisher;
 
 import java.util.ArrayList;
 

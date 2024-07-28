@@ -818,7 +818,7 @@ create table issued_books(
     issue_date datetime not null,
     return_date datetime null,
     fine int not null default 0,
-    status varchar(10) null
+    status int null
 );
 
 
@@ -891,3 +891,20 @@ inner join book_editions be
 inner join books as b 
 inner join memberships as m 
 where ib.member_id=m.member_id and be.book_edition_id=ib.book_edition_id;
+
+
+
+        System.out.println("##################1");
+        System.out.println("##################2");
+        System.out.println("##################3");
+        System.out.println("##################4");
+        System.out.println("##################5");
+        System.out.println("##################6");
+        System.out.println("##################7");
+        System.out.println("##################8");
+        System.out.println("##################9");
+        System.out.println("#######//#endregion");
+        System.out.println("##################10");
+        System.out.println("##################12");
+        System.out.println("##################13");
+        System.out.println("##################11");

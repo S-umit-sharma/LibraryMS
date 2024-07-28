@@ -76,7 +76,8 @@ public class User {
 
 
     // -----------------------------------------------------------------
-    public void searchEmail(){
+    public boolean searchEmail(){
+        boolean flag = false;
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
@@ -89,11 +90,13 @@ public class User {
                 profilePic = rs.getString(2);
                 userId = rs.getInt(3);
                 userType = new UserType(rs.getInt(4));
-
+                flag = true;
             }
         }catch(SQLException|ClassNotFoundException e){
             e.printStackTrace();
         }
+
+        return flag;
     } 
     // -----------------------------------------------------------------
     

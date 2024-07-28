@@ -30,7 +30,7 @@ public class BookIssueServlet extends HttpServlet{
         Integer membershipId = Integer.parseInt(request.getParameter("member_id"));
         Integer libraryBookId = Integer.parseInt(request.getParameter("library_book_id"));
         Integer bookIssued = Integer.parseInt(request.getParameter("book_issued"));
-        String status = "issued";
+        
         
         // ----------------------------------------------------
 
@@ -45,7 +45,7 @@ public class BookIssueServlet extends HttpServlet{
         
         // ----------------------------------------------------
         
-        IssuedBook issuedBook = new IssuedBook(new BookEdition(editionId),new MemberShip(membershipId),DateUtil.getCurrentDate(),returnDate,status);
+        IssuedBook issuedBook = new IssuedBook(new BookEdition(editionId),new MemberShip(membershipId),DateUtil.getCurrentDate(),returnDate);
         
         boolean flag = issuedBook.issueBook();
         if(flag){

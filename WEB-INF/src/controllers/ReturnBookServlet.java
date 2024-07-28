@@ -25,22 +25,21 @@ public class ReturnBookServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         Library lib = (Library) session.getAttribute("user");
-        String memberId = request.getParameter("member_id");
+        Integer memberId = Integer.parseInt(request.getParameter("member_id"));
         Integer bookIssued = Integer.parseInt(request.getParameter("book_issued"));
         System.out.println(bookIssued);
         Integer bookEditonId = Integer.parseInt(request.getParameter("book_edition_id"));
         // ------------------get records from issuedBooks ---------
-        IssuedBook member = new IssuedBook(new MemberShip(memberId), new BookEdition(bookEditonId));
-        System.out.println("######################1");
+        MemberShip memebership = new MemberShip();
+        memebership.setMemberId(memberId);
+        IssuedBook member = new IssuedBook(memebership, new BookEdition(bookEditonId));
         
         member.returnBook();
-        System.out.println("######################2");
         // -----------------calculating fine ---------
         Long d = 0L; 
         try{
 
             d = DateUtil.getDateDifferenc(member.getReturnDate());
-            System.out.println("######################3");
         }catch(Exception e){
             e.printStackTrace();
 
@@ -49,32 +48,22 @@ public class ReturnBookServlet extends HttpServlet {
         
         // ----------------- updating fine ---------
         if (d > 0) {
-            System.out.println("######################4");
             
             Integer lateFine = lib.getLateFine();
-            System.out.println("######################5");
             
             Integer fine = Integer.parseInt("" + d * lateFine + member.getFine());
-            System.out.println("######################6");
             
             member.setFine(fine);
-            System.out.println("######################7");
             member.updateFine();
-            System.out.println("######################8");
         }
         
         // ----------------- updating books ----------
-        boolean flag = member.deleteIssuedBook();
-        System.out.println("######################9");
+        boolean flag = member.updateIssuedBook();
         
         if (flag) {
-            System.out.println("######################10");
             LibraryBooks libraryBooks = new LibraryBooks(new BookEdition(bookEditonId),bookIssued);
-            System.out.println("######################11");
             libraryBooks.updateBookCopies();
-            System.out.println("######################12");
         }
-        System.out.println("######################13");
 
         Gson gson = new Gson();
 
