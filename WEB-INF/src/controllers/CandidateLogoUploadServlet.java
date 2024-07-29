@@ -24,7 +24,7 @@ public class CandidateLogoUploadServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         ServletContext context = getServletContext();
         HttpSession session = request.getSession();
-        MemberShip memberShip = (MemberShip) session.getAttribute("member");
+        MemberShip memberShip = (MemberShip) session.getAttribute("user");
 
         if (memberShip != null) {
             try {

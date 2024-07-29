@@ -16,25 +16,28 @@ import utils.DateUtil;
 @WebServlet("/remove_member.do")
 public class RemoveMemberServlet extends HttpServlet{
     public void doGet(HttpServletRequest request, HttpServletResponse response)throws IOException,ServletException{
-        Integer  memberId = Integer.parseInt(request.getParameter("member_id"));
-
+        
+        Integer memberId = Integer.parseInt(request.getParameter("member_id"));
+        
+        
         Date leftOn = DateUtil.getCurrentDate();
-
+        
         MemberShip member = new MemberShip(memberId,leftOn);
-
+        
         
         int val = member.checkingForBooks();
-        System.out.println(val);
-        if(val<0){
+        // System.out.println(val);
+        if(val==0){
             member.changeStatus();
         }
-
-
+        
+        
         Gson gson = new Gson();
-
+        
         String json = gson.toJson(val);
-
+        
         response.getWriter().write(json);
-
+        
+        
     }
 }

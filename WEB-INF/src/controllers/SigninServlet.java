@@ -120,9 +120,10 @@ public class SigninServlet extends HttpServlet {
                 } else if (statusId == Status.INACTIVE) {
                     String msg = MessageTemplate.getIncompleteEmailVerificationMessage(email);
                     nextPage = "success.jsp?color=alert-secondary&message=" + msg;
-                } else if (statusId == Status.MANUAL_VERIFIED) {
+                } else if (statusId == Status.EMAIL_VERIFIED) {
+                    String msg = MessageTemplate.getEmailVerificationSuccessMessage();
                     session.setAttribute("member",member);
-                    nextPage = "candidate_upload_pic.jsp";
+                    nextPage = "success.jsp?color=alert-success&message=" + msg;
                 }
 
             } else {

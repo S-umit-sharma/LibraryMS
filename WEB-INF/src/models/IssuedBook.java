@@ -66,7 +66,7 @@ public class IssuedBook {
 
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
-            String query = "update issued_books set status='returned' where member_id=? and book_edition_id=?";
+            String query = "update issued_books set status=2 where member_id=? and book_edition_id=?";
 
             PreparedStatement ps = con.prepareStatement(query);
 

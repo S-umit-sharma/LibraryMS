@@ -32,7 +32,10 @@ public class AddCandidateServlet extends HttpServlet {
 
         MemberShip member = new MemberShip();
         member.setUserId(userId);
+        member.setLibrary(lib);
         boolean flag = member.checkUserAvailabilityForAdd();
+        // System.out.println(member.getMemberId() + "########");
+        // System.out.println(flag + "#########");
         Gson gson = new Gson();
         String json = "";
 
@@ -53,7 +56,11 @@ public class AddCandidateServlet extends HttpServlet {
 
             member.collectMember();
 
-            json = gson.toJson(member);
+            Map<String,Object> obj = new HashMap<>();
+            obj.put("flag",flag);
+            obj.put("member",member);
+
+            json = gson.toJson(obj);
 
         } else  {
 
@@ -64,7 +71,7 @@ public class AddCandidateServlet extends HttpServlet {
             json = gson.toJson(obj);
         }
 
-        response.getWriter().write(json);
+        response.getWriter().print(json);
 
     }
 }

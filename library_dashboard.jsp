@@ -136,7 +136,7 @@
                     <%@ include file="Navbar.jsp" %>
                 </div>
             </div>
-            <div class="row" style="background-color: #ccc;">
+            <div class="row" style="background-color: #bbdaa2;border-radius:10px">
                 <div class="col-md">
                     <img src="logo.do?path=${user.profilePic}" width="80" class="border border-rounded mb-2"
                         id="user_img">
@@ -302,9 +302,9 @@
                 </div>
                 <!-- ============================================================================================================ -->
                 <div class="tab-pane fade" id="add_candidate">
-                    <div class="row justify-content-around">
-                        <div class="col-md text-center">
-                            <h3>ADD new Member</h3>
+                    <div class="row justify-content-around mt-4">
+                        <div class="col-md ">
+                            <h2>ADD new Member</h2>
                         </div>
                     </div>
                     <div class="row">
@@ -333,9 +333,13 @@
                             </div>
                             <div class="row mt-4">
                                 <div class="col">
+                                    <h2>Remove the member</h2>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col">
                                     <input type="number" placeholder="enter the member ID........"
-                                        search="enter the member Id" name="delete_member" id="delete_member_input"
-                                        class="form-control">
+                                        id="delete_member_input" class="form-control">
                                 </div>
                                 <div class="col">
                                     <button type="button" class="btn btn-danger" id="delete_member_btn">Remove</button>
@@ -527,6 +531,19 @@
                             member.value = member.defaultValue;
                             success_msg.innerText = 'Book Issued Success Fully';
                             success_msg.style.display = 'block';
+                            
+                            setTimeout(function () {
+                                success_msg.style.display = 'none';
+                            }, 3000);
+                        }else{
+                            
+                            card_div.style.display = 'none';
+                            isbn_no.value = isbn_no.defaultValue;
+                            member.value = member.defaultValue;
+                            success_msg.innerHTML = '<span> Member is<Strong> Not Active </Strong>so cannot issue book </span>';
+                            success_msg.style.color = 'red';
+                            success_msg.classList.replace('alert-success','alert-danger');
+                            success_msg.style.display = 'block';
 
                             setTimeout(function () {
                                 success_msg.style.display = 'none';
@@ -602,8 +619,9 @@
 
                     if (req.readyState == 4 && req.status == 200) {
                         let json = JSON.parse(req.responseText);
-                        console.log(json.member);
-                        if(json.flag){
+                        // console.log(json);
+                        console.log(json.flag);
+                        if (json.flag) {
                             candidate_success_msg.innerText = 'Candidate Become a Member';
                             candidate_success_msg.style.display = 'block';
                             input_name.value = input_name.defaultValue;
@@ -614,16 +632,17 @@
                                 setTimeout(() => {
                                     member_id_msg.style.display = 'none';
                                 }, 10000);
-                                
+
                             }, 3000);
                             show_candidate();
-                        }else{
-                            candidate_success_msg.innerHTML = "Candiate already is a Library member Member ID : <h1>"+json.member.memberId+"</h1>";
+                        } else {
+                            console.log(json.flag +"#####");
+                            candidate_success_msg.innerHTML = "Candiate already is a Library member Member ID : <h1>" + json.member.memberId + "</h1>";
                             candidate_success_msg.style.display = 'block';
                             setTimeout(() => {
                                 candidate_success_msg.style.display = 'none';
-                            },10000);
-                            
+                            }, 10000);
+
                             show_candidate();
 
                         }
@@ -655,29 +674,36 @@
             });
 
             delete_ok_btn.addEventListener('click', () => {
-                delete_member_input.value = delete_member_input.defaultValue;
+
                 let req = new XMLHttpRequest();
 
-                let param = '?member_id=' + delete_member_input.value;
+                let param = 'member_id=' + delete_member_input.value;
 
-                req.open('GET', 'remove_member.do' + param, true);
+
+                req.open('GET', 'remove_member.do?' + param, true);
 
                 req.addEventListener('readystatechange', () => {
                     let json = JSON.parse(req.responseText);
+                    // console.log(json + '###');
                     delete_modal.style.display = 'none';
                     member_removed_success.style.display = 'block';
                     if (json == 0) {
                         member_removed_success.innerText = 'Member Removed SuccessFully';
                         setTimeout(() => {
                             member_removed_success.style.display = 'none';
+                            delete_member_input.value = delete_member_input.defaultValue;
+
                         }, 5000);
                     } else {
                         member_removed_success.innerHTML = '<strong>Member Have<h3>' + json + '</h3>books</strong>';
                         setTimeout(() => {
                             member_removed_success.style.display = 'none';
+                            delete_member_input.value = delete_member_input.defaultValue;
+
                         }, 10000);
 
                     }
+                    show_candidate();
                 });
 
                 req.send();

@@ -76,6 +76,7 @@ public class User {
 
 
     // -----------------------------------------------------------------
+    // -----------------------------------------------------------------
     public boolean searchEmail(){
         boolean flag = false;
         try{
@@ -112,7 +113,7 @@ public class User {
             ps.setInt(2,Status.ACTIVE);
             ps.setInt(3,userId);
             
-            int val = ps.executeUpdate();
+            ps.executeUpdate();
 
             con.close();
 
