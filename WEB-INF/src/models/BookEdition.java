@@ -178,14 +178,14 @@ public class BookEdition {
     public ArrayList<BookEdition> collectAllEditions(){
         ArrayList<BookEdition> list = new ArrayList<>();
         try{Class.forName("com.mysql.cj.jdbc.Driver");}catch(ClassNotFoundException e){e.printStackTrace();}
-        String query = "select book_edition_id,edition,published_on,price,isbn_no,details,book_edition_pic,book_id from book_editions where book_id=?";
+        String query = "select book_edition_id,edition,published_on,price,isbn_no,details,book_edition_pic,be.book_id,title from book_editions as be inner join books as b where be.book_id=b.book_id and be.book_id=?";
         try(Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234")){
             PreparedStatement ps = con.prepareStatement(query);  
             ps.setInt(1,book.getBookId());
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                list.add(new BookEdition(rs.getInt(1),rs.getInt(2),rs.getDate(3),rs.getInt(4),rs.getInt(5),rs.getString(6),rs.getString(7),new Book(rs.getInt(8))));
+                list.add(new BookEdition(rs.getInt(1),rs.getInt(2),rs.getDate(3),rs.getInt(4),rs.getInt(5),rs.getString(6),rs.getString(7),new Book(rs.getInt(8),rs.getString(9))));
             }
         }catch(SQLException e){
             e.printStackTrace();

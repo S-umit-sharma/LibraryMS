@@ -71,37 +71,7 @@
                 /* Optional: Adjust spacing as needed */
             }
         </style>
-        <style>
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                }
-
-                to {
-                    opacity: 1;
-                }
-            }
-
-            @keyframes slideIn {
-                from {
-                    transform: translateY(-20px);
-                    opacity: 0;
-                }
-
-                to {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
-            }
-
-            #lib_name {
-                animation: fadeIn 1s ease-in-out;
-            }
-
-            #user_img {
-                animation: slideIn 1s ease-in-out;
-            }
-        </style>
+        
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
@@ -136,70 +106,51 @@
                     <%@ include file="Navbar.jsp" %>
                 </div>
             </div>
-            <div class="row" style="background-color: #bbdaa2;border-radius:10px">
-                <div class="col-md">
-                    <img src="logo.do?path=${user.profilePic}" width="80" class="border border-rounded mb-2"
-                        id="user_img">
-                </div>
-                <div class="col-md text-center fs-1" id="lib_name">
-                    <Strong>${user.name}</Strong>
-                </div>
-            </div>
+            <%@ include file="nameHeader.html" %>
 
-            <ul class="nav nav-tabs">
-                <li class="nav-item ">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#home">Home</button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#book_issue">Issue
-                        Book</button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#add_candidate">
-                        Candidate</button>
-                </li>
-                <!-- Add more tab buttons as needed -->
-            </ul>
-
-            <!-- ============================================================================================================ -->
-
-            <div class="tab-content">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item ">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#home">Home</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#book_issue">Issue
+                            Book</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#add_candidate">
+                            Candidate</button>
+                    </li>
+                    <!-- Add more tab buttons as needed -->
+                </ul>
 
                 <!-- ============================================================================================================ -->
-                <div class="tab-pane fade show active" id="home">
-                    <div class="row">
-                        <div class="col-md">
-                            <input type="text" name="title" class="form-control mt-2"
-                                placeholder="Search New books by title..." id="title_value">
-                        </div>
-                        <div class="col-md">
-                            <button type="button" class="btn btn-outline-success mt-2"
-                                id="search_title_btn">Search</button>
-                        </div>
 
+                <div class="tab-content">
 
-                        <div class="row mt-4">
-                            <div class="row">
-                                <div class="col-md">
-                                    <img id="book_img" width="180">
-                                </div>
-                                <div class="col-md">
-                                    <h3>Title:<h1 id="title"></h1>
-                                    </h3>
-                                </div>
+                    <!-- ============================================================================================================ -->
+                    <div class="tab-pane fade show active" id="home">
+                        <div class="row">
+                            <div class="col-md">
+                                <input type="text" name="title" class="form-control mt-2"
+                                    placeholder="Search New books by title..." id="title_value">
                             </div>
+                        </div>
 
-                            <div class="row mt-4">
-                                <div class="col-md">
-                                    <a href="" id="all_editions">
-                                        <button type="button" class="btn btn-primary" style="display: none;"
-                                            id="edition_btn">Editions</button>
-                                    </a>
-                                </div>
-                            </div>
-
+                        <!-- -------------------------------------------------------------------------------------------------- -->
+                        <div class="row" id="row_for_books">
                         </div>
                     </div>
+                    <!-- --------------------------------------------------------------------------------- -->
+                    <div class="row mt-4">
+                        <div class="col-md">
+                            <a href="" id="all_editions">
+                                <button type="button" class="btn btn-primary" style="display: none;"
+                                    id="edition_btn">Editions</button>
+                            </a>
+                        </div>
+                    </div>
+
+
                 </div>
                 <!-- ============================================================================================================ -->
 
@@ -402,9 +353,9 @@
 
                 </div>
                 <!-- ============================================================================================================ -->
-            </div>
+        </div>
 
-            <!-- ============================================================================================================ -->
+        <!-- ============================================================================================================ -->
         </div>
 
 
@@ -416,7 +367,6 @@
         </div>
 
         <script>
-            let search_title_btn = document.querySelector("#search_title_btn");
             let title_value = document.querySelector("#title_value");
             let book_img = document.querySelector('#book_img');
             let title = document.querySelector("#title");
@@ -424,33 +374,77 @@
             let price = document.querySelector("#price");
             let all_editions = document.querySelector("#all_editions");
             let edition_btn = document.querySelector("#edition_btn");
+            let row_for_books = document.querySelector("#row_for_books");
+            row_for_books.innerHTML = '';
+            let num = 0;
 
-            search_title_btn.addEventListener('click', () => {
-
+            let search_func = () => {
+                
+                row_for_books.innerHTML = '';
                 let req = new XMLHttpRequest();
+                let regex = /[A-Za-z]/;
+                if (regex.test(title)) {
 
-                let param = 'title=' + title_value.value;
+                    let param = 'title=' + title_value.value;
 
-                req.open('GET', 'search_title.do?' + param, true);
+                    req.open('GET', 'search_title.do?' + param, true);
 
-                req.addEventListener('readystatechange', () => {
-                    if (req.readyState == 4 && req.status == 200) {
-                        let arr = JSON.parse(req.responseText);
+                    req.addEventListener('readystatechange', () => {
+                        if (req.readyState == 4 && req.status == 200) {
+                            let arr = JSON.parse(req.responseText);
+                            
 
-                        for (let obj of arr) {
-                            for (let prop in obj) {
-                                book_img.src = 'show_book_img.do?img_path=' + obj.bookPic;
-                                title.innerText = obj.title;
-                                all_editions.href = 'book_edition.do?book_id=' + obj.bookId + '&num=2&title=' + obj.title;
-                                edition_btn.style.display = 'block';
+                            for (let obj of arr) {
+                                let a = document.createElement('a');
+                                
+                                a.href = 'book_edition.do?book_id=' + obj.bookId + "&num=2";
+                                let col = document.createElement('div');
+                                col.className = 'col-md-3 mt-4 ';
+                                row_for_books.append(col);
+
+                                let card = document.createElement('div');
+                                col.append(card);
+                                card.className = 'card shadow p-3 mb-2 bg-body-tertiary rounded'
+                                card.style.width = '15rem;';
+                                card.append(a);
+                                let img = document.createElement('img');
+                                a.append(img);
+                                img.src = 'show_book_img.do?img_path=' + obj.bookPic;
+                                img.height = '290';
+                                img.className = 'card-img-top';
+                                let card_body = document.createElement('div');
+                                card.append(card_body);
+                                card_body.className = 'card-body';
+                                let h3 = document.createElement('h3');
+                                card_body.append(h3);
+                                h3.innerText = obj.title;
+                                
+
                             }
                         }
-                    }
-                });
-                req.send();
-            });
-        </script>
+                    });
+                    req.send();
+                }
+            }
 
+            let debounce_search_title = function (func, delay) {
+                let timeout;
+                return function () {
+                    if(timeout)
+                        clearTimeout(timeout);
+                    timeout = setTimeout(func, delay);
+                }
+            }
+
+
+            let counter = 0;
+
+            let optimizeSearch = debounce_search_title(search_func, 800);
+            title_value.addEventListener('keyup', () => {
+                optimizeSearch();
+            });
+
+        </script>
         <script>
             const isbn_no = document.querySelector('#isbn_no');
             const search_isbn = document.querySelector('#search_isbn');
@@ -531,18 +525,18 @@
                             member.value = member.defaultValue;
                             success_msg.innerText = 'Book Issued Success Fully';
                             success_msg.style.display = 'block';
-                            
+
                             setTimeout(function () {
                                 success_msg.style.display = 'none';
                             }, 3000);
-                        }else{
-                            
+                        } else {
+
                             card_div.style.display = 'none';
                             isbn_no.value = isbn_no.defaultValue;
                             member.value = member.defaultValue;
                             success_msg.innerHTML = '<span> Member is<Strong> Not Active </Strong>so cannot issue book </span>';
                             success_msg.style.color = 'red';
-                            success_msg.classList.replace('alert-success','alert-danger');
+                            success_msg.classList.replace('alert-success', 'alert-danger');
                             success_msg.style.display = 'block';
 
                             setTimeout(function () {
@@ -581,7 +575,6 @@
                     if (req.readyState == 4 && req.status == 200) {
                         let arr = JSON.parse(req.responseText);
                         if (arr == true) {
-                            console.log(arr);
                             not_registered_msg.style.display = 'block';
                             setTimeout(() => {
                                 not_registered_msg.style.display = 'none';
@@ -619,8 +612,8 @@
 
                     if (req.readyState == 4 && req.status == 200) {
                         let json = JSON.parse(req.responseText);
-                        // console.log(json);
-                        console.log(json.flag);
+                        
+                        
                         if (json.flag) {
                             candidate_success_msg.innerText = 'Candidate Become a Member';
                             candidate_success_msg.style.display = 'block';
@@ -636,7 +629,7 @@
                             }, 3000);
                             show_candidate();
                         } else {
-                            console.log(json.flag +"#####");
+                            
                             candidate_success_msg.innerHTML = "Candiate already is a Library member Member ID : <h1>" + json.member.memberId + "</h1>";
                             candidate_success_msg.style.display = 'block';
                             setTimeout(() => {
@@ -684,7 +677,7 @@
 
                 req.addEventListener('readystatechange', () => {
                     let json = JSON.parse(req.responseText);
-                    // console.log(json + '###');
+                    
                     delete_modal.style.display = 'none';
                     member_removed_success.style.display = 'block';
                     if (json == 0) {
@@ -783,7 +776,7 @@
 
                 let param = 'member_id=' + member.value + "&book_edition_id=" + input_edition.value + "&book_issued=" + book_issued.value;
 
-                console.log(param);
+                
                 req.open('GET', 'return_book.do?' + param, true);
 
                 req.addEventListener('readystatechange', () => {

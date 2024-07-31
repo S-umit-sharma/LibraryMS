@@ -27,76 +27,116 @@
                     <%@ include file="Navbar.jsp" %>
                 </div>
             </div>
-                <div class="row d-inline-block">
-                    <h2 class="fs-1 mb-4 my-4 p-2 shadow-lg p-3 m-5 bg-body-tertiary rounded"
-                        style="border: 1px solid rgb(0, 0, 0);background-color: rgb(245, 247, 246);border-radius: 10px;">
-                        <c:choose>
-                            <c:when test="${param.user_type_id==1}">
-                                Library
-                            </c:when>
-                            <c:when test="${param.user_type_id==2}">
-                                Publisher
-                            </c:when>
-                            <c:when test="${param.user_type_id==3}">
-                                Candidate
-                            </c:when>
-                            <c:otherwise>
-                                Librarian
-                            </c:otherwise>
-                        </c:choose>Login
-                    </h2>
+            <div class="row d-inline-block">
+                <h2 class="fs-1 mb-4 my-4 p-2 shadow-lg p-3 m-5 bg-body-tertiary rounded"
+                    style="border: 1px solid rgb(0, 0, 0);background-color: rgb(245, 247, 246);border-radius: 10px;">
+                    <c:choose>
+                        <c:when test="${param.user_type_id==1}">
+                            Library
+                        </c:when>
+                        <c:when test="${param.user_type_id==2}">
+                            Publisher
+                        </c:when>
+                        <c:when test="${param.user_type_id==3}">
+                            Candidate
+                        </c:when>
+                        <c:otherwise>
+                            Librarian
+                        </c:otherwise>
+                    </c:choose>Login
+                </h2>
 
-                    <form action="signin.do" class="form-check fs-1 border border-radius shadow-lg p-3 m-5 bg-body-tertiary rounded" id="form" >
-                        <input type="hidden" name="user_type_id" value="${param.user_type_id}">
-                        <div class="col-md text-start">
-                            <label for="iemail" class="form-label fs-5 fw-semibold text-primary">Email</label>
-                            <input class="form-control" type="email" id="iemail" name="email">
-                            
-                            <div class="text-danger fs-5" id="err_email" style="display: none;">${err_email_message}</div>
-                                
+                <form action="signin.do"
+                    class="form-check fs-1 border border-radius shadow-lg p-3 m-5 bg-body-tertiary rounded" id="form">
+                    <input type="hidden" name="user_type_id" value="${param.user_type_id}">
+                    <div class="col-md text-start">
+                        <label for="iemail" class="form-label fs-5 fw-semibold text-primary">Email</label>
+                        <input class="form-control" type="email" id="iemail" name="email">
+                        <div class="text-danger fs-5" id="inccorect_user" style="display: none;">${err_email_message}
                         </div>
-
-                        <div class="col-md text-start">
-                            <label class="form-label fs-5 fw-semibold text-primary" for="ipassword">Password</label>
-                            <input class="form-control fs-5" type="password" id="ipassword" name="password">
-                            <c:if test="${not empty err_password_message}">
-                                <div class="text-danger fs-5" id="pass_err">${err_password_message}</div>
-                            </c:if>
-                        </div>
-                        <div class="col my-4">
-                            <button class="btn btn-primary btn-lg" id="signin_btn">Login</button>
-                            <a class="fs-5 mx-3  text-danger" id="forgot_password">Forgot Password</a>
-                        </div>
+                        <c:if test="${not empty err_email_message}">
+                            <div class="text-danger fs-5" id="err_email" style="display: none;">${err_email_message}
+                            </div>
+                        </c:if>
 
 
-                        <div class="col">
-                            <button class="btn btn-outline-primary mx-2">SignUp</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
 
+                    <div class="col-md text-start">
+                        <label class="form-label fs-5 fw-semibold text-primary" for="ipassword">Password</label>
+                        <input class="form-control fs-5" type="password" id="ipassword" name="password">
+                        <c:if test="${not empty err_password_message}">
+                            <div class="text-danger fs-5" id="pass_err">${err_password_message}</div>
+                        </c:if>
+                    </div>
+                    <div class="col my-4">
+                        <button class="btn btn-primary btn-lg" id="signin_btn">Login</button>
+                        <a class="fs-5 mx-3  text-danger" id="forgot_password">Forgot Password</a>
+                    </div>
+
+
+                    <div class="col">
+                        <button class="btn btn-outline-primary mx-2">SignUp</button>
+                    </div>
+                </form>
             </div>
 
-            <script>
-                const form = document.querySelector("#form");
-                const signin_btn = document.querySelector("#signin_btn");
+        </div>
 
-                signin_btn.addEventListener('click', () => {
-                    form.submit;
-                })
+        <script>
+            const form = document.querySelector("#form");
+            const signin_btn = document.querySelector("#signin_btn");
 
-                let email_msg = document.querySelector('#err_email');
-                let pass_msg = document.querySelector('#pass_err');
+            signin_btn.addEventListener('click', () => {
+                form.submit;
+            })
 
-                setTimeout(function(){
-                    email_msg.style.display = 'none';
-                },3000);
-                setTimeout(function(){
-                    pass_msg.style.display ='none';
+            let email_msg = document.querySelector('#err_email');
+            let pass_msg = document.querySelector('#pass_err');
 
-                },3000);
-            </script>
-            </script>
+            setTimeout(function () {
+                email_msg.style.display = 'none';
+            }, 3000);
+            setTimeout(function () {
+                pass_msg.style.display = 'none';
+
+            }, 3000);
+        </script>
+        <script>
+            let iemail = document.querySelector('#iemail');
+            let inccorect_user = document.querySelector('#inccorect_user');
+            iemail.addEventListener('blur', () => {
+                let req = new XMLHttpRequest();
+
+                let url = new URL(window.location.href);
+
+                let params = new URLSearchParams(url.search);
+
+                let param = 'email=' + iemail.value + '&user_type_id=' + params.get('user_type_id');
+
+                req.open('GET', 'search_for_usertype.do?' + param, true);
+
+                req.addEventListener('readystatechange', () => {
+                    if (req.readyState == 4 && req.status == 200) {
+                        let json = JSON.parse(req.responseText);
+
+                        if (json == false) {
+                            signin_btn.classList.replace('btn-primary', 'btn-secondary');
+                            inccorect_user.innerText = 'your email is not correct';
+                            inccorect_user.style.display = 'block';
+                            setTimeout(() => {
+                                inccorect_user.style.display = 'none';
+                            }, 3000);
+
+                        } else
+                            signin_btn.classList.replace('btn-secondary', 'btn-primary');
+                    }
+                });
+
+
+                req.send();
+            });
+        </script>
     </body>
 
     </html>

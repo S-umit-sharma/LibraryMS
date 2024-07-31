@@ -1,0 +1,40 @@
+<style>
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    #lib_name {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    #user_img {
+        animation: slideIn 1s ease-in-out;
+    }
+</style>
+<div class="row" style="background-color: #bbdaa2;border-radius:10px">
+    <div class="col-md">
+        <img src="logo.do?path=${user.profilePic}" width="80" class="border border-rounded mb-2"
+            id="user_img">
+    </div>
+    <div class="col-md text-center fs-1" id="lib_name">
+        <Strong>${user.name}</Strong>
+    </div>
+</div>

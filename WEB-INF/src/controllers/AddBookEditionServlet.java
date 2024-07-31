@@ -55,6 +55,7 @@ public class AddBookEditionServlet extends HttpServlet {
             ;
         } else {
             String title = request.getParameter("title");
+            request.setAttribute("title",title);
             request.getRequestDispatcher("library_book_edition.jsp?title=" + title).forward(request, response);
             
         }

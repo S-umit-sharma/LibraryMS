@@ -84,6 +84,7 @@
                     <%@ include file="Navbar.jsp" %>
                 </div>
             </div>
+            <%@ include file="nameHeader.html" %>
             <div class="row">
                 <div class="col-1">
                     <abbr title="Show Books">

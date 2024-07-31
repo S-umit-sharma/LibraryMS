@@ -45,6 +45,7 @@
                 <%@ include file="Navbar.jsp" %>
             </div>
         </div>
+        <%@ include file="nameHeader.html" %>
         <div class="row justify-content-center">
             <div class="col-6 border border-secondary rounded p-4 shadow-lg p-3 m-5 bg-body-tertiary rounded" id="divcolor">
                 <h1>Publisher</h1>

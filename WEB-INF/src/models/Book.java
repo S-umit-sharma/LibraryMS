@@ -100,9 +100,9 @@ public class Book {
             try{
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-                String query = "select * from books where title=?";
+                String query = "select * from books where title LIKE ?";
                 PreparedStatement ps = con.prepareStatement(query);
-                ps.setString(1,title);
+                ps.setString(1,"%"+title+"%");
                 
                 ResultSet rs = ps.executeQuery();
                 while(rs.next()){

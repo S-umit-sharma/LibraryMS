@@ -44,6 +44,23 @@
                 <%@ include file="Navbar.jsp" %>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="#">Home</a></li>
+                      <li class="breadcrumb-item"><a href="search_title.do?title=${book_editions[0].book.title}">book</a></li>
+                      <li class="breadcrumb-item active" aria-current="page">Editions</li>
+                    </ol>
+                  </nav>
+            </div>
+        </div>
+        <%@ include file="nameHeader.html" %>
+        <div class="row mt-3">
+            <div class="col text-center">
+                <span> Editions Of &nbsp;<span class="fs-1 fw-bold">${book_editions[0].book.title}&nbsp;</span> book</span>
+            </div>
+        </div>
         <!-- <div class="row">
             <div class="col">
                 <a href="search_title.do?title=${param.title}">
