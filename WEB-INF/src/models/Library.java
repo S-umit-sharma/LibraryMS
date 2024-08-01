@@ -1,7 +1,5 @@
 package models;
 
-
-import java.sql.Timestamp;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
 
 import models.User;
-import utils.EmailTemplates;
 import utils.MessageTemplate;
 
 import javax.servlet.ServletException;
@@ -20,7 +19,7 @@ public class verifyEmailServlet extends HttpServlet {
         String verificationCode = request.getParameter("verification_code");
         Integer userTypeId = Integer.parseInt(request.getParameter("user_type_id"));
 
-        boolean flag = User.verify(email, verificationCode, userTypeId);
+        User.verify(email, verificationCode, userTypeId);
 
         String nextPage = "signin.jsp?user_type_id=" + userTypeId;
 

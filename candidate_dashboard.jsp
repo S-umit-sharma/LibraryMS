@@ -48,6 +48,8 @@
                 <%@ include file="Navbar.jsp" %>
             </div>
         </div>
+        <%@ include file="nameHeader.html" %>
+        <hr>
         <div class="row mt-2">
             <div class="col-md-1 mb-1">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -58,13 +60,12 @@
                     data-bs-target="#document_modal">upload Document</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <img src="logo.do?path=${user.profilePic}" width="200">
+        <div class="row mt-4">
+            <div class="col-md-12">
+            <input type="text" placeholder="search for libraries" class="form-control" id="library_search">    
+            <input type="hidden" value="${user.city.getCity()}" id="city">
             </div>
-            <div class="col">
-                
-            </div>
+            
         </div>
     </div>
 
@@ -84,19 +85,26 @@
     </script>
     <script>
 
-        // Dropzone.autoDiscover = false;
         const dropzone = new Dropzone('#form', {
             maxFiles: 1,
             maxFileSize: 1,
             acceptedFiles: '.png,.jpg',
             autoProcessQueue: false
         });
-        // const upload_btn = document.querySelector("#upload_btn");
+        
 
-        // upload_btn.addEventListener('click', () => {
-        //     dropzone.processQueue();
-        // });
+    </script>
+    <script>
+        let library_search = document.querySelector('#library_search');
+        let city = document.querySelector('#city');
 
+        let search_lib_func = () => {
+            let req = new XMLHttpRequest();
+
+            let param = 
+
+            req.open = 
+        };
     </script>
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     

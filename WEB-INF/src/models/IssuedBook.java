@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-import java.util.ArrayList;
 
 public class IssuedBook {
 
@@ -48,7 +47,6 @@ public class IssuedBook {
             if (rs.next()) {
                 issuedBookId = rs.getInt(1);
                 issueDate = rs.getDate(2);
-                System.out.println(rs.getDate(3)+"############");
                 returnDate = rs.getDate(3);
                 fine = rs.getInt(4);
                 status = rs.getInt(5);
@@ -127,7 +125,6 @@ public class IssuedBook {
             if (rs.next()) {
                 issuedBookId = rs.getInt(1);
                 issueDate = rs.getDate(2);
-                System.out.println(rs.getDate(3)+"############");
                 returnDate = rs.getDate(3);
                 fine = rs.getInt(4);
                 status = rs.getInt(5);

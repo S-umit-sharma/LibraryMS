@@ -23,7 +23,7 @@ public class AddBookEditionServlet extends HttpServlet {
         Boolean flag = Boolean.parseBoolean(request.getParameter("flag"));
         Integer isbnNo = Integer.parseInt(request.getParameter("isbn_no"));
         Integer bookId = Integer.parseInt(request.getParameter("book_id"));
-        Integer num = Integer.parseInt(request.getParameter("num"));
+        // Integer num = Integer.parseInt(request.getParameter("num"));
         Integer edition = Integer.parseInt(request.getParameter("edition"));
         Date publishDate = Date.valueOf(request.getParameter("publish_date"));
         Integer price = Integer.parseInt(request.getParameter("price"));

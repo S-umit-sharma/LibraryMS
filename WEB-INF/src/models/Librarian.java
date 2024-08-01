@@ -43,7 +43,6 @@ public class Librarian extends User {
 
                 ps.executeQuery();
 
-                System.out.println(ps);
 
                 con.close();
             } catch (ClassNotFoundException | SQLException e) {

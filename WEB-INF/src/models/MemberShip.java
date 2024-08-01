@@ -116,7 +116,6 @@ public class MemberShip extends User {
             ps.setDate(1, leftOn);
             ps.setInt(2, Status.LEFT);
             ps.setInt(3, memberId);
-            System.out.println(ps + "#######");
             int val = ps.executeUpdate();
 
             if (val == 1) {

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <div class="container">
         <div class="row">
@@ -12,13 +14,25 @@
                 <%@ include file="Navbar.jsp" %>
             </div>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <form action="update_book.do" method="post"> 
-                    <input type="hidden" name="publisher_id" value="${book.publisher.getPublisherId()}">                   
-                    <input type="hidden" name="book_id" value="${book.bookId}">                   
+
+        <%@ include file="nameHeader.html" %>
+            <div class="row">
+                <div class="col">
+                    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <!-- home_page.do meanes to library page -->
+                            <li class="breadcrumb-item"><a href="book.do">Home</a></li>
+                            <li class="breadcrumb-item active">Update ${book.title} Book</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col">
+                    <form action="update_book.do" method="post">
+                        <input type="hidden" name="publisher_id" value="${book.publisher.getPublisherId()}">
+                        <input type="hidden" name="book_id" value="${book.bookId}">
                         <div>
                             <label class="form-label fs-4" for="book">Book Category</label>
                             <select name="book_category" id="book">
@@ -41,16 +55,19 @@
                         </div>
                         <div>
                             <label class="form-label fs-4" for="book_title">Book Title</label>
-                            <input type="text" name="book_title" class="form-control fs-3" id="book_title" value="${book.title}">
+                            <input type="text" name="book_title" class="form-control fs-3" id="book_title"
+                                value="${book.title}">
                         </div>
 
                         <div class="mt-4">
                             <input type="submit" class="btn btn-primary" value="Update" id="submit_button">
                         </div>
                     </form>
-                
+
+                </div>
             </div>
-        </div>
+    </div>
     </div>
 </body>
+
 </html>

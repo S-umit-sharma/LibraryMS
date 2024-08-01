@@ -20,7 +20,7 @@ public class PublisherDetailServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         Publisher publisher = (Publisher)session.getAttribute("publisher");
-        System.out.println(publisher);
+        
         
         publisher.setDetails(details);
         publisher.setWebsite(website);

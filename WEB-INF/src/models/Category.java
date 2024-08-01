@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import java.sql.SQLException;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,8 +49,6 @@ public class Category {
             
             String nm1 = n1.name;
             String nm2 = n2.name;
-
-            System.out.println();
             
             flag = nm1.equals(nm2);
         }

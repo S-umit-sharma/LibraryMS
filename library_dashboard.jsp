@@ -71,7 +71,7 @@
                 /* Optional: Adjust spacing as needed */
             }
         </style>
-        
+
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
@@ -107,6 +107,15 @@
                 </div>
             </div>
             <%@ include file="nameHeader.html" %>
+                <div class="row">
+                    <div class="col">
+                        <nav style="--bs-breadcrumb-divider:'>';" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">Home</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
 
                 <ul class="nav nav-tabs">
                     <li class="nav-item ">
@@ -150,207 +159,208 @@
                         </div>
                     </div>
 
+                    <!-- ============================================================================================================ -->
 
-                </div>
-                <!-- ============================================================================================================ -->
-
-                <div class="tab-pane fade" id="book_issue">
-                    <div class="row">
-                        <div class="col">
-                            <div class="row justify-content-end">
-                                <div class="col-md-auto">
-                                    <input type="number" name="isbn_no" class="form-control mt-2"
-                                        placeholder="Enter book isbn no......" id="isbn_no">
+                    <div class="tab-pane fade" id="book_issue">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col-md-auto">
+                                        <input type="number" name="isbn_no" class="form-control mt-2"
+                                            placeholder="Enter book isbn no......" id="isbn_no">
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <button type="button" class="Search btn btn-outline-success mt-2 "
+                                            id="search_isbn">Search</button>
+                                    </div>
                                 </div>
-                                <div class="col-md-auto">
-                                    <button type="button" class="Search btn btn-outline-success mt-2 "
-                                        id="search_isbn">Search</button>
+                                <div class="alert alert-success" id="success_msg" style="display: none;">
+
                                 </div>
-                            </div>
-                            <div class="alert alert-success" id="success_msg" style="display: none;">
+                                <div class="row mt-4" id="card_div" style="display: none;">
+                                    <div class="col-md">
+                                        <div class="card mb-3 shadow mr-3 p-1 bg-body-tertiary rounded"
+                                            style="max-width: 540px;">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img src="" class="img-fluid rounded-start p-1 rounded"
+                                                        id="img_path" alt="Book Cover">
+                                                </div>
+                                                <div class="col-md">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title" id="title">Title</h5>
+                                                        <p class="card-text">
+                                                            <strong>Edition:</strong> <span id="edition"></span><br>
+                                                            <strong>Total copies:</strong> <span id="copies"></span><br>
+                                                            <strong>Available:</strong> <span id="copies_left"></span>
+                                                        </p>
 
-                            </div>
-                            <div class="row mt-4" id="card_div" style="display: none;">
-                                <div class="col-md">
-                                    <div class="card mb-3 shadow mr-3 p-1 bg-body-tertiary rounded"
-                                        style="max-width: 540px;">
-                                        <div class="row g-0">
-                                            <div class="col-md-4">
-                                                <img src="" class="img-fluid rounded-start p-1 rounded" id="img_path"
-                                                    alt="Book Cover">
-                                            </div>
-                                            <div class="col-md">
-                                                <div class="card-body">
-                                                    <h5 class="card-title" id="title">Title</h5>
-                                                    <p class="card-text">
-                                                        <strong>Edition:</strong> <span id="edition"></span><br>
-                                                        <strong>Total copies:</strong> <span id="copies"></span><br>
-                                                        <strong>Available:</strong> <span id="copies_left"></span>
-                                                    </p>
-
-                                                    Details:<p class="card-text" id="details"></p>
+                                                        Details:<p class="card-text" id="details"></p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+                            <div class="col">
 
+                                <input type="hidden" name="edition_id" id="input_edition">
+                                <input type="hidden" name="library_book_id" id="library_book_id">
+                                <input type="hidden" name="book_issued" id="book_issued">
+
+                                <div class="form-group" id="find_div" style="display:none;">
+                                    <div class="row mt-4">
+                                        <div class="col-md">
+                                            <input type="text" class="form-control" id="Member"
+                                                placeholder="enter the member ID" name="membership_id" required>
+                                        </div>
+                                        <div class="col-md mt-2">
+                                            <button class="btn btn-primary" id="find_img">Find</button>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-md-3 text-center">
+                                            <img src="static/media/images/profile.jpg" width="140" id="member_photo"
+                                                class="shadow p-3 bg-body-tertiary rounded">
+                                        </div>
+                                        <div class="col-md ">
+                                            Name:<h5 id="member_name"></h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-button" style="display:none;" id="return_issue_btn">
+                                    <button type="submit" class="btn btn-primary" id="issue_btn">Issue Book</button>
+                                    <button type="submit" class="btn btn-primary" id="return_btn">return Book</button>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <table border="1px solid red" width="100%" style="border: 1px solid red;">
+                                        <thead style="border:1px solid rgb(161, 150, 150);">
+                                            <tr>
+                                                <th colspan="1">Sr No.</th>
+                                                <th colspan="1">Stuent Name</th>
+                                                <th colspan="1">Book Name</th>
+                                                <th colspan="1">Issue Date</th>
+                                                <th colspan="1">Return Date</th>
+                                                <th colspan="">Member Id</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="history_table">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col">
 
-                            <input type="hidden" name="edition_id" id="input_edition">
-                            <input type="hidden" name="library_book_id" id="library_book_id">
-                            <input type="hidden" name="book_issued" id="book_issued">
+                    </div>
+                    <!-- ============================================================================================================ -->
 
-                            <div class="form-group">
+                    <div class="tab-pane fade" id="add_candidate">
+                        <div class="row justify-content-around mt-4">
+                            <div class="col-md ">
+                                <h2>ADD new Member</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <div class="row mt-4">
                                     <div class="col-md">
-                                        <input type="text" class="form-control" id="Member"
-                                            placeholder="enter the member ID" name="membership_id" required>
+                                        <input type="text" id="email_input" name="member_email" class="form-control"
+                                            placeholder="enter the email to search member....">
                                     </div>
-                                    <div class="col-md mt-2">
-                                        <button class="btn btn-primary" id="find_img">Find</button>
+                                    <div class="col-md">
+                                        <button type="button" class="btn btn-primary"
+                                            id="email_search_btn">Search</button>
                                     </div>
                                 </div>
                                 <div class="row mt-4">
-                                    <div class="col-md-3 text-center">
-                                        <img src="static/media/images/student.gif" width="140" id="member_photo"
-                                            class="shadow p-3 bg-body-tertiary rounded">
+                                    <div class="col-md">
+
+                                        <input type="text" class="form-control"
+                                            placeholder="name of the member is........" id="input_name" name="name"
+                                            readonly>
                                     </div>
-                                    <div class="col-md ">
-                                        Name:<h5 id="member_name"></h5>
+                                    <div class="col-md">
+                                        <button type="button" class="btn btn-primary" id="add_candidate_btn">&plus;
+                                            Add</button>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <h2>Remove the member</h2>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col">
+                                        <input type="number" placeholder="enter the member ID........"
+                                            id="delete_member_input" class="form-control">
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-danger"
+                                            id="delete_member_btn">Remove</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-button">
-                                <button type="submit" class="btn btn-primary" id="issue_btn">Issue Book</button>
-                                <button type="submit" class="btn btn-primary" id="return_btn">return Book</button>
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="alert alert-danger" id="not_registered_msg" style="display:none;">
+                                            Not Registered</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md">
+                                        <div class="alert alert-success"
+                                            style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
+                                            id="candidate_success_msg">
+                                        </div>
+
+                                        <div class="alert alert-success"
+                                            style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
+                                            id="member_id_msg">Your Member ID is&nbsp;<span id="member_id"></span>
+                                        </div>
+                                        <div class="alert alert-success"
+                                            style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
+                                            id="member_removed_success">Member Removed SuccessFully
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md">
+                                        <img id="img_show" src="static/media/images/student.gif" width="180">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <div class="col-12">
+                            <div class="col">
                                 <table border="1px solid red" width="100%" style="border: 1px solid red;">
                                     <thead style="border:1px solid rgb(161, 150, 150);">
                                         <tr>
                                             <th colspan="1">Sr No.</th>
-                                            <th colspan="1">Stuent Name</th>
-                                            <th colspan="1">Book Name</th>
-                                            <th colspan="1">Issue Date</th>
-                                            <th colspan="1">Return Date</th>
-                                            <th colspan="">Member Id</th>
+                                            <th colspan="1">Joined On</th>
+                                            <th colspan="1">Dues</th>
+                                            <th colspan="1">Member ID</th>
+                                            <th colspan="1">Name</th>
+                                            <th colspan="">contact</th>
+                                            <th colspan="2">left On</th>
                                         </tr>
                                     </thead>
 
-                                    <tbody id="history_table">
+                                    <tbody id="table">
 
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
+
                     </div>
-
-                </div>
-                <!-- ============================================================================================================ -->
-                <div class="tab-pane fade" id="add_candidate">
-                    <div class="row justify-content-around mt-4">
-                        <div class="col-md ">
-                            <h2>ADD new Member</h2>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="row mt-4">
-                                <div class="col-md">
-                                    <input type="text" id="email_input" name="member_email" class="form-control"
-                                        placeholder="enter the email to search member....">
-                                </div>
-                                <div class="col-md">
-                                    <button type="button" class="btn btn-primary" id="email_search_btn">Search</button>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col-md">
-                                    <input type="hidden" class="form-control" placeholder="enter" id="user_id"
-                                        name="user_id">
-
-                                    <input type="text" class="form-control" placeholder="name of the member is........"
-                                        id="input_name" name="name" readonly>
-                                </div>
-                                <div class="col-md">
-                                    <button type="button" class="btn btn-primary" id="add_candidate_btn">&plus;
-                                        Add</button>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col">
-                                    <h2>Remove the member</h2>
-                                </div>
-                            </div>
-                            <div class="row mt-4">
-                                <div class="col">
-                                    <input type="number" placeholder="enter the member ID........"
-                                        id="delete_member_input" class="form-control">
-                                </div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-danger" id="delete_member_btn">Remove</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="alert alert-danger" id="not_registered_msg" style="display:none;">
-                                        Not Registered</div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md">
-                                    <div class="alert alert-success"
-                                        style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
-                                        id="candidate_success_msg">
-                                    </div>
-
-                                    <div class="alert alert-success"
-                                        style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
-                                        id="member_id_msg">Your Member ID is&nbsp;<span id="member_id"></span>
-                                    </div>
-                                    <div class="alert alert-success"
-                                        style="display: none;font-family: Georgia, 'Times New Roman', Times, serif;"
-                                        id="member_removed_success">Member Removed SuccessFully
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md">
-                                    <img id="img_show" src="static/media/images/student.gif" width="180">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col">
-                            <table border="1px solid red" width="100%" style="border: 1px solid red;">
-                                <thead style="border:1px solid rgb(161, 150, 150);">
-                                    <tr>
-                                        <th colspan="1">Sr No.</th>
-                                        <th colspan="1">Joined On</th>
-                                        <th colspan="1">Dues</th>
-                                        <th colspan="1">Member ID</th>
-                                        <th colspan="1">Name</th>
-                                        <th colspan="">contact</th>
-                                        <th colspan="2">left On</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody id="table">
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-
                 </div>
                 <!-- ============================================================================================================ -->
         </div>
@@ -379,11 +389,11 @@
             let num = 0;
 
             let search_func = () => {
-                
+
                 row_for_books.innerHTML = '';
                 let req = new XMLHttpRequest();
-                let regex = /[A-Za-z]/;
-                if (regex.test(title)) {
+                let regex = /[A-Za-z]{3,}/;
+                if (regex.test(title_value.value)) {
 
                     let param = 'title=' + title_value.value;
 
@@ -392,11 +402,11 @@
                     req.addEventListener('readystatechange', () => {
                         if (req.readyState == 4 && req.status == 200) {
                             let arr = JSON.parse(req.responseText);
-                            
+
 
                             for (let obj of arr) {
                                 let a = document.createElement('a');
-                                
+
                                 a.href = 'book_edition.do?book_id=' + obj.bookId + "&num=2";
                                 let col = document.createElement('div');
                                 col.className = 'col-md-3 mt-4 ';
@@ -418,7 +428,7 @@
                                 let h3 = document.createElement('h3');
                                 card_body.append(h3);
                                 h3.innerText = obj.title;
-                                
+
 
                             }
                         }
@@ -430,7 +440,7 @@
             let debounce_search_title = function (func, delay) {
                 let timeout;
                 return function () {
-                    if(timeout)
+                    if (timeout)
                         clearTimeout(timeout);
                     timeout = setTimeout(func, delay);
                 }
@@ -458,6 +468,9 @@
             const library_book_id = document.querySelector('#library_book_id');
             const copies_left = document.querySelector('#copies_left');
             let book_issued = document.querySelector("#book_issued");
+            let member_photo = document.querySelector('#member_photo');
+
+            let find_div = document.querySelector("#find_div");
 
 
             search_isbn.addEventListener('click', () => {
@@ -498,6 +511,8 @@
                 });
 
                 req.send();
+                member_photo.style.display = 'block';
+                find_div.style.display = 'block';
             });
 
 
@@ -612,8 +627,8 @@
 
                     if (req.readyState == 4 && req.status == 200) {
                         let json = JSON.parse(req.responseText);
-                        
-                        
+
+
                         if (json.flag) {
                             candidate_success_msg.innerText = 'Candidate Become a Member';
                             candidate_success_msg.style.display = 'block';
@@ -629,7 +644,7 @@
                             }, 3000);
                             show_candidate();
                         } else {
-                            
+
                             candidate_success_msg.innerHTML = "Candiate already is a Library member Member ID : <h1>" + json.member.memberId + "</h1>";
                             candidate_success_msg.style.display = 'block';
                             setTimeout(() => {
@@ -677,7 +692,7 @@
 
                 req.addEventListener('readystatechange', () => {
                     let json = JSON.parse(req.responseText);
-                    
+
                     delete_modal.style.display = 'none';
                     member_removed_success.style.display = 'block';
                     if (json == 0) {
@@ -740,8 +755,8 @@
         </script>
         <script>
             let find_img = document.querySelector("#find_img");
-            let member_photo = document.querySelector('#member_photo');
             let member_name = document.querySelector('#member_name');
+            let return_issue_btn = document.querySelector('#return_issue_btn');
 
             find_img.addEventListener('click', () => {
                 let req = new XMLHttpRequest();
@@ -758,11 +773,15 @@
                     }
                 });
                 req.send();
+                return_issue_btn.style.display = 'block';
             });
 
             issue_btn.addEventListener('click', () => {
-                member_photo.src = "static/media/images/student.gif";
+                member_photo.src = 'static/media/images/profile.jpg';
+                member_photo.style.display = ' none';
                 member_name.innerText = ' ';
+                return_issue_btn.style.display = 'none';
+                find_div.style.display = 'none';
             });
 
 
@@ -776,7 +795,7 @@
 
                 let param = 'member_id=' + member.value + "&book_edition_id=" + input_edition.value + "&book_issued=" + book_issued.value;
 
-                
+
                 req.open('GET', 'return_book.do?' + param, true);
 
                 req.addEventListener('readystatechange', () => {
@@ -792,9 +811,13 @@
             });
 
             return_btn.addEventListener('click', () => {
+
+                member_photo.src = 'static/media/images/profile.jpg';
                 member.value = member.defaultValue;
-                member_photo.src = "static/media/images/student.gif";
-                member_name.innerText = '';
+                member_photo.style.display = ' none';
+                member_name.innerText = ' ';
+                return_issue_btn.style.display = 'none';
+                find_div.style.display = 'none';
                 card_div.style.display = 'none';
                 isbn_no.value = isbn_no.defaultValue;
                 success_msg.innerText = 'Book Returned SuccessFully';

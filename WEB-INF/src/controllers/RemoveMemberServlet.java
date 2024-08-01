@@ -26,7 +26,7 @@ public class RemoveMemberServlet extends HttpServlet{
         
         
         int val = member.checkingForBooks();
-        // System.out.println(val);
+        
         if(val==0){
             member.changeStatus();
         }

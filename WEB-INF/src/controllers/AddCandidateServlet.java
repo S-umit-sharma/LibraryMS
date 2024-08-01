@@ -34,8 +34,6 @@ public class AddCandidateServlet extends HttpServlet {
         member.setUserId(userId);
         member.setLibrary(lib);
         boolean flag = member.checkUserAvailabilityForAdd();
-        // System.out.println(member.getMemberId() + "########");
-        // System.out.println(flag + "#########");
         Gson gson = new Gson();
         String json = "";
 

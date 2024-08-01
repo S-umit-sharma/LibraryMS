@@ -1,6 +1,5 @@
 package controllers;
 
-import models.Library;
 import models.Publisher;
 
 import javax.servlet.http.HttpServlet;
@@ -27,7 +26,7 @@ public class PublisherLogoUploadServlet extends HttpServlet {
         HttpSession session = request.getSession();
         ServletContext context = getServletContext();
         Publisher publisher = (Publisher) session.getAttribute("publisher");
-        // System.out.println(publisher);
+
         if (publisher != null) {
             if (ServletFileUpload.isMultipartContent(request)) {
                 try {
@@ -36,26 +35,28 @@ public class PublisherLogoUploadServlet extends HttpServlet {
                     ServletFileUpload sf = new ServletFileUpload(dfif);
                     List<FileItem> items = sf.parseRequest(request);
                     FileItem item = items.get(0);
-                    
+
                     String fileName = "logo." + item.getName().split("\\.")[1];
 
-                    publisher.setProfilePic("publishers/"+publisher.getEmail()+"/logo/"+fileName);
-                    String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/"+ publisher.getEmail()+"/logo");
+                    publisher.setProfilePic("publishers/" + publisher.getEmail() + "/logo/" + fileName);
+                    String uploadPath = context
+                            .getRealPath("/WEB-INF/uploads/publishers/" + publisher.getEmail() + "/logo");
                     File folder = new File(uploadPath);
                     folder.mkdir();
-                    // System.out.println(publisher.getEmail()+ "Email of the publiaher 111111111111");
-
-                    // System.out.println(uploadPath +"---------------######111111");
                     publisher.saveProfilePic();
 
-                    File file = new File(uploadPath,fileName);
+                    File file = new File(uploadPath, fileName);
 
-                    try{item.write(file); }catch(Exception e){e.printStackTrace();}
+                    try {
+                        item.write(file);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } catch (FileUploadException e) {
                     e.printStackTrace();
                 }
             }
-        }else{
+        } else {
             // handle session invalidate
         }
     }

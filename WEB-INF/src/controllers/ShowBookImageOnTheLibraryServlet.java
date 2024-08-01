@@ -15,7 +15,6 @@ import java.io.OutputStream;
 public class ShowBookImageOnTheLibraryServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException {
         ServletContext context = getServletContext();
-        // System.out.println("helo############");
         String path = request.getParameter("img_path");
 
         InputStream is = context.getResourceAsStream("/WEB-INF/uploads/publishers/"+path);
@@ -23,9 +22,7 @@ public class ShowBookImageOnTheLibraryServlet extends HttpServlet {
 
         byte[] arr = new byte[256];
 
-        int count=0;
-
-        while((count = is.read(arr)) != -1){
+        while((is.read(arr)) != -1){
             os.write(arr);
         }
 

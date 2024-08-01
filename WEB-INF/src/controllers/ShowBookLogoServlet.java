@@ -1,6 +1,5 @@
 package controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import models.Book;
 import models.Publisher;
-import models.UserType;
 
 @WebServlet("/show_book_logo.do")
 public class ShowBookLogoServlet extends HttpServlet {
@@ -25,15 +23,8 @@ public class ShowBookLogoServlet extends HttpServlet {
         Publisher publisher = (Publisher)session.getAttribute("user");
         Integer bookId = Integer.parseInt(request.getParameter("book_id"));
 
-        String path=null;
         if(publisher != null){
-            try{
-                path = context.getRealPath("/WEB-INF/uploads/publishers/"+publisher.getEmail()+"/book_image");
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            File file = new File(path);
-            String[] list = file.list();
+            
             Book book = new Book(bookId);
             // ---------------------------------------------------------
             String imgPath = book.getImagePath();
@@ -46,8 +37,7 @@ public class ShowBookLogoServlet extends HttpServlet {
 
             byte[] arr = new byte[256];
 
-            int count = 0;
-            while((count=is.read(arr)) != -1){
+            while((is.read(arr)) != -1){
                 os.write(arr);
             }
 

@@ -1,7 +1,6 @@
 package models;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -63,14 +62,12 @@ public class Publisher extends User{
             ps.setInt(1,getUserId());
             ps.setString(2,details);
             ps.setString(3,website);
-            // System.out.println(ps);
-
+            
             int val = ps.executeUpdate();
 
             if(val==1){
                 flag=true;
             }
-            // System.out.println(flag);
 
             return flag;
 

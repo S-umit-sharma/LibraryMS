@@ -26,7 +26,7 @@ public class LibraryLogoUploadServlet extends HttpServlet {
         HttpSession session = request.getSession();
         ServletContext context = getServletContext();
         Library library = (Library) session.getAttribute("library");
-        // System.out.println(library);
+        
         if (library != null) {
             if (ServletFileUpload.isMultipartContent(request)) {
                 try {

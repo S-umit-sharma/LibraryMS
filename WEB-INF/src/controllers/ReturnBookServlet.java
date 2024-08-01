@@ -1,8 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,41 +25,40 @@ public class ReturnBookServlet extends HttpServlet {
         Library lib = (Library) session.getAttribute("user");
         Integer memberId = Integer.parseInt(request.getParameter("member_id"));
         Integer bookIssued = Integer.parseInt(request.getParameter("book_issued"));
-        System.out.println(bookIssued);
+        
         Integer bookEditonId = Integer.parseInt(request.getParameter("book_edition_id"));
         // ------------------get records from issuedBooks ---------
         MemberShip memebership = new MemberShip();
         memebership.setMemberId(memberId);
         IssuedBook member = new IssuedBook(memebership, new BookEdition(bookEditonId));
-        
+
         member.returnBook();
         // -----------------calculating fine ---------
-        Long d = 0L; 
-        try{
+        Long d = 0L;
+        try {
 
             d = DateUtil.getDateDifferenc(member.getReturnDate());
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
 
         }
-        
-        
+
         // ----------------- updating fine ---------
         if (d > 0) {
-            
+
             Integer lateFine = lib.getLateFine();
-            
+
             Integer fine = Integer.parseInt("" + d * lateFine + member.getFine());
-            
+
             member.setFine(fine);
             member.updateFine();
         }
-        
+
         // ----------------- updating books ----------
         boolean flag = member.updateIssuedBook();
-        
+
         if (flag) {
-            LibraryBooks libraryBooks = new LibraryBooks(new BookEdition(bookEditonId),bookIssued);
+            LibraryBooks libraryBooks = new LibraryBooks(new BookEdition(bookEditonId), bookIssued);
             libraryBooks.updateBookCopies();
         }
 

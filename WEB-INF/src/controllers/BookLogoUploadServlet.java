@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.servlet.ServletContext;
@@ -53,8 +52,6 @@ public class BookLogoUploadServlet extends HttpServlet {
                         File folder = new File(uploadPath);
 
                         folder.mkdir();
-
-                        String filePath = uploadPath+fileName;
 
                         book.setBookPic(pub.getEmail()+"/book_image/"+fileName);
 

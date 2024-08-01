@@ -83,6 +83,17 @@
                 </div>
             </div>
             <%@ include file="nameHeader.html" %>
+            
+            <div class="row">
+                <div class="col">
+                    <nav style="--bs-breadcrumb-divider:'>';" aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="book.do">Home</a></li>
+                            <li class="breadcrumb-item active">Book Editions</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
             <div class="row">
                 <div class="col">
                     <div data-bs-toggle="tab" data-bs-target="#book_edition_pane">

@@ -1,9 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +25,7 @@ public class SaveBookInToLibraryServlet extends HttpServlet{
         Integer copy = Integer.parseInt(request.getParameter("copy"));
         
         LibraryBooks libBooks = new LibraryBooks(new BookEdition(editionId),copy,new Library(lib.getLibraryId()));
-        boolean flag = libBooks.saveLibraryBooks();
+        libBooks.saveLibraryBooks();
          
         request.getRequestDispatcher("book_edition.do?num=2").forward(request, response);
          

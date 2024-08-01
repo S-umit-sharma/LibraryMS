@@ -37,15 +37,6 @@ public class AppUtils {
         return star.toString();
     }
 
-    // public static Integer getCategory(ArrayList<Category> categories,String category){
-    //     // System.out.println("categories"+categories);
-    //     // System.out.println("category"+category);
-    //     int x = categories.indexOf(category);
-    //     // System.out.println(x);
-    //     return x;
-
-
-    // }
 
 }
 

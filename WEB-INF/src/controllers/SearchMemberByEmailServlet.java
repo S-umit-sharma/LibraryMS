@@ -7,11 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import com.google.gson.Gson;
-
-import models.MemberShip;
 import models.User;
 
 @WebServlet("/search_email.do")
@@ -20,16 +16,15 @@ public class SearchMemberByEmailServlet extends HttpServlet {
 
         String email = request.getParameter("email");
         User user = new User(email);
-        
+
         boolean flag = user.searchEmail();
-        Integer userTypeId = 0; 
-        if(flag){
+        Integer userTypeId = 0;
+        if (flag) {
             userTypeId = user.getUserType().getUserTypeId();
         }
 
-        
         Gson gson = new Gson();
-        
+
         if (userTypeId == 3) {
             String json = gson.toJson(user);
             response.getWriter().print(json);
@@ -37,7 +32,7 @@ public class SearchMemberByEmailServlet extends HttpServlet {
             flag = true;
             String json = gson.toJson(flag);
             response.getWriter().print(json);
-            
+
         }
     }
 }
