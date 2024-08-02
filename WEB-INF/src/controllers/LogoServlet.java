@@ -16,21 +16,20 @@ import models.User;
 
 @WebServlet("/logo.do")
 public class LogoServlet extends HttpServlet {
-    public void doGet(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException{
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         ServletContext context = getServletContext();
-        User user = (User)session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
         String path = request.getParameter("path");
-    
-        if(user != null){
-            
-            InputStream is = context.getResourceAsStream("/WEB-INF/uploads/"+path);
+        
+        if (user != null) {
 
+            InputStream is = context.getResourceAsStream("/WEB-INF/uploads/" + path);
             OutputStream os = response.getOutputStream();
 
             byte[] arr = new byte[256];
 
-            while((is.read(arr)) != -1){
+            while ((is.read(arr)) != -1) {
                 os.write(arr);
             }
 
@@ -38,6 +37,5 @@ public class LogoServlet extends HttpServlet {
             os.close();
         }
 
-
-   }
+    }
 }

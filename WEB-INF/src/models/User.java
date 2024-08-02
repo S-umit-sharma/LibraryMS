@@ -33,7 +33,9 @@ public class User {
     public User() {
 
     }
-
+    public User(City city){
+        this.city = city;
+    }
     public User(Integer userId){
         this.userId = userId;
     }
