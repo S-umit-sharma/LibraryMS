@@ -22,6 +22,7 @@ public class SearchLibraryByCityServlet extends HttpServlet{
         String library = request.getParameter("library");
 
         Library lib = new Library();
+        System.out.println(library);
         lib.setName(library);
 
         ArrayList<Library> list = lib.collectLibraryByName();

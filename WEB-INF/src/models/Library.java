@@ -50,27 +50,29 @@ public class Library extends User {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String libraryName = "%" + getName() + "%";
-            String query = "select name,c.city,dob,address,contact,profile_pic,l.details,l.website,l.open_timing,l.close_timing,book_issue_days,l.late_fine,l.deposit_amount from users as u inner join cities as c inner join libraries as l where l.user_id=u.user_id and u.city_id=c.city_id and u.name LIKE ?";
+            
+            String query = "SELECT u.name, u.dob,u.address,u.contact,u.profile_pic,l.details,l.website,l.open_timing,l.close_timing, l.book_issue_days, l.late_fine,l.deposit_amount,c.city,l.library_id FROM users AS u INNER JOIN libraries AS l inner join cities as c ON l.user_id = u.user_id and c.city_id = u.city_id WHERE u.name LIKE ?";
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, libraryName);
+            ps.setString(1, "%"+ getName() +"%");
+            System.out.println(this.getName() + "######");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
                 Library lib = new Library();
                 lib.setName(rs.getString(1));
-                lib.setCity(new City(rs.getString(2)));
-                lib.setDob(rs.getDate(3));
-                lib.setAddress(rs.getString(4));
-                lib.setContact(rs.getString(5));
-                lib.setProfilePic(rs.getString(6));
-                lib.setDetails(rs.getString(7));
-                lib.setWebsite(rs.getString(8));
-                lib.setOpeningTime(rs.getTime(9));
-                lib.setClosingTime(rs.getTime(10));
-                lib.setBookIssueDays(rs.getInt(11));
-                lib.setLateFine(rs.getInt(12));
-                lib.setDepositAmount(rs.getInt(13));
+                lib.setDob(rs.getDate(2));
+                lib.setAddress(rs.getString(3));
+                lib.setContact(rs.getString(4));
+                lib.setProfilePic(rs.getString(5));
+                lib.setDetails(rs.getString(6));
+                lib.setWebsite(rs.getString(7));
+                lib.setOpeningTime(rs.getTime(8));
+                lib.setClosingTime(rs.getTime(9));
+                lib.setBookIssueDays(rs.getInt(10));
+                lib.setLateFine(rs.getInt(11));
+                lib.setDepositAmount(rs.getInt(12));
+                lib.setCity(new City(rs.getString(13)));
+                lib.setLibraryId(rs.getInt(14));
 
                 list.add(lib);
             }

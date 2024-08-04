@@ -39,8 +39,9 @@ public class LibraryLogoUploadServlet extends HttpServlet {
                     String fileName = "logo." + item.getName().split("\\.")[1];
 
                     library.setProfilePic("libraries/"+library.getEmail()+"/logo/"+fileName);
-                    String uploadPath = context.getRealPath("/WEB-INF/uploads/libraries/"+ library.getEmail()+"/logo");
-                    
+                    String uploadPath = context.getRealPath("/WEB-INF/uploads/libraries/"+ library.getEmail()+"/logo/");
+                    File folder = new File(uploadPath);
+                    folder.mkdir();
                     library.saveProfilePic();
 
                     File file = new File(uploadPath,fileName);

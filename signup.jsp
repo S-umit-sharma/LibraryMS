@@ -216,19 +216,19 @@
     let email = document.querySelector('#email');
     let password = document.querySelector('#password');
     let contact = document.querySelector('#contact');
-    let address = document.querySelector('#address');
+    // let address = document.querySelector('#address');
 
     let err_name_msg = document.querySelector('#err_name_msg');
     let err_email_msg = document.querySelector('#err_email_msg');
     let err_password_msg = document.querySelector('#err_password_msg');
     let err_contact_msg = document.querySelector('#err_contact_msg');
-    let err_address_msg = document.querySelector('#err_address_msg');
+    // let err_address_msg = document.querySelector('#err_address_msg');
 
     let namePattern = new RegExp(/^[A-Za-z0-9 ]{8,15}$/);
     let emailPattern = new RegExp(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/);
     let passwordPattern = new RegExp(/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*_])[0-9A-Za-z!@#$%^&*_]{8,16}$/);
     let contactPattern = new RegExp(/^[6-9][0-9]{9}$/);
-    let addressPattern = new RegExp(/^[a-zA-Z0-9-, ]$/);
+    // let addressPattern = new RegExp(/^[a-zA-Z0-9-, ]$/);
 
     name.addEventListener('focus', () => {
       err_name_msg.style.display = 'none';
@@ -242,9 +242,9 @@
     contact.addEventListener('focus', () => {
       err_contact_msg.style.display = 'none';
     });
-    address.addEventListener('focus', () => {
-      err_address_msg.style.display = 'none';
-    });
+    // address.addEventListener('focus', () => {
+    //   err_address_msg.style.display = 'none';
+    // });
 
     name.addEventListener('blur', () => {
       if (!namePattern.test(name.value)) {
@@ -260,12 +260,12 @@
       }
 
     });
-    address.addEventListener('blur', () => {
-      if (!addressPattern.test(address.value)) {
-        err_address_msg.style.display = 'block';
-        flag = false;
-      }
-    });
+    // address.addEventListener('blur', () => {
+    //   if (!addressPattern.test(address.value)) {
+    //     err_address_msg.style.display = 'block';
+    //     flag = false;
+    //   }
+    // });
     password.addEventListener('blur', () => {
       if (!passwordPattern.test(password.value)) {
         err_password_msg.style.display = 'inline';
@@ -302,10 +302,10 @@
         err_contact_msg.style.display = 'inline';
         flag = false;
       }
-      if (!addressPattern.test(address.value)) {
-        err_address_msg.style.display = 'inline';
-        flag = false;
-      }
+      // if (!addressPattern.test(address.value)) {
+      //   err_address_msg.style.display = 'inline';
+      //   flag = false;
+      // }
 
       if (flag) {
         form.submit();

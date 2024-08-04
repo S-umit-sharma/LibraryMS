@@ -74,12 +74,12 @@ public class signupServlet extends HttpServlet {
             request.setAttribute("contact", contact);
             request.getRequestDispatcher("signup.jsp?user_type_id=" + userTypeId);
         }
-        if (!(RegexPatternUtil.validateField(address, RegexPatternUtil.ADDRESS_PATTERN))) {
-            flag = false;
+        // if (!(RegexPatternUtil.validateField(address, RegexPatternUtil.ADDRESS_PATTERN))) {
+        //     flag = false;
 
-            request.setAttribute("address", address);
-            request.getRequestDispatcher("signup.jsp?user_type_id=" + userTypeId);
-        }
+        //     request.setAttribute("address", address);
+        //     request.getRequestDispatcher("signup.jsp?user_type_id=" + userTypeId);
+        // }
 
         // ----------------------- seprating cities and states ------------------------
         if (flag) {

@@ -677,7 +677,7 @@ create table status(
     status_id int not null auto_increment primary key,
     name varchar(25) not null
 );
-insert into status (name) values('active'),('inactive'),('working'),('left'),('closed'),('blocked'),('manual_verified'),('email_verified');
+insert into status (name) values('active'),('inactive'),('working'),('left'),('closed'),('blocked'),('manual_verified'),('email_verified'),('aprove'),('rejected'),('pending');
 
 create table document_type(
     document_type_id int not null primary key,
@@ -706,11 +706,12 @@ create table users(
     status_id int not null default 2, 
     document_type_id int, 
     document_path varchar(255) null,
-    user_type_id int not null default 1, 
+    user_type_id int not null default 1,
     constraint fk_users_cities foreign key (city_id) references cities(city_id),
     constraint fk_users_status foreign key (status_id) references status(status_id) ,
     constraint fk_users_document_type foreign key (document_type_id) references document_type(document_type_id),
     constraint fk_users_user_type_id foreign key (user_type_id) references user_type(user_type_id)
+    
      
 );
 
@@ -821,9 +822,15 @@ create table issued_books(
     status int null
 );
 
-
-
-
+create table requests(
+    request_id int not null auto_increment primary key,
+    library_id int not null,
+    user_id int not null,
+    status_id int not null,
+    constraint fk_request_library foreign key (library_id) references libraries(library_id),
+    constraint fk_reques_users foreign key (user_id) references users(user_id),
+    constraint fk_request_status_id foreign key (status_id) references status(status_id)
+);
 
 
 
@@ -891,6 +898,21 @@ inner join book_editions be
 inner join books as b 
 inner join memberships as m 
 where ib.member_id=m.member_id and be.book_edition_id=ib.book_edition_id;
+
+
+--library books
+SELECT b.title, b.book_id, be.book_edition_id, lb.library_book_id
+FROM library_books AS lb
+INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id
+INNER JOIN books AS b ON be.book_id = b.book_id
+WHERE and library_id = ? and  b.title LIKE '%s%'
+
+
+
+
+
+
+
 
 
 

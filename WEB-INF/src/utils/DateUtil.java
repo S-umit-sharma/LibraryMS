@@ -16,8 +16,8 @@ public class DateUtil {
         Long cd = currentDate.getTime();
 
         Long dd = cd-rd;
-        System.out.println(cd + "##########");
-        System.out.println(rd + "##########");
+        // System.out.println(cd + "##########");
+        // System.out.println(rd + "##########");
         int perDay = 24*60*60*1000;
 
         Long res = dd/perDay;

@@ -14,6 +14,9 @@ public class Status {
     public static final Integer BLOCKED = 6;
     public static final Integer MANUAL_VERIFIED = 7;
     public static final Integer EMAIL_VERIFIED = 8;
+    public static final Integer APPROVE = 9;
+    public static final Integer REJECTED = 10;
+    public static final Integer PENDING = 11;
     
     // ############### constructor ###############
     

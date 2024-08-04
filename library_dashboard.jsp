@@ -129,38 +129,30 @@
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#add_candidate">
                             Candidate</button>
                     </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#add_new_book">&plus;New
+                            Books</button>
+                    </li>
                     <!-- Add more tab buttons as needed -->
                 </ul>
 
                 <!-- ============================================================================================================ -->
 
-                <div class="tab-content">
 
+                <div class="tab-content">
                     <!-- ============================================================================================================ -->
-                    <div class="tab-pane fade show active" id="home">
-                        <div class="row">
+                    <div class="tab-pane fade  show active" id="home">
+                        <div class="row mt-4">
                             <div class="col-md">
-                                <input type="text" name="title" class="form-control mt-2"
-                                    placeholder="Search New books by title..." id="title_value">
+                                <input type="text" id="library_book_title" class="form-control"
+                                    placeholder="search books ........">
                             </div>
                         </div>
-
-                        <!-- -------------------------------------------------------------------------------------------------- -->
-                        <div class="row" id="row_for_books">
+                        <div class="row mt-4" id="book_title_row">
+                        
                         </div>
                     </div>
-                    <!-- --------------------------------------------------------------------------------- -->
-                    <div class="row mt-4">
-                        <div class="col-md">
-                            <a href="" id="all_editions">
-                                <button type="button" class="btn btn-primary" style="display: none;"
-                                    id="edition_btn">Editions</button>
-                            </a>
-                        </div>
-                    </div>
-
                     <!-- ============================================================================================================ -->
-
                     <div class="tab-pane fade" id="book_issue">
                         <div class="row">
                             <div class="col">
@@ -359,23 +351,154 @@
 
                             </div>
                         </div>
+                        <!-- ============================================================================================================ -->
 
                     </div>
+                    <!-- ============================================================================================================ -->
+                    <div class="tab-pane fade" id="add_new_book">
+                        <div class="row">
+                            <div class="col-md">
+                                <input type="text" name="title" class="form-control mt-2"
+                                    placeholder="Search New books by title..." id="title_value">
+                            </div>
+                        </div>
+
+                        <!-- -------------------------------------------------------------------------------------------------- -->
+                        <div class="row" id="row_for_books">
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md">
+                                <a href="" id="all_editions">
+                                    <button type="button" class="btn btn-primary" style="display: none;"
+                                        id="edition_btn">Editions</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================================================================================ -->
                 </div>
-                <!-- ============================================================================================================ -->
         </div>
 
-        <!-- ============================================================================================================ -->
-        </div>
+        <script>
+            let debounce_search_title = function (func, delay) {
+                let timeout;
+                return function () {
+                    if (timeout)
+                        clearTimeout(timeout);
+                    timeout = setTimeout(func, delay);
+                }
+            }
+            let library_book_title = document.querySelector('#library_book_title');
+            let book_title_row = document.querySelector('#book_title_row');
+
+            let libBookFunc = async () => {
+                book_title_row.innerHTML = '';
+                let param = 'title=' + library_book_title.value;
+                let response = await fetch('search_books_in_library.do?' + param);
+                let data = await response.json();
+                console.log(data)
+                for(let obj of data){
+                    let col_1 = document.createElement('div');
+                    col_1.className = 'col-md-6';
+                    book_title_row.append(col_1);
+
+                    let card = document.createElement('div');
+                    card.className = 'card';
+                    col_1.append(card);
+                    
+                    let col_1_row_1 = document.createElement('div');
+                    col_1_row_1.className = 'row';
+                    card.append(col_1_row_1);
+
+                    let col_1_row_1_col_1 = document.createElement('div');
+                    col_1_row_1_col_1.className = 'col';
+                    col_1_row_1.append(col_1_row_1_col_1);
+
+                    let img = document.createElement('img');
+                    img.className = 'card-img-top shadow p-3 mb-2 bg-body-tertiary rounded';
+                    img.src = "show_edition_img.do?path="+obj.bookEdition.bookEditionPic;
+                    img.style.width = "300px";
+                    col_1_row_1_col_1.append(img);
+
+                    let col_1_row_1_col_2 = document.createElement('div');
+                    col_1_row_1_col_2.className = 'col-md';
+                    col_1_row_1.append(col_1_row_1_col_2);
 
 
-        </div>
+
+                    let card_body = document.createElement('div');
+                    card_body.className = 'card-body';
+                    col_1_row_1_col_2.append(card_body);
+
+                    let card_body_row_1 = document.createElement('div');
+                    card_body_row_1.className = 'row fs-1';
+                    card_body.append(card_body_row_1);
+                    card_body_row_1.innerText = obj.bookEdition.book.title;
+
+                    let card_body_row_2 = document.createElement('div');
+                    card_body_row_2.className = 'row';
+                    card_body.append(card_body_row_2);
+                    
+                    let card_body_row_2_col_1 = document.createElement('div');
+                    card_body_row_2_col_1.className = 'col-md fs-3';
+                    card_body_row_2_col_1.innerText = 'Total:';
+                    card_body_row_2.append(card_body_row_2_col_1);
+                    
+                    let card_body_row_2_col_2 = document.createElement('div');
+                    card_body_row_2_col_2.className = 'col-md fs-2';
+                    card_body_row_2_col_2.innerText = obj.copies;
+                    card_body_row_2.append(card_body_row_2_col_2);
+
+                    
+                    let card_body_row_3 = document.createElement('div');
+                    card_body_row_3.className = 'row';
+                    card_body.append(card_body_row_3);
+                    
+                    let card_body_row_3_col_1 = document.createElement('div');
+                    card_body_row_3_col_1.className = 'col-md fs-3';
+                    card_body_row_3_col_1.innerText = 'Available:';
+                    card_body_row_3.append(card_body_row_3_col_1);
+                    
+                    let card_body_row_3_col_2 = document.createElement('div');
+                    if((obj.copies - obj.bookIssued) === 0){
+                        card_body_row_3_col_2.className = 'col-md mt-2';
+                        card_body_row_3_col_2.innerText = 'out of stock' ;
+                        card_body_row_3_col_2.style.color = 'red';
+                    }else{
+                        card_body_row_3_col_2.className = 'col-md fs-2';
+                        card_body_row_3_col_2.innerText = obj.copies - obj.bookIssued ;
+                    }
+                    card_body_row_3.append(card_body_row_3_col_2);
 
 
-        </div>
 
-        </div>
+                    let card_body_row_4 = document.createElement('div');
+                    card_body_row_4.className = 'row';
+                    card_body.append(card_body_row_4);
+                    
+                    let card_body_row_4_col_1 = document.createElement('div');
+                    card_body_row_4_col_1.className = 'col-md fs-3';
+                    card_body_row_4_col_1.innerText = 'Edition:';
+                    card_body_row_4.append(card_body_row_4_col_1);
+                    
+                    let card_body_row_4_col_2 = document.createElement('div');
+                    card_body_row_4_col_2.className = 'col-md fs-2';
+                    card_body_row_4_col_2.innerText = obj.bookEdition.edition ;
+                    card_body_row_4.append(card_body_row_4_col_2);
+                    
 
+
+
+
+                }
+            }
+
+            let optSearch = debounce_search_title(libBookFunc, 800);
+            library_book_title.addEventListener('keyup', () => {
+                optSearch();
+            });
+        </script>
         <script>
             let title_value = document.querySelector("#title_value");
             let book_img = document.querySelector('#book_img');
@@ -436,16 +559,6 @@
                     req.send();
                 }
             }
-
-            let debounce_search_title = function (func, delay) {
-                let timeout;
-                return function () {
-                    if (timeout)
-                        clearTimeout(timeout);
-                    timeout = setTimeout(func, delay);
-                }
-            }
-
 
             let counter = 0;
 

@@ -1,6 +1,7 @@
 package models;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,6 +21,17 @@ public class LibraryBooks {
 
     public LibraryBooks() {
 
+    }
+
+    public LibraryBooks(Integer libraryBookId,Integer bookIssued,Integer copies,BookEdition bookEdition){
+        this.libraryBookId = libraryBookId;
+        this.bookIssued = bookIssued;
+        this.copies = copies;
+        this.bookEdition = bookEdition;
+    }
+
+    public LibraryBooks(BookEdition bookEdition){
+        this.bookEdition = bookEdition;
     }
 
     public LibraryBooks(BookEdition bookEdition, Integer bookIssued) {
@@ -51,6 +63,31 @@ public class LibraryBooks {
         this.library = library;
     }
 
+     // ----------------------------Method for books-----------------------------------------
+     public ArrayList<LibraryBooks> searchBookInLibrary(Integer id){
+        ArrayList<LibraryBooks> list = new ArrayList<>();
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "SELECT lb.library_book_id, lb.books_issued, lb.copies, be.book_edition_id, b.title, b.book_id,be.book_edition_pic,be.edition  FROM library_books AS lb INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id INNER JOIN books AS b ON be.book_id = b.book_id WHERE library_id = ? and  b.title LIKE ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            
+            ps.setInt(1,id);
+            ps.setString(2,"%"+bookEdition.getBook().getTitle()+"%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                list.add(new LibraryBooks(rs.getInt(1),rs.getInt(2),rs.getInt(3),new BookEdition(rs.getInt(4),new Book(rs.getString(5),rs.getInt(6)),rs.getString(7),rs.getInt(8))));
+            }
+        }catch(SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+   
     // -------------------updating copies----------------------
     public void updateBookCopies() {
         try {
@@ -66,8 +103,7 @@ public class LibraryBooks {
         }
     }
 
-    // ----------------------------Method for updating the issued
-    // books-----------------------------------------
+    // ----------------------------Method for updating the issued books-----------------------------------------
     public void numberOfBooksIssued() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

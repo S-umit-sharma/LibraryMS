@@ -22,6 +22,11 @@ public class Book {
     public Book(){
         
     }
+
+    public Book(String title,Integer bookId){
+        this.bookId = bookId;
+        this.title = title;
+    }
     public Book(String title){
         this.title = title;
     }
