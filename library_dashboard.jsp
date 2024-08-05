@@ -149,7 +149,7 @@
                             </div>
                         </div>
                         <div class="row mt-4" id="book_title_row">
-                        
+
                         </div>
                     </div>
                     <!-- ============================================================================================================ -->
@@ -196,7 +196,7 @@
                                 </div>
 
                             </div>
-                            <div class="col">
+                            <div class="col" id="student_col">
 
                                 <input type="hidden" name="edition_id" id="input_edition">
                                 <input type="hidden" name="library_book_id" id="library_book_id">
@@ -218,7 +218,14 @@
                                                 class="shadow p-3 bg-body-tertiary rounded">
                                         </div>
                                         <div class="col-md ">
-                                            Name:<h5 id="member_name"></h5>
+                                            <div class="row">
+                                                <div class="col-md">
+                                                    Name:<h5 id="member_name"></h5>
+                                                </div>
+                                                <div class="col-md">
+                                                    current Dues: <h3 id="current_dues"></h3>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -227,7 +234,7 @@
                                     <button type="submit" class="btn btn-primary" id="return_btn">return Book</button>
                                 </div>
                             </div>
-                            <div class="row mt-4">
+                            <!-- <div class="row mt-4">
                                 <div class="col-12">
                                     <table border="1px solid red" width="100%" style="border: 1px solid red;">
                                         <thead style="border:1px solid rgb(161, 150, 150);">
@@ -246,7 +253,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
@@ -260,10 +267,12 @@
                         </div>
                         <div class="row">
                             <div class="col">
+                                <input type="hidden" id="user_id">
                                 <div class="row mt-4">
                                     <div class="col-md">
                                         <input type="text" id="email_input" name="member_email" class="form-control"
                                             placeholder="enter the email to search member....">
+
                                     </div>
                                     <div class="col-md">
                                         <button type="button" class="btn btn-primary"
@@ -398,7 +407,7 @@
                 let response = await fetch('search_books_in_library.do?' + param);
                 let data = await response.json();
                 console.log(data)
-                for(let obj of data){
+                for (let obj of data) {
                     let col_1 = document.createElement('div');
                     col_1.className = 'col-md-6';
                     book_title_row.append(col_1);
@@ -406,7 +415,7 @@
                     let card = document.createElement('div');
                     card.className = 'card';
                     col_1.append(card);
-                    
+
                     let col_1_row_1 = document.createElement('div');
                     col_1_row_1.className = 'row';
                     card.append(col_1_row_1);
@@ -417,7 +426,7 @@
 
                     let img = document.createElement('img');
                     img.className = 'card-img-top shadow p-3 mb-2 bg-body-tertiary rounded';
-                    img.src = "show_edition_img.do?path="+obj.bookEdition.bookEditionPic;
+                    img.src = "show_edition_img.do?path=" + obj.bookEdition.bookEditionPic;
                     img.style.width = "300px";
                     col_1_row_1_col_1.append(img);
 
@@ -432,71 +441,85 @@
                     col_1_row_1_col_2.append(card_body);
 
                     let card_body_row_1 = document.createElement('div');
-                    card_body_row_1.className = 'row fs-1';
+                    card_body_row_1.className = 'row fs-1 fw-bolder';
                     card_body.append(card_body_row_1);
                     card_body_row_1.innerText = obj.bookEdition.book.title;
+
 
                     let card_body_row_2 = document.createElement('div');
                     card_body_row_2.className = 'row';
                     card_body.append(card_body_row_2);
-                    
+
                     let card_body_row_2_col_1 = document.createElement('div');
-                    card_body_row_2_col_1.className = 'col-md fs-3';
-                    card_body_row_2_col_1.innerText = 'Total:';
+                    card_body_row_2_col_1.className = 'col-md fs-3 fw-bold';
+                    card_body_row_2_col_1.innerText = 'Edition:';
                     card_body_row_2.append(card_body_row_2_col_1);
-                    
+
                     let card_body_row_2_col_2 = document.createElement('div');
-                    card_body_row_2_col_2.className = 'col-md fs-2';
-                    card_body_row_2_col_2.innerText = obj.copies;
+                    card_body_row_2_col_2.className = 'col-md fs-2 fw-bolder';
+                    card_body_row_2_col_2.innerText = obj.bookEdition.edition;
                     card_body_row_2.append(card_body_row_2_col_2);
 
-                    
                     let card_body_row_3 = document.createElement('div');
                     card_body_row_3.className = 'row';
                     card_body.append(card_body_row_3);
-                    
-                    let card_body_row_3_col_1 = document.createElement('div');
-                    card_body_row_3_col_1.className = 'col-md fs-3';
-                    card_body_row_3_col_1.innerText = 'Available:';
-                    card_body_row_3.append(card_body_row_3_col_1);
-                    
-                    let card_body_row_3_col_2 = document.createElement('div');
-                    if((obj.copies - obj.bookIssued) === 0){
-                        card_body_row_3_col_2.className = 'col-md mt-2';
-                        card_body_row_3_col_2.innerText = 'out of stock' ;
-                        card_body_row_3_col_2.style.color = 'red';
-                    }else{
-                        card_body_row_3_col_2.className = 'col-md fs-2';
-                        card_body_row_3_col_2.innerText = obj.copies - obj.bookIssued ;
-                    }
-                    card_body_row_3.append(card_body_row_3_col_2);
 
+                    let card_body_row_3_col_1 = document.createElement('div');
+                    card_body_row_3_col_1.className = 'col-md fs-3 fw-bold';
+                    card_body_row_3_col_1.innerText = 'Total:';
+                    card_body_row_3.append(card_body_row_3_col_1);
+
+                    let card_body_row_3_col_2 = document.createElement('div');
+                    card_body_row_3_col_2.className = 'col-md fs-2 fw-bolder';
+                    card_body_row_3_col_2.innerText = obj.copies;
+                    card_body_row_3.append(card_body_row_3_col_2);
 
 
                     let card_body_row_4 = document.createElement('div');
                     card_body_row_4.className = 'row';
                     card_body.append(card_body_row_4);
-                    
+
                     let card_body_row_4_col_1 = document.createElement('div');
-                    card_body_row_4_col_1.className = 'col-md fs-3';
-                    card_body_row_4_col_1.innerText = 'Edition:';
+                    card_body_row_4_col_1.className = 'col-md fs-3 fw-bold';
+                    card_body_row_4_col_1.innerText = 'Available:';
                     card_body_row_4.append(card_body_row_4_col_1);
-                    
+
                     let card_body_row_4_col_2 = document.createElement('div');
-                    card_body_row_4_col_2.className = 'col-md fs-2';
-                    card_body_row_4_col_2.innerText = obj.bookEdition.edition ;
+                    if ((obj.copies - obj.bookIssued) === 0) {
+                        card_body_row_4_col_2.className = 'col-md mt-2 fw-bolder';
+                        card_body_row_4_col_2.innerText = 'out of stock';
+                        card_body_row_4_col_2.style.color = 'red';
+                    } else {
+                        card_body_row_4_col_2.className = 'col-md fs-2 fw-bolder';
+                        card_body_row_4_col_2.innerText = obj.copies - obj.bookIssued;
+                    }
                     card_body_row_4.append(card_body_row_4_col_2);
+
                     
+                    let card_body_row_5 = document.createElement('div');
+                    card_body_row_3.className = 'row';
+                    card_body.append(card_body_row_5);
 
+                    let card_body_row_5_col_1 = document.createElement('div');
+                    card_body_row_5_col_1.className = 'col-md fs-3 fw-bold';
+                    card_body_row_5_col_1.innerText = 'ISBN no.:';
+                    card_body_row_5.append(card_body_row_5_col_1);
 
-
-
+                    let card_body_row_5_col_2 = document.createElement('div');
+                    card_body_row_5_col_2.className = 'col-md fs-2 fw-bolder';
+                    card_body_row_5_col_2.innerText = obj.bookEdition.isbnNo;
+                    card_body_row_5.append(card_body_row_5_col_2);
                 }
             }
-
+            let regex = /[A-Za-z ]{3,}/;
             let optSearch = debounce_search_title(libBookFunc, 800);
             library_book_title.addEventListener('keyup', () => {
-                optSearch();
+                if (regex.test(library_book_title.value)) {
+                    optSearch();
+                } else {
+                    book_title_row.innerHTML = ' ';
+                }
+
             });
         </script>
         <script>
@@ -582,6 +605,7 @@
             const copies_left = document.querySelector('#copies_left');
             let book_issued = document.querySelector("#book_issued");
             let member_photo = document.querySelector('#member_photo');
+            let student_col = document.querySelector('#student_col');
 
             let find_div = document.querySelector("#find_div");
 
@@ -612,15 +636,16 @@
                             book_issued.value = arr.bookIssued;
 
                             if (arr.copies - arr.bookIssued > 0) {
+                                student_col.style.display = 'inline';
                                 copies_left.innerText = arr.copies - arr.bookIssued;
+                                copies_left.style.color = 'black';
                             } else {
+                                student_col.style.display = 'none';
                                 copies_left.innerText = "out of stock";
                                 copies_left.style.color = 'red';
                             }
-
                         }
                     }
-
                 });
 
                 req.send();
@@ -732,6 +757,7 @@
 
                 let req = new XMLHttpRequest();
 
+                console.log(user_id.value + "########");
                 let param = "user_id=" + user_id.value;
 
                 req.open('GET', 'add_candidate.do?' + param, true);
@@ -866,10 +892,12 @@
                 req.send();
             };
         </script>
+        
         <script>
             let find_img = document.querySelector("#find_img");
             let member_name = document.querySelector('#member_name');
             let return_issue_btn = document.querySelector('#return_issue_btn');
+            let current_dues = document.querySelector('#current_dues');
 
             find_img.addEventListener('click', () => {
                 let req = new XMLHttpRequest();
@@ -883,6 +911,15 @@
                         let obj = JSON.parse(req.responseText);
                         member_photo.src = "logo.do?path=" + obj.profilePic;
                         member_name.innerText = obj.name;
+                        current_dues.innerText = obj.currentDues;
+                        if(obj.currentDues > 0){
+                            issue_btn.style.pointer_event = 'none';
+                            issue_btn.style.opacity = '0.5';
+                            issue_btn.style.cursor = 'not-allowed';
+
+                        }else{
+
+                        }
                     }
                 });
                 req.send();

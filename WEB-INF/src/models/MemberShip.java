@@ -135,14 +135,14 @@ public class MemberShip extends User {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select u.profile_pic,u.name from memberships m join users u where u.user_id=m.user_id and m.member_id=?";
+            String query = "select u.profile_pic,u.name,current_dues from memberships m join users u where u.user_id=m.user_id and m.member_id=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, memberId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 this.setProfilePic(rs.getString(1));
                 this.setName(rs.getString(2));
-
+                this.setCurrentDues(rs.getInt(3));
             }
 
             con.close();

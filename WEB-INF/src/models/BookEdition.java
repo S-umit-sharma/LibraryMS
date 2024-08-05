@@ -26,11 +26,12 @@ public class BookEdition {
 
     }
 
-    public BookEdition(Integer bookEditionId, Book book, String bookEditionPic, Integer edition) {
+    public BookEdition(Integer bookEditionId, Book book, String bookEditionPic, Integer edition,Integer isbnNo) {
         this.bookEditionId = bookEditionId;
         this.book = book;
         this.bookEditionPic = bookEditionPic;
         this.edition = edition;
+        this.isbnNo = isbnNo;
     }
 
     // --------------------
