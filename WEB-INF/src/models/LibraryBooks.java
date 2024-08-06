@@ -96,6 +96,7 @@ public class LibraryBooks {
             String query = "update library_books set books_issued=? where  book_edition_id=? ";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookIssued - 1);
+            // System.out.println(bookIssued + "##########");
             ps.setInt(2, bookEdition.getBookEditionId());
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {

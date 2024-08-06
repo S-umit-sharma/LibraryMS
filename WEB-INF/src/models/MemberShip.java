@@ -129,30 +129,6 @@ public class MemberShip extends User {
         return flag;
     }
 
-    // -------------------- collect photo by member
-    // id--------------------------------------
-    public void collectPhoto() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select u.profile_pic,u.name,current_dues from memberships m join users u where u.user_id=m.user_id and m.member_id=?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, memberId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                this.setProfilePic(rs.getString(1));
-                this.setName(rs.getString(2));
-                this.setCurrentDues(rs.getInt(3));
-            }
-
-            con.close();
-
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     // -------------------- collect all record from the member table of the specific
     // library --------------------------------------
     public ArrayList<MemberShip> collectAllMembers() {

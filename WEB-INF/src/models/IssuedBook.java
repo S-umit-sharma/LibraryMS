@@ -17,6 +17,7 @@ public class IssuedBook {
     private Date returnDate;
     private Integer fine ;
     private Integer status;
+    private Integer memberId;
 
     public IssuedBook() {
 
@@ -32,6 +33,46 @@ public class IssuedBook {
         this.memberShip = memberShip;
         this.issueDate = issueDate;
         this.returnDate = returnDate;
+    }
+    // ------------------------collect photo and collect book info for returning--------------------------------
+    public boolean collectPhoto() {
+        boolean flag = false;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select u.profile_pic,u.name,current_dues,be.book_edition_id,be.isbn_no from memberships m join users u join book_editions be join books b join issued_books ib where u.user_id=m.user_id and be.book_edition_id=ib.book_edition_id and b.book_id=be.book_id and m.member_id=? and ib.status=1";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, memberId);
+            System.out.println(ps);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+
+                // System.out.println("###################10");
+                try{
+                    
+                    MemberShip memberShip = new MemberShip();
+                    memberShip.setProfilePic(rs.getString(1));
+                    memberShip.setName(rs.getString(2));
+                    memberShip.setCurrentDues(rs.getInt(3));
+                    setMemberShip(memberShip);
+                    BookEdition bookEdition = new BookEdition();
+                    bookEdition.setBookEditionId(rs.getInt(4));
+                    bookEdition.setIsbnNo(rs.getInt(5));
+                    setBookEdition(bookEdition);
+                    flag = true;
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                
+            }
+
+            con.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
     // ------------------------History book method--------------------------------
     public void collectAllIssuedBooks() {
@@ -64,16 +105,19 @@ public class IssuedBook {
 
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
-            String query = "update issued_books set status=2 where member_id=? and book_edition_id=?";
+            String query = "update issued_books set status=2 where member_id=? and book_edition_id=? and status=1";
 
             PreparedStatement ps = con.prepareStatement(query);
 
+            
             ps.setInt(1, memberShip.getMemberId());
             ps.setInt(2, bookEdition.getBookEditionId());
-
+            
+            // System.out.println(ps + "########");
             int val = ps.executeUpdate();
-
+            // System.out.println(val + "############");
             if(val == 1){
+                // System.out.println(flag + "############");
                 flag = true; 
             }
 
@@ -168,19 +212,19 @@ public class IssuedBook {
         this.issuedBookId = issuedBookId;
     }
 
-    public BookEdition getBookEditionId() {
+    public BookEdition getBookEdition() {
         return bookEdition;
     }
 
-    public void setBookEditionId(BookEdition bookEdition) {
+    public void setBookEdition(BookEdition bookEdition) {
         this.bookEdition = bookEdition;
     }
 
-    public MemberShip getMemberShipId() {
+    public MemberShip getMemberShip() {
         return memberShip;
     }
 
-    public void setMemberShipId(MemberShip memberShip) {
+    public void setMemberShip(MemberShip memberShip) {
         this.memberShip = memberShip;
     }
 
@@ -214,6 +258,14 @@ public class IssuedBook {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public void setMemberId(Integer memberId){
+        this.memberId = memberId;
+    }
+
+    public Integer getMemberId(){
+        return memberId;
     }
 
 }

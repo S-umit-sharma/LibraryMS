@@ -30,6 +30,7 @@ public class AddBookEditionServlet extends HttpServlet {
         String details = request.getParameter("more_details");
 
         if (flag) {
+            
             doGet(request, response);
         } else {
             BookEdition bookEdition = new BookEdition(isbnNo, new Book(bookId), edition, publishDate, price, details);
@@ -44,6 +45,11 @@ public class AddBookEditionServlet extends HttpServlet {
         Integer bookId = Integer.parseInt(request.getParameter("book_id"));
         Integer num = Integer.parseInt(request.getParameter("num"));
 
+        // if(num == null){
+        //     System.out.println(request.getAttribute("num"));
+            
+        // }
+
         BookEdition bookEdition = new BookEdition(new Book(bookId));
 
         ArrayList<BookEdition> editions = bookEdition.collectAllEditions();
@@ -52,7 +58,7 @@ public class AddBookEditionServlet extends HttpServlet {
 
         if (num == 1) {
             request.getRequestDispatcher("book_edition.jsp").forward(request, response);
-            ;
+            
         } else {
             String title = request.getParameter("title");
             request.setAttribute("title",title);

@@ -126,6 +126,9 @@
                             Book</button>
                     </li>
                     <li class="nav-item">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#book_return">Return Book</button>
+                    </li>
+                    <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#add_candidate">
                             Candidate</button>
                     </li>
@@ -229,31 +232,101 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-button" style="display:none;" id="return_issue_btn">
+                                <div class="form-button" style="display:none;" id="issue_btn">
                                     <button type="submit" class="btn btn-primary" id="issue_btn">Issue Book</button>
-                                    <button type="submit" class="btn btn-primary" id="return_btn">return Book</button>
                                 </div>
                             </div>
-                            <!-- <div class="row mt-4">
-                                <div class="col-12">
-                                    <table border="1px solid red" width="100%" style="border: 1px solid red;">
-                                        <thead style="border:1px solid rgb(161, 150, 150);">
-                                            <tr>
-                                                <th colspan="1">Sr No.</th>
-                                                <th colspan="1">Stuent Name</th>
-                                                <th colspan="1">Book Name</th>
-                                                <th colspan="1">Issue Date</th>
-                                                <th colspan="1">Return Date</th>
-                                                <th colspan="">Member Id</th>
-                                            </tr>
-                                        </thead>
+                        </div>
 
-                                        <tbody id="history_table">
+                    </div>
+                    <!-- ============================================================================================================ -->
+                    <div class="tab-pane fade" id="book_return">
+                        <div class="row">
+                            <div class="col">
+                                <div class="row">
+                                    <!-- --------------------------------------------------------------- -->
+                                    <div class="form-group" id="return_find_div">
+                                        <div class="row mt-4">
+                                            <div class="col-md">
+                                                <input type="text" class="form-control" id="return_member"
+                                                    placeholder="enter the member ID" name="membership_id" required>
+                                            </div>
+                                            <div class="col-md ">
+                                                <button class="btn btn-primary" id="return_find_img">Find</button>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-md-3 text-center">
+                                                <img src="static/media/images/profile.jpg" width="140"
+                                                    id="return_member_photo"
+                                                    class="shadow p-3 bg-body-tertiary rounded">
+                                            </div>
+                                            <div class="col-md ">
+                                                <div class="row">
+                                                    <div class="col-md">
+                                                        Name:<h5 id="return_member_name"></h5>
+                                                    </div>
+                                                    <div class="col-md">
+                                                        current Dues: <h3 id="return_current_dues"></h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- --------------------------------------------------------------- -->
 
-                                        </tbody>
-                                    </table>
                                 </div>
-                            </div> -->
+                                <div class="alert alert-success" id="return_success_msg" style="display: none;">
+
+                                </div>
+                                <div class="row mt-4" id="return_card_div" style="display: none;">
+                                    <div class="col-md">
+                                        <div class="card mb-3 shadow mr-3 p-1 bg-body-tertiary rounded"
+                                            style="max-width: 540px;">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                    <img src="" class="img-fluid rounded-start p-1 rounded"
+                                                        id="return_img_path" alt="Book Cover">
+                                                </div>
+                                                <div class="col-md">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title" id="return_title">Title</h5>
+                                                        <p class="card-text">
+                                                            <strong>Edition:</strong> <span
+                                                                id="return_edition"></span><br>
+                                                            <strong>Total copies:</strong> <span
+                                                                id="return_copies"></span><br>
+                                                            <strong>Available:</strong> <span
+                                                                id="return_copies_left"></span>
+                                                        </p>
+
+                                                        Details:<p class="card-text" id="return_details"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col" id="return_student_col">
+
+                                <input type="hidden" name="edition_id" id="return_input_edition">
+                                <input type="hidden" name="library_book_id" id="return_library_book_id">
+                                <input type="hidden" name="book_issued" id="return_book_issued">
+                                <div class="col-md-auto">
+                                    <span id="return_isbn"></span>
+                                </div>
+                                <!-- <div class="col-md-auto">
+                                    <button type="button" class="Search btn btn-outline-success mt-2 "
+                                        id="return_search_isbn">Search</button>
+                                </div> -->
+
+                                <div class="form-button " style="display:none" id="return_btn_div">
+                                    <button type="submit" class="btn btn-primary mt-4" id="return_btn">return
+                                        Book</button>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -406,7 +479,7 @@
                 let param = 'title=' + library_book_title.value;
                 let response = await fetch('search_books_in_library.do?' + param);
                 let data = await response.json();
-                console.log(data)
+
                 for (let obj of data) {
                     let col_1 = document.createElement('div');
                     col_1.className = 'col-md-6';
@@ -452,12 +525,16 @@
 
                     let card_body_row_2_col_1 = document.createElement('div');
                     card_body_row_2_col_1.className = 'col-md fs-3 fw-bold';
-                    card_body_row_2_col_1.innerText = 'Edition:';
+                    card_body_row_2_col_1.innerText = 'ISBN:';
                     card_body_row_2.append(card_body_row_2_col_1);
 
                     let card_body_row_2_col_2 = document.createElement('div');
-                    card_body_row_2_col_2.className = 'col-md fs-2 fw-bolder';
-                    card_body_row_2_col_2.innerText = obj.bookEdition.edition;
+                    card_body_row_2_col_2.className = 'col-md fs-2 fw-bolder ';
+
+                    let span = document.createElement('span');
+                    card_body_row_2_col_2.append(span);
+                    span.className = 'text-bg-dark p-1 m-auto';
+                    span.innerText = obj.bookEdition.isbnNo;
                     card_body_row_2.append(card_body_row_2_col_2);
 
                     let card_body_row_3 = document.createElement('div');
@@ -466,13 +543,26 @@
 
                     let card_body_row_3_col_1 = document.createElement('div');
                     card_body_row_3_col_1.className = 'col-md fs-3 fw-bold';
-                    card_body_row_3_col_1.innerText = 'Total:';
+                    card_body_row_3_col_1.innerText = 'Edition:';
                     card_body_row_3.append(card_body_row_3_col_1);
 
                     let card_body_row_3_col_2 = document.createElement('div');
                     card_body_row_3_col_2.className = 'col-md fs-2 fw-bolder';
-                    card_body_row_3_col_2.innerText = obj.copies;
                     card_body_row_3.append(card_body_row_3_col_2);
+
+                    if (obj.bookEdition.edition === 1) {
+                        card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'st' + '</sup>' + '</span>';
+                    }
+                    else if (obj.bookEdition.edition === 2) {
+                        card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'nd' + '</sup>' + '</span>';
+                    }
+                    else if (obj.bookEdition.edition === 3) {
+                        card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'rd' + '</sup>' + '</span>';
+                    } else {
+                        card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'th' + '</sup>' + '</span>';
+                    }
+
+
 
 
                     let card_body_row_4 = document.createElement('div');
@@ -481,33 +571,35 @@
 
                     let card_body_row_4_col_1 = document.createElement('div');
                     card_body_row_4_col_1.className = 'col-md fs-3 fw-bold';
-                    card_body_row_4_col_1.innerText = 'Available:';
+                    card_body_row_4_col_1.innerText = 'Total:';
                     card_body_row_4.append(card_body_row_4_col_1);
 
                     let card_body_row_4_col_2 = document.createElement('div');
-                    if ((obj.copies - obj.bookIssued) === 0) {
-                        card_body_row_4_col_2.className = 'col-md mt-2 fw-bolder';
-                        card_body_row_4_col_2.innerText = 'out of stock';
-                        card_body_row_4_col_2.style.color = 'red';
-                    } else {
-                        card_body_row_4_col_2.className = 'col-md fs-2 fw-bolder';
-                        card_body_row_4_col_2.innerText = obj.copies - obj.bookIssued;
-                    }
+                    card_body_row_4_col_2.className = 'col fs-2 fw-bolder';
+                    card_body_row_4_col_2.innerText = obj.copies;
                     card_body_row_4.append(card_body_row_4_col_2);
 
-                    
+
+
                     let card_body_row_5 = document.createElement('div');
-                    card_body_row_3.className = 'row';
+                    card_body_row_5.className = 'row';
                     card_body.append(card_body_row_5);
 
                     let card_body_row_5_col_1 = document.createElement('div');
                     card_body_row_5_col_1.className = 'col-md fs-3 fw-bold';
-                    card_body_row_5_col_1.innerText = 'ISBN no.:';
+                    card_body_row_5_col_1.innerText = 'Available:';
                     card_body_row_5.append(card_body_row_5_col_1);
 
                     let card_body_row_5_col_2 = document.createElement('div');
-                    card_body_row_5_col_2.className = 'col-md fs-2 fw-bolder';
-                    card_body_row_5_col_2.innerText = obj.bookEdition.isbnNo;
+                    card_body_row_5_col_2.className = 'col-md fs-3 fw-bolder';
+                    if ((obj.copies - obj.bookIssued) === 0) {
+                        card_body_row_5_col_2.className = 'col-md mt-2 fw-bolder';
+                        card_body_row_5_col_2.innerText = 'out of stock';
+                        card_body_row_5_col_2.style.color = 'red';
+                    } else {
+                        card_body_row_5_col_2.className = 'col-md fs-2 fw-bolder';
+                        card_body_row_5_col_2.innerText = obj.copies - obj.bookIssued;
+                    }
                     card_body_row_5.append(card_body_row_5_col_2);
                 }
             }
@@ -659,7 +751,6 @@
             const issue_btn = document.querySelector("#issue_btn");
             const member = document.querySelector("#Member");
             const success_msg = document.querySelector("#success_msg");
-            const close_btn = document.querySelector("#close_btn");
             issue_btn.addEventListener('click', () => {
                 let req = new XMLHttpRequest();
 
@@ -704,6 +795,190 @@
                 req.send(null);
             });
 
+        </script>
+        <script>
+            let find_img = document.querySelector("#find_img");
+            let member_name = document.querySelector('#member_name');
+            let current_dues = document.querySelector('#current_dues');
+
+            find_img.addEventListener('click', () => {
+                let req = new XMLHttpRequest();
+
+                let param = 'member_id=' + member.value;
+
+                req.open('GET', 'member_photo_find.do?' + param, true);
+
+                req.addEventListener('readystatechange', () => {
+                    if (req.readyState == 4 && req.status == 200) {
+                        let obj = JSON.parse(req.responseText);
+                        member_photo.src = "logo.do?path=" + obj.profilePic;
+                        member_name.innerText = obj.name;
+                        current_dues.innerText = obj.currentDues;
+                        if (obj.currentDues > 0) {
+                            issue_btn.style.pointer_event = 'none';
+                            issue_btn.style.opacity = '0.5';
+                            issue_btn.style.cursor = 'not-allowed';
+
+                        } else {
+
+                        }
+                    }
+                });
+                req.send();
+                issue_btn.style.display = 'block';
+            });
+
+            issue_btn.addEventListener('click', () => {
+                member_photo.src = 'static/media/images/profile.jpg';
+                member_photo.style.display = ' none';
+                member_name.innerText = ' ';
+                issue_btn.style.display = 'none';
+                find_div.style.display = 'none';
+            });
+
+
+
+        </script>
+        <script>
+            const return_isbn_no = document.querySelector('#return_isbn');
+            const return_search_isbn = document.querySelector('#return_search_isbn');
+            const return_h1 = document.querySelector('#return_title');
+            const return_img_path = document.querySelector('#return_img_path');
+            const return_card_div = document.querySelector('#return_card_div');
+            const return_edition = document.querySelector('#return_edition');
+            const return_details = document.querySelector('#return_details');
+            const return_copies = document.querySelector('#return_copies');
+            const return_input_edition = document.querySelector('#return_input_edition');
+            const return_library_book_id = document.querySelector('#return_library_book_id');
+            const return_copies_left = document.querySelector('#return_copies_left');
+            let return_book_issued = document.querySelector("#return_book_issued");
+            let return_member_photo = document.querySelector('#return_member_photo');
+            let return_student_col = document.querySelector('#return_student_col');
+            
+
+            let return_find_div = document.querySelector("#return_find_div");
+
+
+            let return_isbn_func = (isbnNo)=> {
+
+                    let req = new XMLHttpRequest();
+
+
+                    let param = 'isbn_no=' + isbnNo;
+                    console.log(param + "##########");
+
+
+                    req.open('GET', 'search_isbn_no.do?' + param, true);
+
+                    req.addEventListener('readystatechange', () => {
+
+                        if (req.readyState == 4 && req.status == 200) {
+                            return_card_div.style.display = 'block';
+                            let arr = JSON.parse(req.responseText);
+
+                            for (let obj in arr) {
+                                return_h1.innerText = arr.bookEdition.book.title;
+                                return_img_path.src = 'show_edition_img.do?path=' + arr.bookEdition.bookEditionPic;
+                                return_edition.innerText = arr.bookEdition.edition;
+                                return_details.innerText = arr.bookEdition.details;
+                                return_copies.innerText = arr.copies;
+                                return_input_edition.value = arr.bookEdition.bookEditionId;
+                                return_library_book_id.value = arr.libraryBookId;
+                                return_book_issued.value = arr.bookIssued;
+                                return_find_div.style.display = 'inline';
+                                return_btn.style.display = 'inline';
+
+                                if (arr.copies - arr.bookIssued > 0) {
+                                    return_copies_left.innerText = arr.copies - arr.bookIssued;
+                                    return_copies_left.style.color = 'black';
+                                } else {
+                                    return_copies_left.innerText = "out of stock";
+                                    return_copies_left.style.color = 'red';
+                                }
+                            }
+                        }
+                    });
+
+                    req.send();
+                }
+            
+
+
+        </script>
+        <script>
+            let return_find_img = document.querySelector("#return_find_img");
+            let return_member_name = document.querySelector('#return_member_name');
+            let return_current_dues = document.querySelector('#return_current_dues');
+            let return_member = document.querySelector('#return_member');
+            let return_btn = document.querySelector('#return_btn');
+            let return_btn_div = document.querySelector('#return_btn_div');
+
+            return_find_img.addEventListener('click', () => {
+                let req = new XMLHttpRequest();
+
+                let param = 'member_id=' + return_member.value;
+                console.log(param);
+
+                req.open('GET', 'member_photo_find.do?' + param, true);
+
+                req.addEventListener('readystatechange', () => {
+                    
+                    if (req.readyState == 4 && req.status == 200) {
+                        let obj = JSON.parse(req.responseText);
+                        if(obj.flag){
+                            console.log(obj);
+                            return_member_photo.src = "logo.do?path=" + obj.memberShip?.profilePic;
+                            return_member_name.innerText = obj.memberShip?.name;
+                            return_current_dues.innerText = obj.memberShip?.currentDues;
+                            return_btn_div.style.display = 'inline';
+                            return_isbn_no.innerHTML = '<h2>ISBN No :&nbsp;<span class="fs-1">'+obj.bookEdition?.isbnNo +'</span></h2>';
+                            return_isbn_func(obj.bookEdition?.isbnNo);
+                        }else
+                        
+
+                    }
+                });
+                req.send();
+            });
+        </script>
+        <script>
+
+            return_btn.addEventListener('click', () => {
+                let req = new XMLHttpRequest();
+
+                let param = 'member_id=' + return_member.value + "&book_edition_id=" + return_input_edition.value + "&book_issued=" + return_book_issued.value;
+
+
+                req.open('GET', 'return_book.do?' + param, true);
+
+                req.addEventListener('readystatechange', () => {
+                    if (req.readystate == 4 && req.status == 200) {
+
+                        console.log(req.responseText);
+
+
+                    }
+                });
+
+                req.send();
+            });
+
+            return_btn.addEventListener('click', () => {
+
+                return_member_photo.src = 'static/media/images/profile.jpg';
+                return_member.value = member.defaultValue;
+                return_member_name.innerText = ' ';
+                return_btn.style.display = 'none'
+                return_find_div.style.display = 'none';
+                return_card_div.style.display = 'none';
+                return_isbn_no.value = isbn_no.defaultValue;
+                return_success_msg.innerText = 'Book Returned SuccessFully';
+                return_success_msg.style.display = 'block';
+                // return_isbn_no.innerHTML = '';
+                setTimeout(function () {
+                    return_success_msg.style.display = 'none';
+                }, 3000);
+            });
         </script>
         <script>
             let email_input = document.querySelector("#email_input");
@@ -757,7 +1032,6 @@
 
                 let req = new XMLHttpRequest();
 
-                console.log(user_id.value + "########");
                 let param = "user_id=" + user_id.value;
 
                 req.open('GET', 'add_candidate.do?' + param, true);
@@ -892,91 +1166,9 @@
                 req.send();
             };
         </script>
-        
-        <script>
-            let find_img = document.querySelector("#find_img");
-            let member_name = document.querySelector('#member_name');
-            let return_issue_btn = document.querySelector('#return_issue_btn');
-            let current_dues = document.querySelector('#current_dues');
-
-            find_img.addEventListener('click', () => {
-                let req = new XMLHttpRequest();
-
-                let param = 'member_id=' + member.value;
-
-                req.open('GET', 'member_photo_find.do?' + param, true);
-
-                req.addEventListener('readystatechange', () => {
-                    if (req.readyState == 4 && req.status == 200) {
-                        let obj = JSON.parse(req.responseText);
-                        member_photo.src = "logo.do?path=" + obj.profilePic;
-                        member_name.innerText = obj.name;
-                        current_dues.innerText = obj.currentDues;
-                        if(obj.currentDues > 0){
-                            issue_btn.style.pointer_event = 'none';
-                            issue_btn.style.opacity = '0.5';
-                            issue_btn.style.cursor = 'not-allowed';
-
-                        }else{
-
-                        }
-                    }
-                });
-                req.send();
-                return_issue_btn.style.display = 'block';
-            });
-
-            issue_btn.addEventListener('click', () => {
-                member_photo.src = 'static/media/images/profile.jpg';
-                member_photo.style.display = ' none';
-                member_name.innerText = ' ';
-                return_issue_btn.style.display = 'none';
-                find_div.style.display = 'none';
-            });
 
 
 
-        </script>
-        <script>
-            let return_btn = document.querySelector('#return_btn');
-
-            return_btn.addEventListener('click', () => {
-                let req = new XMLHttpRequest();
-
-                let param = 'member_id=' + member.value + "&book_edition_id=" + input_edition.value + "&book_issued=" + book_issued.value;
-
-
-                req.open('GET', 'return_book.do?' + param, true);
-
-                req.addEventListener('readystatechange', () => {
-                    if (req.readystate == 4 && req.status == 200) {
-
-                        console.log(req.responseText);
-
-
-                    }
-                });
-
-                req.send();
-            });
-
-            return_btn.addEventListener('click', () => {
-
-                member_photo.src = 'static/media/images/profile.jpg';
-                member.value = member.defaultValue;
-                member_photo.style.display = ' none';
-                member_name.innerText = ' ';
-                return_issue_btn.style.display = 'none';
-                find_div.style.display = 'none';
-                card_div.style.display = 'none';
-                isbn_no.value = isbn_no.defaultValue;
-                success_msg.innerText = 'Book Returned SuccessFully';
-                success_msg.style.display = 'block';
-                setTimeout(function () {
-                    success_msg.style.display = 'none';
-                }, 3000);
-            });
-        </script>
         <script>
             let history_table = document.querySelector("#history_table");
 

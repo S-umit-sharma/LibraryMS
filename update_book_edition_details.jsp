@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Update Edition details</title>
 </head>
 <body>
     <div class="container">
@@ -19,6 +19,7 @@
                 <form action="update_book_edition.do" method="post">
                     <input type="hidden" name="book_id" value="${Edition.book.getBookId()}">
                     <input type="hidden" name="book_edition_id" value="${Edition.bookEditionId}">
+                    <input type="hidden" name="num" value="1">
                         <div>
                             <label for="isbn_no" class="form-label fs-3">Isbn No</label>
                             <input type="number" name="isbn_no" class="form-control" id="isbn_no" value="${Edition.isbnNo}">
