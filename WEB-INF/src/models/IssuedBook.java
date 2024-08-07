@@ -44,7 +44,6 @@ public class IssuedBook {
             String query = "select u.profile_pic,u.name,current_dues from memberships as m inner join users u where member_id=? and u.user_id=m.user_id";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, memberId);
-            System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 MemberShip memberShip = new MemberShip();
@@ -54,7 +53,6 @@ public class IssuedBook {
                 setMemberShip(memberShip);
                 flag = true;
             }
-            System.out.println("##########" + flag);
 
             con.close();
 
@@ -71,10 +69,9 @@ public class IssuedBook {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select u.profile_pic,u.name,current_dues,be.book_edition_id,be.isbn_no from memberships m join users u join book_editions be join books b join issued_books ib where u.user_id=m.user_id and be.book_edition_id=ib.book_edition_id and b.book_id=be.book_id and m.member_id=? and ib.status=1";
+            String query = "select u.profile_pic,u.name,current_dues,be.book_edition_id,be.isbn_no from memberships m join users u join book_editions be join books b join issued_books ib where u.user_id=m.user_id and be.book_edition_id=ib.book_edition_id and b.book_id=be.book_id and ib.member_id=? and ib.status=1";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, memberId);
-            System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 MemberShip memberShip = new MemberShip();
@@ -136,11 +133,8 @@ public class IssuedBook {
             ps.setInt(1, memberShip.getMemberId());
             ps.setInt(2, bookEdition.getBookEditionId());
 
-            // System.out.println(ps + "########");
             int val = ps.executeUpdate();
-            // System.out.println(val + "############");
             if (val == 1) {
-                // System.out.println(flag + "############");
                 flag = true;
             }
 

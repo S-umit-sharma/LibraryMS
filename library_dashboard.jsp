@@ -71,12 +71,71 @@
                 /* Optional: Adjust spacing as needed */
             }
         </style>
+        <style>
+            #payment_offcanvas {
+
+                margin: auto;
+            }
+        </style>
+        <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            td {
+                padding: 10px;
+                /* Adjust padding if necessary */
+                text-align: center;
+                /* Center the image if desired */
+            }
+
+            .candidate_img {
+                position: relative;
+                overflow: hidden;
+            }
+
+
+            img {
+                display: block;
+                transition: transform 0.3s ease;
+                /*Smooth transition*/
+                max-width: 100%;
+                /* Ensures the image doesn't exceed its container */
+            }
+        </style>
 
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     </head>
 
-    <body>
+    <body onload="requests()">
+        <!-- -----------------------------offcanvas for payment------------------------------------ -->
+
+        <div class="offcanvas offcanvas-top alert alert-info w-25" data-bs-backdrop="static" tabindex="-1"
+            id="payment_offcanvas" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title fs-2 mt-4 fw-bold" id="offcanvasExampleLabel">${user.name}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"
+                    id="close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div>
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" class="form-control fw-bold" id="payment_amount"
+                                placeholder="enter the amount...">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <button type="button" class="btn btn-outline-warning fw-bold"
+                                id="pay">&#8377;&nbsp;PAY</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- ----------------------------delete member modal----------------------------------- -->
         <div class="modal" id="delete_modal">
@@ -135,6 +194,9 @@
                     <li class="nav-item">
                         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#add_new_book">&plus;New
                             Books</button>
+                    </li>
+                    <li>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#requests">Requests</button>
                     </li>
                     <!-- Add more tab buttons as needed -->
                 </ul>
@@ -211,7 +273,7 @@
                                             <input type="text" class="form-control" id="Member"
                                                 placeholder="enter the member ID" name="membership_id" required>
                                         </div>
-                                        <div class="col-md mt-2">
+                                        <div class="col-md ">
                                             <button class="btn btn-primary" id="find_img">Find</button>
                                         </div>
                                     </div>
@@ -226,7 +288,16 @@
                                                     Name:<h5 id="member_name"></h5>
                                                 </div>
                                                 <div class="col-md">
-                                                    current Dues: <h3 id="current_dues"></h3>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            current Dues: <h3 id="current_dues"></h3>
+                                                        </div>
+                                                        <div class="col-md">
+                                                            <span class="btn btn-info" style="display: none;"
+                                                                id="pay_btn" data-bs-toggle="offcanvas"
+                                                                data-bs-target="#payment_offcanvas">Pay</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -234,6 +305,12 @@
                                 </div>
                                 <div class="form-button" style="display:none;" id="issue_btn">
                                     <button type="submit" class="btn btn-primary" id="issue_btn">Issue Book</button>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-md">
+                                        <span id="msg_for_dues"></span>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -453,6 +530,20 @@
                         </div>
                     </div>
 
+                    <!-- ============================================================================================================ -->
+                    <div class="tab-pane fade" id="requests">
+                        <table border="1px solid green" width="80%" style="margin:30px auto;">
+                            <thead class="text-center fw-bold">
+                                <td>Sr no.</td>
+                                <td>Name</td>
+                                <td>Profile Pic</td>
+                                <td>Status</td>
+                            </thead>
+                            <tbody id="tbl" class="text-center">
+
+                            </tbody>
+                        </table>
+                    </div>
                     <!-- ============================================================================================================ -->
                 </div>
         </div>
@@ -795,8 +886,12 @@
             let find_img = document.querySelector("#find_img");
             let member_name = document.querySelector('#member_name');
             let current_dues = document.querySelector('#current_dues');
-
+            let msg_for_dues = document.querySelector('#msg_for_dues');
+            let pay_btn = document.querySelector('#pay_btn');
             find_img.addEventListener('click', () => {
+                find();
+            });
+            let find = () => {
                 let req = new XMLHttpRequest();
 
                 let param = 'member_id=' + member.value;
@@ -806,15 +901,18 @@
                 req.addEventListener('readystatechange', () => {
                     if (req.readyState == 4 && req.status == 200) {
                         let obj = JSON.parse(req.responseText);
-                        console.log(obj);
                         if (obj.flag) {
                             member_photo.src = "logo.do?path=" + obj.issued_book.memberShip.profilePic;
                             member_name.innerText = obj.issued_book.memberShip.name;
                             current_dues.innerText = obj.issued_book.memberShip.currentDues;
-                            if (obj.issued_book.currentDues > 0) {
-                                issue_btn.style.pointer_event = 'none';
-                                issue_btn.style.opacity = '0.5';
-                                issue_btn.style.cursor = 'not-allowed';
+                            msg_for_dues.style.display = 'none';
+                            if (obj.issued_book.memberShip.currentDues > 0) {
+                                msg_for_dues.style.display = 'inline';
+                                issue_btn.style.display = 'none';
+                                msg_for_dues.innerText = 'Please Pay the Dues';
+                                msg_for_dues.style.color = 'red';
+                                msg_for_dues.className = 'fw-bolder fs-1';
+                                pay_btn.style.display = 'inline';
                             }
                         } else {
                             member_name.innerText = 'No member found';
@@ -822,12 +920,12 @@
 
 
 
-                        
+
                     }
                 });
                 req.send();
                 issue_btn.style.display = 'block';
-            });
+            };
 
             issue_btn.addEventListener('click', () => {
                 member_photo.src = 'static/media/images/profile.jpg';
@@ -865,10 +963,7 @@
 
                 let req = new XMLHttpRequest();
 
-
                 let param = 'isbn_no=' + isbnNo;
-                console.log(param + "##########");
-
 
                 req.open('GET', 'search_isbn_no.do?' + param, true);
 
@@ -920,7 +1015,7 @@
                 let req = new XMLHttpRequest();
 
                 let param = 'member_id=' + return_member.value;
-                // console.log(param);
+
 
                 req.open('GET', 'member_photo_find.do?' + param, true);
 
@@ -929,16 +1024,21 @@
                     if (req.readyState == 4 && req.status == 200) {
                         let obj = JSON.parse(req.responseText);
                         if (obj.flag) {
-                            // console.log(obj);
                             return_member_photo.src = "logo.do?path=" + obj.issued_book.memberShip.profilePic;
                             return_member_name.innerText = obj.issued_book.memberShip.name;
                             return_current_dues.innerText = obj.issued_book.memberShip.currentDues;
                             return_btn_div.style.display = 'inline';
                             return_isbn_no.innerHTML = '<h2>ISBN No :&nbsp;<span class="fs-1">' + obj.issued_book.bookEdition.isbnNo + '</span></h2>';
+                            return_isbn_no.style.display = 'inline';
                             return_isbn_func(obj.issued_book.bookEdition.isbnNo);
                         } else {
-                            return_success_msg.innerHTML = 'Member do not have book';
+                            return_success_msg.style.display = 'inline';
+                            return_success_msg.innerText = 'Member do not have book';
                             return_success_msg.classList.replace('succes', 'danger');
+                            setTimeout(() => {
+                                return_success_msg.style.display = 'none';
+
+                            }, 5000);
                         }
 
                     }
@@ -1186,6 +1286,67 @@
                     }
                 });
             }
+        </script>
+        <script>
+            let pay = document.querySelector('#pay');
+            let payment_amount = document.querySelector('#payment_amount');
+            let close = document.querySelector('#close');
+
+            pay.addEventListener('click', async () => {
+                let response = await fetch('payment.do?member_id=' + member.value + '&payment_amount=' + payment_amount.value);
+                let flag = await response.json();
+                if (flag) {
+                    close.click();
+                    payment_amount.value = payment_amount.defaultValue;
+                    find();
+                }
+            });
+        </script>
+        <script>
+            let tbl = document.querySelector("#tbl");
+            let requests = async () => {
+                let response = await fetch('get_all_request.do');
+                let data = await response.json();
+                let i = 0;
+                for (let obj of data) {
+                    let row = tbl.insertRow(i);
+                    let j = 0;
+                    let cell = row.insertCell(j++);
+                    cell.innerText = i + 1;
+                    for (let prop in obj) {
+                        // console.log(prop );
+                        if (prop === 'user') {
+                            for (let p in obj[prop]) {
+                                cell = row.insertCell(j++);
+                                if (p === 'name') {
+                                    cell.innerText = obj.user.name;
+                                } else {
+                                    cell.innerHTML = "<img src=logo.do?path=" + obj.user.profilePic + " width='25px' class='candidate_img m-auto'></img>";
+                                }
+
+
+                            }
+                        } else if (prop === 'status') {
+                            cell = row.insertCell(j++);
+                            cell.innerText = obj.status.name;
+                        }
+                        // else {
+                        // }
+
+                    }
+
+                }
+                let candidate_imgs = document.querySelectorAll(".candidate_img");
+                candidate_imgs.forEach((candidate_img) => {
+                    candidate_img.addEventListener('mouseover', () => {
+                        candidate_img.style.transform = 'scale(5)';
+                    });
+                    candidate_img.addEventListener('mouseout', () => {
+                        candidate_img.style.transform = 'scale(1)';
+                    });
+                });
+            };
+
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

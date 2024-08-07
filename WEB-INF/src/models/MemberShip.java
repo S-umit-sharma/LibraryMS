@@ -54,6 +54,49 @@ public class MemberShip extends User {
         super(email, password);
     }
 
+    // -------------------- payment method--------------------------------------
+    public boolean payment(Integer amount) {
+        boolean flag = false;
+
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "update memberships set current_dues=? where member_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, currentDues - amount);
+            ps.setInt(2, memberId);
+            int val = ps.executeUpdate();
+            if(val == 1){
+                flag=true;
+            }
+            con.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return flag;
+    }
+
+    // -------------------- getting current dues method--------------------------------------
+    public void currentDues(){
+        
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select current_dues from  memberships where member_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, memberId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                currentDues = rs.getInt(1);
+            }
+            con.close();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     // -------------------- return book method--------------------------------------
     public boolean checkStatus() {
         boolean flag = false;

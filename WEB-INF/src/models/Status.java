@@ -34,7 +34,7 @@ public class Status {
         return statusId;
     }
 
-    public void setStatus(Integer statusId) {
+    public void setStatusId(Integer statusId) {
         this.statusId = statusId;
     }
 

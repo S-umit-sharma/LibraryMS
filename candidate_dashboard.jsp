@@ -319,36 +319,22 @@
     <script>
 
         window.addEventListener('click', (e) => {
-            if(e.target.tagName === 'BUTTON'){
+            if (e.target.tagName === 'BUTTON') {
                 let id = e.target.id;
-                let par = 'library_id='+id ;
-                async function sendApproveRequest() {   
-                    let response = await fetch('request.do?'+par);
+                let par = 'library_id=' + id;
+                async function sendApproveRequest() {
+                    let response = await fetch('request.do?' + par);
                     let flag = await response.text();
-                    if(flag){
+                    if (flag) {
                         e.target.innerText = 'requested';
-
-                        localStorage.setItem('button_style'+e.target.id,id);
-                        localStorage.setItem('style',e.target.innerText);
-                        console.log(localStorage.getItem('button_style')+"########");
-                    } else{
+                    } else {
 
                     }
                 }
-                if(!(
-                    console.log(localStorage.getItem('button_style' ) )=== e.target.id)){
-                    sendApproveRequest();
-                    console.log('if');
-                }else{
-                    window.addEventListener('load',()=>{
-                        // e.target.innerText = console.log(localStorage.getItem('style'));
-                        console.log('else');
-                    });
-                }
 
 
 
-                
+
             }
         });
 
