@@ -23,14 +23,14 @@ public class LibraryBooks {
 
     }
 
-    public LibraryBooks(Integer libraryBookId,Integer bookIssued,Integer copies,BookEdition bookEdition){
+    public LibraryBooks(Integer libraryBookId, Integer bookIssued, Integer copies, BookEdition bookEdition) {
         this.libraryBookId = libraryBookId;
         this.bookIssued = bookIssued;
         this.copies = copies;
         this.bookEdition = bookEdition;
     }
 
-    public LibraryBooks(BookEdition bookEdition){
+    public LibraryBooks(BookEdition bookEdition) {
         this.bookEdition = bookEdition;
     }
 
@@ -57,39 +57,79 @@ public class LibraryBooks {
         this.library = library;
     }
 
-    public LibraryBooks(BookEdition bookEdition, Integer copies, Library library) {
+    public LibraryBooks(BookEdition bookEdition, Library library) {
         this.bookEdition = bookEdition;
-        this.copies = copies;
         this.library = library;
     }
 
-     // ----------------------------Method for books-----------------------------------------
-     public ArrayList<LibraryBooks> searchBookInLibrary(Integer id){
+    // ----------------------------Method for
+    public void updateBookCopies(Integer copy) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "update library_books set copies=? where  book_edition_id=? and library_id =?";
+            PreparedStatement ps = con.prepareStatement(query);
+           
+            ps.setInt(1, copy + copies);
+            ps.setInt(2, bookEdition.getBookEditionId());
+            ps.setInt(3, library.getLibraryId());
+
+            // System.out.println(bookIssued + "##########");
+            ps.setInt(2, bookEdition.getBookEditionId());
+            ps.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // books-----------------------------------------
+    public void BookInfo() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select copies from library_books where book_edition_id=? and library_id=? ";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, bookEdition.getBookEditionId());
+            ps.setInt(2, library.getLibraryId());
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                setCopies(rs.getInt(1));
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+    // -------------------------------------------------------------------------------------
+    public ArrayList<LibraryBooks> searchBookInLibrary(Integer id) {
         ArrayList<LibraryBooks> list = new ArrayList<>();
 
-        try{
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
             String query = "SELECT lb.library_book_id, lb.books_issued, lb.copies, be.book_edition_id, b.title, b.book_id,be.book_edition_pic,be.edition,be.isbn_no  FROM library_books AS lb INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id INNER JOIN books AS b ON be.book_id = b.book_id WHERE library_id = ? and  b.title LIKE ?";
             PreparedStatement ps = con.prepareStatement(query);
-            
-            ps.setInt(1,id);
-            ps.setString(2,"%"+bookEdition.getBook().getTitle()+"%");
+
+            ps.setInt(1, id);
+            ps.setString(2, "%" + bookEdition.getBook().getTitle() + "%");
 
             ResultSet rs = ps.executeQuery();
 
-            while(rs.next()){
-                list.add(new LibraryBooks(rs.getInt(1),rs.getInt(2),rs.getInt(3),new BookEdition(rs.getInt(4),new Book(rs.getString(5),rs.getInt(6)),rs.getString(7),rs.getInt(8),rs.getInt(9))));
+            while (rs.next()) {
+                list.add(new LibraryBooks(rs.getInt(1), rs.getInt(2), rs.getInt(3), new BookEdition(rs.getInt(4),
+                        new Book(rs.getString(5), rs.getInt(6)), rs.getString(7), rs.getInt(8), rs.getInt(9))));
             }
-        }catch(SQLException | ClassNotFoundException e){
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
         return list;
     }
-   
+
     // -------------------updating copies----------------------
-    public void updateBookCopies() {
+    public void updateBookIssued() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
@@ -104,7 +144,8 @@ public class LibraryBooks {
         }
     }
 
-    // ----------------------------Method for updating the issued books-----------------------------------------
+    // ----------------------------Method for updating the issued
+    // books-----------------------------------------
     public void numberOfBooksIssued() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -149,7 +190,35 @@ public class LibraryBooks {
 
     // ----------------------------Method for savin librayr
     // books-----------------------------------------
-    public boolean saveLibraryBooks() {
+    public boolean checkBook() {
+        boolean flag = false;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+
+            String query = "select copies from  library_books where book_edition_id = ? and library_id=? ";
+
+            PreparedStatement ps = con.prepareStatement(query);
+
+            ps.setInt(1, bookEdition.getBookEditionId());
+            ps.setInt(2, library.getLibraryId());
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                setCopies(rs.getInt(1));
+                flag = true;
+
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return flag;
+    }
+    // -----------------------------------------
+
+    public boolean saveLibraryBooks(Integer copy) {
         boolean flag = false;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -161,7 +230,7 @@ public class LibraryBooks {
 
             ps.setInt(1, library.getLibraryId());
             ps.setInt(2, bookEdition.getBookEditionId());
-            ps.setInt(3, copies);
+            ps.setInt(3, copy);
 
             int val = ps.executeUpdate();
 

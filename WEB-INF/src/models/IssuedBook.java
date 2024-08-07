@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-
 public class IssuedBook {
 
     private Integer issuedBookId;
@@ -15,7 +14,7 @@ public class IssuedBook {
     private MemberShip memberShip;
     private Date issueDate;
     private Date returnDate;
-    private Integer fine ;
+    private Integer fine;
     private Integer status;
     private Integer memberId;
 
@@ -34,7 +33,39 @@ public class IssuedBook {
         this.issueDate = issueDate;
         this.returnDate = returnDate;
     }
-    // ------------------------collect photo and collect book info for returning--------------------------------
+
+    // ------------------------collect photo and collect book info for
+    // returning--------------------------------
+    public boolean memberPhotoFindForIssue() {
+        boolean flag = false;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select u.profile_pic,u.name,current_dues from memberships as m inner join users u where member_id=? and u.user_id=m.user_id";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, memberId);
+            System.out.println(ps);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                MemberShip memberShip = new MemberShip();
+                memberShip.setProfilePic(rs.getString(1));
+                memberShip.setName(rs.getString(2));
+                memberShip.setCurrentDues(rs.getInt(3));
+                setMemberShip(memberShip);
+                flag = true;
+            }
+            System.out.println("##########" + flag);
+
+            con.close();
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    // ------------------------collect photo and collect book info for
+    // returning--------------------------------
     public boolean collectPhoto() {
         boolean flag = false;
         try {
@@ -46,25 +77,16 @@ public class IssuedBook {
             System.out.println(ps);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-
-                // System.out.println("###################10");
-                try{
-                    
-                    MemberShip memberShip = new MemberShip();
-                    memberShip.setProfilePic(rs.getString(1));
-                    memberShip.setName(rs.getString(2));
-                    memberShip.setCurrentDues(rs.getInt(3));
-                    setMemberShip(memberShip);
-                    BookEdition bookEdition = new BookEdition();
-                    bookEdition.setBookEditionId(rs.getInt(4));
-                    bookEdition.setIsbnNo(rs.getInt(5));
-                    setBookEdition(bookEdition);
-                    flag = true;
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                
+                MemberShip memberShip = new MemberShip();
+                memberShip.setProfilePic(rs.getString(1));
+                memberShip.setName(rs.getString(2));
+                memberShip.setCurrentDues(rs.getInt(3));
+                setMemberShip(memberShip);
+                BookEdition bookEdition = new BookEdition();
+                bookEdition.setBookEditionId(rs.getInt(4));
+                bookEdition.setIsbnNo(rs.getInt(5));
+                setBookEdition(bookEdition);
+                flag = true;
             }
 
             con.close();
@@ -74,6 +96,7 @@ public class IssuedBook {
         }
         return flag;
     }
+
     // ------------------------History book method--------------------------------
     public void collectAllIssuedBooks() {
 
@@ -97,8 +120,9 @@ public class IssuedBook {
         }
 
     }
+
     // ------------------------delete book record--------------------------------
-    public boolean updateIssuedBook(){
+    public boolean updateIssuedBook() {
         boolean flag = false;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -109,16 +133,15 @@ public class IssuedBook {
 
             PreparedStatement ps = con.prepareStatement(query);
 
-            
             ps.setInt(1, memberShip.getMemberId());
             ps.setInt(2, bookEdition.getBookEditionId());
-            
+
             // System.out.println(ps + "########");
             int val = ps.executeUpdate();
             // System.out.println(val + "############");
-            if(val == 1){
+            if (val == 1) {
                 // System.out.println(flag + "############");
-                flag = true; 
+                flag = true;
             }
 
             con.close();
@@ -129,6 +152,7 @@ public class IssuedBook {
 
         return flag;
     }
+
     // ------------------------update fine--------------------------------
     public void updateFine() {
         try {
@@ -260,11 +284,11 @@ public class IssuedBook {
         this.status = status;
     }
 
-    public void setMemberId(Integer memberId){
+    public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }
 
-    public Integer getMemberId(){
+    public Integer getMemberId() {
         return memberId;
     }
 

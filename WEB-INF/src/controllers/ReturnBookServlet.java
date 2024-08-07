@@ -59,7 +59,7 @@ public class ReturnBookServlet extends HttpServlet {
 
         if (flag) {
             LibraryBooks libraryBooks = new LibraryBooks(new BookEdition(bookEditonId), bookIssued);
-            libraryBooks.updateBookCopies();
+            libraryBooks.updateBookIssued();
         }
 
         Gson gson = new Gson();
