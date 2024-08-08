@@ -532,7 +532,7 @@
 
                     <!-- ============================================================================================================ -->
                     <div class="tab-pane fade" id="requests">
-                        <table border="1px solid green" width="80%" style="margin:30px auto;">
+                        <table border="3px solid green" width="80%" style="margin:30px auto;">
                             <thead class="text-center fw-bold">
                                 <td>Sr no.</td>
                                 <td>Name</td>
@@ -1307,6 +1307,7 @@
             let requests = async () => {
                 let response = await fetch('get_all_request.do');
                 let data = await response.json();
+                console.log(data)
                 let i = 0;
                 for (let obj of data) {
                     let row = tbl.insertRow(i);
@@ -1317,10 +1318,11 @@
                         // console.log(prop );
                         if (prop === 'user') {
                             for (let p in obj[prop]) {
-                                cell = row.insertCell(j++);
                                 if (p === 'name') {
+                                    cell = row.insertCell(j++);
                                     cell.innerText = obj.user.name;
-                                } else {
+                                } else if (p === 'profilePic') {
+                                    cell = row.insertCell(j++);
                                     cell.innerHTML = "<img src=logo.do?path=" + obj.user.profilePic + " width='25px' class='candidate_img m-auto'></img>";
                                 }
 
@@ -1329,14 +1331,18 @@
                         } else if (prop === 'status') {
                             cell = row.insertCell(j++);
                             cell.innerText = obj.status.name;
+                            cell = row.insertCell(j++);
+                            cell.innerHTML = '<img src=static/media/images/approve.png width = 20 class="approve_img" id=' + obj.user.userId + '></img>';
+
+                            cell = row.insertCell(j++);
+
+                            cell.innerHTML = '<img src=static/media/images/cancel.png width=20 class="cancel_img" id=' + obj.user.userId + '></img>';
                         }
-                        // else {
-                        // }
 
                     }
 
                 }
-                let candidate_imgs = document.querySelectorAll(".candidate_img");
+                candidate_imgs = document.querySelectorAll(".candidate_img");
                 candidate_imgs.forEach((candidate_img) => {
                     candidate_img.addEventListener('mouseover', () => {
                         candidate_img.style.transform = 'scale(5)';
@@ -1345,11 +1351,36 @@
                         candidate_img.style.transform = 'scale(1)';
                     });
                 });
+
+                let approve_imgs = document.querySelectorAll('.approve_img');
+                let cancel_imgs = document.querySelectorAll('.cancel_img');
+                console.log(cancel_imgs);
+
+                approve_imgs.forEach((approve_img) => {
+                    approve_img.addEventListener('mouseover', () => {
+                        approve_img.style.transform = 'scale(1.5)';
+                    });
+                });
+                cancel_imgs.forEach((cancel_img) => {
+                    cancel_img.addEventListener('mouseover', () => {
+                        cancel_img.style.transform = 'scale(1.5)';
+                    });
+                });
+                approve_imgs.forEach((approve_img) => {
+                    approve_img.addEventListener('mouseout', () => {
+                        approve_img.style.transform = 'scale(1)';
+                    });
+                });
+                cancel_imgs.forEach((cancel_img) => {
+                    cancel_img.addEventListener('mouseout', () => {
+                        cancel_img.style.transform = 'scale(1)';
+                    });
+                });
             };
 
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> --> -->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>

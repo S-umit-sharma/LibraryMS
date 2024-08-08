@@ -33,7 +33,7 @@ public class Request {
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select u.name,u.profile_pic,s.name from requests as r inner join users as u inner join status as s where r.status_id=s.status_id and library_id = ? and u.user_id=r.user_id and r.status_id=11";
+            String query = "select u.name,u.profile_pic,u.user_id,s.name from requests as r inner join users as u inner join status as s where r.status_id=s.status_id and library_id = ? and u.user_id=r.user_id and r.status_id=11";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1,library.getLibraryId());
 
@@ -43,8 +43,9 @@ public class Request {
                 User u = new User();
                 u.setName(rs.getString(1));
                 u.setProfilePic(rs.getString(2));
+                u.setUserId(rs.getInt(3));
                 Status s = new Status();
-                s.setName(rs.getString(3));
+                s.setName(rs.getString(4));
                 list.add(new Request(u,s));
             }
 

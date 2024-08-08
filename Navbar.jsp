@@ -8,8 +8,9 @@
 
   <nav class="navbar  navbar-expand-lg bg-body-lg ">
     <div class="container-fluid" style="background-color: rgb(232, 238, 234);" id="con">
-      <a class="navbar-brand" href="#"><abbr title="Library Management System" id="abbr"><a href="index.jsp"
-            class="text-decoration-none fs-5 text-dark margin-auto"><strong>LMS</strong></a></abbr></a>
+      <abbr title="Library Management System" id="abbr"><a href="index.jsp" class="navbar-brand"
+          class="text-decoration-none fs-5 text-dark margin-auto"><strong>LMS</strong></a></abbr>
+          
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -18,12 +19,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li><img src="" alt=""></li>
-       </ul>
+        </ul>
 
         <!-- -------------------------------- -->
         <div class="btn-group">
           <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown"></button>
           <ul class="dropdown-menu dropdown-menu-end">
+            <li>------------------</li>
             <c:choose>
               <c:when test="${empty user}">
                 <li class="dropdown-item" type="button"><a href="index.jsp" class="btn btn-primary">SignIn</a></li>
