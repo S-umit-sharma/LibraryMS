@@ -22,11 +22,11 @@ public class DispatcherForEditionServlet extends HttpServlet {
         ArrayList<BookEdition> editions = bookEdition.collectAllEditions();
         request.setAttribute("book_editions", editions);
 
+        String title = request.getParameter("title");
+        request.setAttribute("title", title);
         if (num == 1) {
             request.getRequestDispatcher("book_edition.jsp").forward(request, response);
         } else {
-            String title = request.getParameter("title");
-            request.setAttribute("title", title);
             request.getRequestDispatcher("library_book_edition.jsp?title=" + title).forward(request, response);
         }
 

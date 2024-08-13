@@ -137,11 +137,11 @@ public class BookEdition {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select book_edition_id,edition,published_on,price,isbn_no,details,be.book_id,title,img_status from book_editions as be inner join books as b where be.book_id=b.book_id and be.book_id=?";
+            String query = "select book_edition_id,edition,published_on,price,isbn_no,details,be.book_id,title,img_status from book_editions as be inner join books as b where be.book_id=b.book_id and be.book_id=? and be.status_id=?";
 
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, book.getBookId());
-            // System.out.println(book.getBookId() + "###############");
+            ps.setInt(2, Status.AVAILABLE);
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -212,13 +212,15 @@ public class BookEdition {
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
             PreparedStatement ps;
             if (num == 1) {
-                String query = "delete from book_editions where book_id=?";
+                String query = "update book_editions set status_id=? where book_id=?";
                 ps = con.prepareStatement(query);
-                ps.setInt(1, book.getBookId());
+                ps.setInt(1,Status.DELETED);
+                ps.setInt(2, book.getBookId());
             } else {
-                String query = "delete from book_editions where book_edition_id=?";
+                String query = "update book_editions set status_id=? where book_edition_id=?";
                 ps = con.prepareStatement(query);
-                ps.setInt(1, bookEditionId);
+                ps.setInt(1,Status.DELETED);
+                ps.setInt(2, bookEditionId);
             }
 
             ps.executeUpdate();
@@ -236,7 +238,7 @@ public class BookEdition {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "insert into book_editions(book_id,isbn_no,edition,published_on,price,details) value(?,?,?,?,?,?)";
+            String query = "insert into book_editions(book_id,isbn_no,edition,published_on,price,details,status_id) value(?,?,?,?,?,?,12)";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, book.getBookId());
             ps.setInt(2, isbnNo);

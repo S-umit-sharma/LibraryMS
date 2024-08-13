@@ -55,13 +55,14 @@ public class BookEditionLogoUploadServlet extends HttpServlet {
                     } else {
 
                         Integer edtion_number = bookEdition.getEdition();
+                        String ttle = title.replace(" ", "_");
                         String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/" + pub.getEmail() + "/"
-                                + title + "/" + edtion_number + "_edition/");
+                                + ttle + "/" + edtion_number + "_edition/");
                         File folder = new File(uploadPath);
                         folder.mkdir();
                         String fileName = i + "." + fileItem.getName().split("\\.")[1];
 
-                        String filePath = pub.getEmail() + "/" + title + "/" + edtion_number + "_edition/";
+                        String filePath = pub.getEmail() + "/" + ttle + "/" + edtion_number + "_edition/";
                         bookEditionPic.setEditionImgPath(filePath + fileName);
                         bookEditionPic.saveEditionImage();
                         bookEdition.changeImageStatus();

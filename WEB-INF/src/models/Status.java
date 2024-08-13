@@ -17,6 +17,8 @@ public class Status {
     public static final Integer APPROVE = 9;
     public static final Integer REJECTED = 10;
     public static final Integer PENDING = 11;
+    public static final Integer AVAILABLE = 12;
+    public static final Integer DELETED = 13;
     
     // ############### constructor ###############
     

@@ -114,7 +114,7 @@
                                 </div>
                                 <div class="col">
 
-                                    <div class="text-end mt-4 pe-5">
+                                    <div class="text-end pe-5">
                                         <button class="btn btn-primary" data-bs-toggle="modal"
                                             data-bs-target="#edition_modal">&plus; Edition</button>
                                     </div>
@@ -136,8 +136,7 @@
 
                                     <c:choose>
                                         <c:when test="${!edition.imgStatus}">
-                                            <img src="static/media/images/book.png" class="card-img-top" width="100"
-                                                height="250">
+                                            <img src="static/media/images/book.png" class="card-img-top"  width='200' height='260'>
                                         </c:when>
                                         <c:otherwise>
                                             <div id="carouselExampleAutoplaying" class="carousel slide"

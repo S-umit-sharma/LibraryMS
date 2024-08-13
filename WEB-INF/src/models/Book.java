@@ -16,6 +16,7 @@ public class Book {
     private Category category;
     private Publisher publisher;
     private String bookPic;
+    private Status status;
 
     // ################ constructor ################
 
@@ -193,11 +194,12 @@ public class Book {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "delete from books where book_id=?";
+            String query = "update books set status_id=? where book_id=?";
             BookEdition e = new BookEdition(book);
             e.deleteAllBookEdition(1);
             PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, bookId);
+            ps.setInt(1, Status.DELETED);
+            ps.setInt(2, bookId);
             ps.executeUpdate();
             con.close();
         } catch (ClassNotFoundException | SQLException e) {
@@ -235,12 +237,13 @@ public class Book {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
 
-            String query = "select book_id,title,c.category_id,name,book_pic from books as b inner join categories as c where b.category_id=c.category_id and publisher_id = ?";
+            String query = "select book_id,title,c.category_id,name,book_pic from books as b inner join categories as c where b.category_id=c.category_id and publisher_id = ? and status_id=?";
             // String query1 = "select name from categories where category_id=?";
 
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, publisherId);
+            ps.setInt(2, Status.AVAILABLE);
 
             ResultSet rs = ps.executeQuery();
 
@@ -264,7 +267,7 @@ public class Book {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "insert into books(title,category_id,publisher_id) values(?,?,?)";
+            String query = "insert into books(title,category_id,publisher_id,status_id) values(?,?,?,12)";
 
             PreparedStatement ps = con.prepareStatement(query);
 
@@ -325,6 +328,14 @@ public class Book {
 
     public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
+    }
+
+    public void setStatus(Status status){
+        this.status = status;
+    }
+
+    public Status getStatus(){
+        return status;
     }
 
 }

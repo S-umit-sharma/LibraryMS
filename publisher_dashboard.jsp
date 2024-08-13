@@ -121,11 +121,11 @@
                             <div class="card shadow p-3 mb-2 bg-body-tertiary rounded" id="${book.bookId}" style="width:15rem;" >   
                                 <c:choose>
                                     <c:when test="${empty book.bookPic}">
-                                        <img  src="static/media/images/book.png"  class="rounded-start img-fluid x">
+                                        <img  src="static/media/images/book.png"  class="card-img-top"  width='200' height='260'>
                                         
                                     </c:when>
                                     <c:otherwise>
-                                        <img  src="show_book_logo.do?book_id=${book.bookId}" width="100" height="250" class="card-img-top">
+                                        <img  src="show_book_logo.do?book_id=${book.bookId}"  width='200' height='260' class="card-img-top">
                                     </c:otherwise>
                                 </c:choose>
                             </a>
@@ -184,7 +184,7 @@
                 dropzone.processQueue();
             });
             dropzone.on('comlete',()=>{
-                alert.classList.replace('d-none','d-block');
+                alert.classList.replace('d-none','d-inline');
             });
             
         </script>

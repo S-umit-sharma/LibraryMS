@@ -42,7 +42,7 @@ public class EditionImageTagHandler extends SimpleTagSupport {
         String img = "";
         ServletRequest request =  context.getRequest();
         for (BookEditionPic path : list) {
-            img = "<div class='carousel-item active'><img src='show_book_img.do?img_path="+ path.getEditionImgPath()+ "' class='d-block w-100' ></div>";
+            img = "<div class='carousel-item active'><img src='show_book_img.do?img_path="+ path.getEditionImgPath()+ "' class='d-block w-100' width='200' height='260'></div>";
       
             request.setAttribute("img", img);
             frag.invoke(null);

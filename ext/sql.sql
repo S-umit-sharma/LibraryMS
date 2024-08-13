@@ -751,9 +751,10 @@ create table books(
     category_id int not null,
     publisher_id int not null,
     book_pic varchar(255) null,
+    status_id int null default 12,
     constraint fk_books_category foreign key (category_id) references categories(category_id),
-    constraint fk_books_publisher foreign key (publisher_id) references publisher(publisher_id)
-
+    constraint fk_books_publisher foreign key (publisher_id) references publisher(publisher_id),
+    constraint fk_books_status foreign key (status_id) references status(status_id) 
 );
 
 create table book_editions(
@@ -766,7 +767,9 @@ create table book_editions(
     isbn_no int not null,
     book_edition_pic varchar(255) null,
     img_status boolean not null default false,
-    constraint fk_books_edition_book foreign key (book_id) references books(book_id)
+    status int not null default 12,
+    constraint fk_books_edition_book foreign key (book_id) references books(book_id),
+    constraint fk_book_edition_status foreign key (status_id) references status(status_id)
 
 );
 

@@ -18,6 +18,6 @@ public class DeleteBookEditionServlet extends HttpServlet {
 
         BookEdition e = new BookEdition(editionId);
         e.deleteAllBookEdition(2);
-        request.getRequestDispatcher("book_edition.do?book_id="+bookId).forward(request, response);
+        request.getRequestDispatcher("book_edition.do?num=1&book_id="+bookId).forward(request, response);
     }
 }
