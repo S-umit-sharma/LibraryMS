@@ -120,12 +120,18 @@
 
 
     </script>
+    <!-- all the library shown are in this script  -->
     <script>
         let library_search = document.querySelector('#library_search');
         let city = document.querySelector('#city');
         let row_for_library = document.querySelector('#row_for_library');
         let search_img = document.querySelector('#search_img');
+        let checkStatus = async (library_id) => {
+            let response = await fetch("checkStatus.do?library_id=" + library_id);
+            let data = await response.json();
 
+            return data;
+        }
         row_for_library.innerHTML = '';
 
         let regex = /[a-zA-Z]{3,}/;
@@ -137,169 +143,174 @@
 
 
             if (regex.test(library_search.value)) {
-                try {
-                    let response = await fetch('library_search.do?' + param);
-                    let data = await response.json();
 
-                    for (let obj of data) {
+                let response = await fetch('library_search.do?' + param);
+                let data = await response.json();
 
-                        let card = document.createElement('div');
-                        row_for_library.append(card);
-                        card.className = 'card mt-4';
+                for (let obj of data) {
 
-                        let row = document.createElement('div');
-                        card.append(row);
-                        row.className = 'row mt-4';
+                    let card = document.createElement('div');
+                    row_for_library.append(card);
+                    card.className = 'card mt-4';
 
-                        let row_col_1 = document.createElement('div');
-                        row.append(row_col_1);
-                        row_col_1.className = 'col-md-3';
+                    let row = document.createElement('div');
+                    card.append(row);
+                    row.className = 'row mt-4';
 
-                        let img = document.createElement('img');
-                        row_col_1.append(img);
-                        img.className = 'card-img-top mb-3';
-                        img.src = 'logo.do?path=' + obj.profilePic;
-                        img.style.width = '280px';
+                    let row_col_1 = document.createElement('div');
+                    row.append(row_col_1);
+                    row_col_1.className = 'col-md-3';
 
-                        let row_col_2 = document.createElement('div');
-                        row.append(row_col_2);
-                        row_col_2.className = 'col-md';
+                    let img = document.createElement('img');
+                    row_col_1.append(img);
+                    img.className = 'card-img-top mb-3';
+                    img.src = 'logo.do?path=' + obj.profilePic;
+                    img.style.width = '280px';
 
-                        let card_body = document.createElement('div');
-                        row_col_2.append(card_body);
-                        card_body.className = 'card-body';
+                    let row_col_2 = document.createElement('div');
+                    row.append(row_col_2);
+                    row_col_2.className = 'col-md';
 
-                        let card_body_row_1 = document.createElement('div');
-                        card_body.append(card_body_row_1);
-                        card_body_row_1.className = 'row';
+                    let card_body = document.createElement('div');
+                    row_col_2.append(card_body);
+                    card_body.className = 'card-body';
 
-                        let card_body_row_1_col_1 = document.createElement('div');
-                        card_body_row_1.append(card_body_row_1_col_1);
-                        card_body_row_1_col_1.className = 'col-md';
+                    let card_body_row_1 = document.createElement('div');
+                    card_body.append(card_body_row_1);
+                    card_body_row_1.className = 'row';
 
-                        let card_body_row_1_col_2 = document.createElement('div');
-                        card_body_row_1_col_2.className = 'col-md';
-                        card_body_row_1.append(card_body_row_1_col_2);
+                    let card_body_row_1_col_1 = document.createElement('div');
+                    card_body_row_1.append(card_body_row_1_col_1);
+                    card_body_row_1_col_1.className = 'col-md';
 
-                        let h2 = document.createElement('h2');
-                        card_body_row_1_col_1.append(h2);
-                        h2.className = 'card-title';
-                        h2.innerText = obj.name;
+                    let card_body_row_1_col_2 = document.createElement('div');
+                    card_body_row_1_col_2.className = 'col-md';
+                    card_body_row_1.append(card_body_row_1_col_2);
 
-                        let card_body_row_1_col_1_row = document.createElement('div');
-                        card_body_row_1_col_1_row.className = 'row';
-                        card_body_row_1_col_2.append(card_body_row_1_col_1_row);
+                    let h2 = document.createElement('h2');
+                    card_body_row_1_col_1.append(h2);
+                    h2.className = 'card-title';
+                    h2.innerText = obj.name;
 
-
-                        let card_body_row_1_col_1_row_col_1 = document.createElement('div');
-                        card_body_row_1_col_1_row_col_1.className = 'col-md';
-                        card_body_row_1_col_1_row.append(card_body_row_1_col_1_row_col_1);
-
-                        let card_body_row_1_col_1_row_col_2 = document.createElement('div');
-                        card_body_row_1_col_1_row_col_2.className = 'col-md-1';
-                        card_body_row_1_col_1_row.append(card_body_row_1_col_1_row_col_2);
+                    let card_body_row_1_col_1_row = document.createElement('div');
+                    card_body_row_1_col_1_row.className = 'row';
+                    card_body_row_1_col_2.append(card_body_row_1_col_1_row);
 
 
-                        let span = document.createElement('span');
-                        card_body_row_1_col_1_row_col_1.append(span)
-                        span.className = 'float-end text-end';
-                        span.innerText = obj.city.city;
+                    let card_body_row_1_col_1_row_col_1 = document.createElement('div');
+                    card_body_row_1_col_1_row_col_1.className = 'col-md';
+                    card_body_row_1_col_1_row.append(card_body_row_1_col_1_row_col_1);
 
-                        let img_location = document.createElement('img');
-                        img_location.src = 'static/media/images/map.png';
-                        img_location.style.width = '20px';
-
-                        card_body_row_1_col_1_row_col_2.append(img_location);
-                        // console.log(obj);
-
-                        let card_body_row_2 = document.createElement('div');
-                        card_body_row_2.className = 'row mt-1';
-                        card_body.append(card_body_row_2);
-
-                        let card_body_row_2_col_1 = document.createElement('div');
-                        card_body_row_2_col_1.className = 'col-md-1';
-                        card_body_row_2.append(card_body_row_2_col_1)
-
-                        let clock_img = document.createElement('img');
-                        clock_img.style.width = '20px';
-                        clock_img.className = 'float-end mt-1';
-                        clock_img.src = 'static/media/images/clock.png'
-                        card_body_row_2_col_1.append(clock_img);
-
-                        let card_body_row_2_col_2 = document.createElement('div');
-                        card_body_row_2_col_2.className = 'col-md';
-                        card_body_row_2.append(card_body_row_2_col_2)
-
-                        let h4 = document.createElement('h4');
-                        h4.innerText = obj.openingTime + ' to ' + obj.closingTime;
-                        card_body_row_2_col_2.append(h4);
-
-                        let card_body_row_2_col_3 = document.createElement('div');
-                        card_body_row_2_col_3.className = 'col-md-3';
-                        card_body_row_2.append(card_body_row_2_col_3);
-
-                        let card_body_row_2_col_3_row = document.createElement('div');
-                        card_body_row_2_col_3_row.className = 'row';
-                        card_body_row_2_col_3.append(card_body_row_2_col_3_row);
-
-                        let card_body_row_2_col_3_row_col_1 = document.createElement('div');
-                        card_body_row_2_col_3_row_col_1.className = 'col-md';
-                        card_body_row_2_col_3_row.append(card_body_row_2_col_3_row_col_1);
-
-                        let card_body_row_2_col_3_row_col_2 = document.createElement('div');
-                        card_body_row_2_col_3_row_col_2.className = 'col-md-2';
-                        card_body_row_2_col_3_row.append(card_body_row_2_col_3_row_col_2);
-
-                        let span_contact = document.createElement('span');
-                        card_body_row_2_col_3_row_col_1.append(span_contact);
-                        span_contact.innerText = obj.contact;
-                        span_contact.className = 'float-end';
-
-                        let phone_img = document.createElement('img');
-                        phone_img.src = 'static/media/images/phone.png';
-                        phone_img.style.width = '20px';
-                        phone_img.className = 'float-end';
-                        card_body_row_2_col_3_row_col_2.append(phone_img);
+                    let card_body_row_1_col_1_row_col_2 = document.createElement('div');
+                    card_body_row_1_col_1_row_col_2.className = 'col-md-1';
+                    card_body_row_1_col_1_row.append(card_body_row_1_col_1_row_col_2);
 
 
+                    let span = document.createElement('span');
+                    card_body_row_1_col_1_row_col_1.append(span)
+                    span.className = 'float-end text-end';
+                    span.innerText = obj.city.city;
 
-                        let card_body_row_3 = document.createElement('div');
-                        card_body_row_3.className = 'row mt-4';
-                        card_body.append(card_body_row_3);
+                    let img_location = document.createElement('img');
+                    img_location.src = 'static/media/images/map.png';
+                    img_location.style.width = '20px';
 
-                        card_body_row_3.innerHTML = '<h2>Details</h2><br><p>' + obj.details + '</p>';
+                    card_body_row_1_col_1_row_col_2.append(img_location);
+                    // console.log(obj);
 
-                        let card_body_row_4 = document.createElement('div');
-                        card_body_row_4.className = 'row mt-4';
-                        card_body.append(card_body_row_4);
+                    let card_body_row_2 = document.createElement('div');
+                    card_body_row_2.className = 'row mt-1';
+                    card_body.append(card_body_row_2);
 
-                        card_body_row_4.innerHTML = '<h3>Late Fine:</h3><br><p>' + obj.lateFine + '</p>';
+                    let card_body_row_2_col_1 = document.createElement('div');
+                    card_body_row_2_col_1.className = 'col-md-1';
+                    card_body_row_2.append(card_body_row_2_col_1)
 
-                        let card_body_row_5 = document.createElement('div');
-                        card_body_row_5.className = 'row mt-2';
-                        card_body.append(card_body_row_5);
+                    let clock_img = document.createElement('img');
+                    clock_img.style.width = '20px';
+                    clock_img.className = 'float-end mt-1';
+                    clock_img.src = 'static/media/images/clock.png'
+                    card_body_row_2_col_1.append(clock_img);
 
-                        let card_body_row_5_col_1 = document.createElement('div');
-                        card_body_row_5_col_1.className = 'col-md';
-                        card_body_row_5.append(card_body_row_5_col_1);
+                    let card_body_row_2_col_2 = document.createElement('div');
+                    card_body_row_2_col_2.className = 'col-md';
+                    card_body_row_2.append(card_body_row_2_col_2)
 
-                        let button = document.createElement('button');
-                        button.className = 'btn btn-info id';
-                        button.innerText = 'Join now'
-                        button.id = obj.libraryId;
-                        card_body_row_5_col_1.append(button);
+                    let h4 = document.createElement('h4');
+                    h4.innerText = obj.openingTime + ' to ' + obj.closingTime;
+                    card_body_row_2_col_2.append(h4);
 
-                    }
+                    let card_body_row_2_col_3 = document.createElement('div');
+                    card_body_row_2_col_3.className = 'col-md-3';
+                    card_body_row_2.append(card_body_row_2_col_3);
+
+                    let card_body_row_2_col_3_row = document.createElement('div');
+                    card_body_row_2_col_3_row.className = 'row';
+                    card_body_row_2_col_3.append(card_body_row_2_col_3_row);
+
+                    let card_body_row_2_col_3_row_col_1 = document.createElement('div');
+                    card_body_row_2_col_3_row_col_1.className = 'col-md';
+                    card_body_row_2_col_3_row.append(card_body_row_2_col_3_row_col_1);
+
+                    let card_body_row_2_col_3_row_col_2 = document.createElement('div');
+                    card_body_row_2_col_3_row_col_2.className = 'col-md-2';
+                    card_body_row_2_col_3_row.append(card_body_row_2_col_3_row_col_2);
+
+                    let span_contact = document.createElement('span');
+                    card_body_row_2_col_3_row_col_1.append(span_contact);
+                    span_contact.innerText = obj.contact;
+                    span_contact.className = 'float-end';
+
+                    let phone_img = document.createElement('img');
+                    phone_img.src = 'static/media/images/phone.png';
+                    phone_img.style.width = '20px';
+                    phone_img.className = 'float-end';
+                    card_body_row_2_col_3_row_col_2.append(phone_img);
 
 
 
-                } catch (error) {
-                    console.log(error);
+                    let card_body_row_3 = document.createElement('div');
+                    card_body_row_3.className = 'row mt-4';
+                    card_body.append(card_body_row_3);
+
+                    card_body_row_3.innerHTML = '<h2>Details</h2><br><p>' + obj.details + '</p>';
+
+                    let card_body_row_4 = document.createElement('div');
+                    card_body_row_4.className = 'row mt-4';
+                    card_body.append(card_body_row_4);
+
+                    card_body_row_4.innerHTML = '<h3>Late Fine:</h3><br><p>' + obj.lateFine + '</p>';
+
+                    let card_body_row_5 = document.createElement('div');
+                    card_body_row_5.className = 'row mt-2';
+                    card_body.append(card_body_row_5);
+
+                    let card_body_row_5_col_1 = document.createElement('div');
+                    card_body_row_5_col_1.className = 'col-md';
+                    card_body_row_5.append(card_body_row_5_col_1);
+
+                    let button = document.createElement('button');
+                    button.className = 'btn btn-info id';
+                    button.innerText = 'Join now'
+                    button.id = obj.libraryId;
+                    card_body_row_5_col_1.append(button);
+
+                    checkStatus(obj.libraryId).then((d) => {
+                        console.log(d + "####")
+                        if (d) {
+                            button.innerText = "requested";
+                            button.disabled = true;
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                    });
+
                 }
             }
+        }
 
 
-        };
+
 
         let debounceFunc = function (func, delay) {
             let timer;
@@ -315,30 +326,34 @@
         });
 
     </script>
-
+    <!-- script for send request to library -->
     <script>
-
+        async function sendApproveRequest() {
+            let response = await fetch('request.do?' + par);
+            let flag = await response.text();
+            return flag;
+        }
         window.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON') {
+            if (e.target.className == 'btn btn-info id') {
                 let id = e.target.id;
                 let par = 'library_id=' + id;
-                async function sendApproveRequest() {
-                    let response = await fetch('request.do?' + par);
-                    let flag = await response.text();
+
+                sendApproveRequest().then(() => {
                     if (flag) {
-                        e.target.innerText = 'requested';
-                    } else {
-
+                        e.target.innerText = "requested";
+                        e.target.disabled = true;
                     }
-                }
-
-
-
-
+                }).catch((error)=>{
+                    console.log(error);
+                });
             }
         });
 
     </script>
+    <!-- script for checking status -->
+
+
+
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 
 

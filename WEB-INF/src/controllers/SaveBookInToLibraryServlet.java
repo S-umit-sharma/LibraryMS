@@ -22,12 +22,9 @@ public class SaveBookInToLibraryServlet extends HttpServlet {
 
         Integer editionId = Integer.parseInt(request.getParameter("edition_id"));
         Integer copy = Integer.parseInt(request.getParameter("copy"));
-        // System.out.println(editionId + "###############");
 
         LibraryBooks libBooks = new LibraryBooks(new BookEdition(editionId), new Library(lib.getLibraryId()));
         boolean flag = libBooks.checkBook();
-        // System.out.println(flag + "############");
-        // System.out.println(libBooks.getCopies() + "############");
         if (flag)
             libBooks.updateBookCopies(copy);
         else

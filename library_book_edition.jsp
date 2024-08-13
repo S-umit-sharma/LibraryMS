@@ -74,12 +74,12 @@
                                 id="${edition.bookEditionId}">
 
                                 <c:choose>
-                                    <c:when test="${empty edition.bookEditionPic}">
+                                    <c:when test="${empty edition.imgStatus}">
                                         <img src="static/media/images/book.png" class="card-img-top" width="100"
                                             height="250">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="show_edition_img.do?path=${edition.bookEditionPic}" width="100"
+                                        <img src="show_edition_img.do?path=${edition.imgStatus}" width="100"
                                             height="250" class="card-img-top">
                                     </c:otherwise>
                                 </c:choose>

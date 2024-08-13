@@ -9,34 +9,26 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
-import models.User;
 
 @WebServlet("/logo.do")
 public class LogoServlet extends HttpServlet {
-    // static int i = 0;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        // HttpSession session = request.getSession();
+
         ServletContext context = getServletContext();
-        // User user = (User) session.getAttribute("user");
         String path = request.getParameter("path");
-        // System.out.println(path);
-        
-        // if (user != null) {
-            InputStream is = context.getResourceAsStream("/WEB-INF/uploads/" + path);
-            OutputStream os = response.getOutputStream();
-        // System.out.println(i+"#############");
-            byte[] arr = new byte[256];
 
-            while ((is.read(arr)) != -1) {
-                os.write(arr);
-            }
+        InputStream is = context.getResourceAsStream("/WEB-INF/uploads/" + path);
+        OutputStream os = response.getOutputStream();
+        byte[] arr = new byte[256];
 
-            os.flush();
-            os.close();
-        // }
+        while ((is.read(arr)) != -1) {
+            os.write(arr);
+        }
+
+        os.flush();
+        os.close();
 
     }
 }

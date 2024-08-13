@@ -18,53 +18,67 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
 import java.util.List;
 
-
 import models.BookEdition;
+import models.BookEditionPic;
 import models.Publisher;
 
 @WebServlet("/book_edition_logo_upload.do")
 public class BookEditionLogoUploadServlet extends HttpServlet {
-    public void doPost(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException{
+    static int i = 1;
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
-        Publisher pub = (Publisher)session.getAttribute("user");
+        Publisher pub = (Publisher) session.getAttribute("user");
         ServletContext context = getServletContext();
         Boolean flag = ServletFileUpload.isMultipartContent(request);
-        BookEdition bookEdition = new BookEdition();
+        BookEditionPic bookEditionPic = new BookEditionPic();
 
-        if(flag){
-            try{
+        BookEdition bookEdition = new BookEdition();
+        String title = null;
+
+        if (flag) {
+            try {
                 List<FileItem> fileItems = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
-                for(FileItem fileItem : fileItems){
-                    if(fileItem.isFormField()){
-                            String fieldName = fileItem.getFieldName();
-                            Integer fieldValue = Integer.parseInt(fileItem.getString());
+                for (FileItem fileItem : fileItems) {
+                    if (fileItem.isFormField()) {
+                        String fieldName = fileItem.getFieldName();
+                        Integer fieldValue = Integer.parseInt(fileItem.getString());
 
-                        switch(fieldName){
+                        switch (fieldName) {
                             case "edition_id":
-                            bookEdition.setBookEditionId(fieldValue);
-                            break;
-                        } 
-                    }else {
-                        String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/"+pub.getEmail()+"/Edition_images/");
+                                bookEdition.setBookEditionId(fieldValue);
+                                title = bookEdition.collectTitle();
+                                bookEditionPic.setBookEdition(bookEdition);
+                                break;
+                        }
+                    } else {
+
+                        Integer edtion_number = bookEdition.getEdition();
+                        String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/" + pub.getEmail() + "/"
+                                + title + "/" + edtion_number + "_edition/");
                         File folder = new File(uploadPath);
                         folder.mkdir();
-                        String fileName = bookEdition.getBookEditionId()+"."+ fileItem.getName().split("\\.")[1] ;
-                        String filePath = pub.getEmail()+"/Edition_images/"+fileName;
-                       
-                        bookEdition.setBookEditionPic(filePath);
-                        File file = new File(uploadPath,fileName);
+                        String fileName = i + "." + fileItem.getName().split("\\.")[1];
 
-                        try{
+                        String filePath = pub.getEmail() + "/" + title + "/" + edtion_number + "_edition/";
+                        bookEditionPic.setEditionImgPath(filePath + fileName);
+                        bookEditionPic.saveEditionImage();
+                        bookEdition.changeImageStatus();
+
+                        File file = new File(uploadPath, fileName);
+
+                        try {
                             fileItem.write(file);
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        i++;
                     }
 
                 }
-                bookEdition.saveEditionImage();
-            }catch(FileUploadException e){
+
+            } catch (FileUploadException e) {
                 e.printStackTrace();
             }
         }

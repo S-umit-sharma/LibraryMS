@@ -109,7 +109,7 @@ public class LibraryBooks {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "SELECT lb.library_book_id, lb.books_issued, lb.copies, be.book_edition_id, b.title, b.book_id,be.book_edition_pic,be.edition,be.isbn_no  FROM library_books AS lb INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id INNER JOIN books AS b ON be.book_id = b.book_id WHERE library_id = ? and  b.title LIKE ?";
+            String query = "SELECT lb.library_book_id, lb.books_issued, lb.copies, be.book_edition_id, b.title, b.book_id,be.edition,be.isbn_no  FROM library_books AS lb INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id INNER JOIN books AS b ON be.book_id = b.book_id WHERE library_id = ? and  b.title LIKE ?";
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, id);
@@ -118,8 +118,16 @@ public class LibraryBooks {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                list.add(new LibraryBooks(rs.getInt(1), rs.getInt(2), rs.getInt(3), new BookEdition(rs.getInt(4),
-                        new Book(rs.getString(5), rs.getInt(6)), rs.getString(7), rs.getInt(8), rs.getInt(9))));
+                BookEdition be = new BookEdition();
+                be.setBookEditionId(rs.getInt(4));
+                Book b = new Book();
+                b.setTitle(rs.getString(5));
+                b.setBookId(rs.getInt(6));
+                be.setBook(b);
+                be.setEdition(rs.getInt(7));
+                be.setIsbnNo(rs.getInt(9));
+                
+                list.add(new LibraryBooks(rs.getInt(1), rs.getInt(2), rs.getInt(3),be));
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -168,7 +176,7 @@ public class LibraryBooks {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select library_book_id,copies,books_issued,scraped,lb.book_edition_id,edition,published_on,price,details,book_edition_pic,be.book_id,title from library_books as lb inner join book_editions as be inner join books as b where lb.book_edition_id=be.book_edition_id and be.book_id=b.book_id and lb.library_id=? and be.isbn_no=?";
+            String query = "select library_book_id,copies,books_issued,scraped,lb.book_edition_id,edition,published_on,price,details,be.book_id,title from library_books as lb inner join book_editions as be inner join books as b where lb.book_edition_id=be.book_edition_id and be.book_id=b.book_id and lb.library_id=? and be.isbn_no=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, library.getLibraryId());
             ps.setInt(2, isbnNo);
@@ -178,9 +186,17 @@ public class LibraryBooks {
                 copies = rs.getInt(2);
                 bookIssued = rs.getInt(3);
                 scraped = rs.getInt(4);
-                bookEdition = new BookEdition(rs.getInt(5), rs.getInt(6), rs.getDate(7), rs.getInt(8), rs.getString(9),
-                        rs.getString(10), new Book(rs.getInt(11), rs.getString(12)));
-
+                BookEdition be = new BookEdition();
+                be.setBookEditionId(rs.getInt(5));
+                be.setEdition(rs.getInt(6));
+                be.setPublishedOn(rs.getDate(7));
+                be.setPrice(rs.getInt(8));
+                be.setDetails(rs.getString(9));
+                Book b = new Book();
+                b.setBookId(rs.getInt(10));
+                b.setTitle(rs.getString(11));
+                be.setBook(b);
+                bookEdition = be;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

@@ -547,7 +547,7 @@
                     <!-- ============================================================================================================ -->
                 </div>
         </div>
-
+        <!-- home page search bar -->
         <script>
             let debounce_search_title = function (func, delay) {
                 let timeout;
@@ -700,6 +700,7 @@
 
             });
         </script>
+        <!-- search book by title -->
         <script>
             let title_value = document.querySelector("#title_value");
             let book_img = document.querySelector('#book_img');
@@ -769,6 +770,7 @@
             });
 
         </script>
+        <!-- issue book tab for showing book -->
         <script>
             const isbn_no = document.querySelector('#isbn_no');
             const search_isbn = document.querySelector('#search_isbn');
@@ -833,6 +835,7 @@
 
 
         </script>
+        <!-- issue button events -->
         <script>
             const issue_btn = document.querySelector("#issue_btn");
             const member = document.querySelector("#Member");
@@ -882,6 +885,7 @@
             });
 
         </script>
+        <!-- find image of the member for issue book  -->
         <script>
             let find_img = document.querySelector("#find_img");
             let member_name = document.querySelector('#member_name');
@@ -939,6 +943,7 @@
 
 
         </script>
+        <!-- return book tab for showing book -->
         <script>
             const return_isbn_no = document.querySelector('#return_isbn');
             const return_search_isbn = document.querySelector('#return_search_isbn');
@@ -1002,6 +1007,7 @@
 
 
         </script>
+        <!-- find image of the member for return book  -->
         <script>
             let return_find_img = document.querySelector("#return_find_img");
             let return_member_name = document.querySelector('#return_member_name');
@@ -1046,9 +1052,8 @@
                 req.send();
             });
         </script>
+        <!-- return button events -->>
         <script>
-
-
             return_btn.addEventListener('click', () => {
                 let req = new XMLHttpRequest();
 
@@ -1086,6 +1091,7 @@
                 }, 3000);
             });
         </script>
+        <!-- candidate search by email add candidate tab -->
         <script>
             let email_input = document.querySelector("#email_input");
             let email_search_btn = document.querySelector("#email_search_btn");
@@ -1126,6 +1132,7 @@
                 req.send();
             });
         </script>
+        <!-- add candidate button events -->
         <script>
             let add_candidate_btn = document.querySelector("#add_candidate_btn");
             let candidate_success_msg = document.querySelector("#candidate_success_msg");
@@ -1181,6 +1188,7 @@
                 req.send();
             })
         </script>
+        <!-- delete member button events -->
         <script>
             let delete_member_input = document.querySelector("#delete_member_input");
             let delete_member_btn = document.querySelector("#delete_member_btn");
@@ -1239,6 +1247,7 @@
 
 
         </script>
+        <!-- table below the add canidate tab  -->
         <script>
             let show_member = document.querySelector("#show_member");
             let table = document.querySelector("#table");
@@ -1272,6 +1281,7 @@
                 req.send();
             };
         </script>
+        <!-- history table -->
         <script>
             let history_table = document.querySelector("#history_table");
 
@@ -1287,6 +1297,7 @@
                 });
             }
         </script>
+        <!-- payment  -->
         <script>
             let pay = document.querySelector('#pay');
             let payment_amount = document.querySelector('#payment_amount');
@@ -1302,6 +1313,7 @@
                 }
             });
         </script>
+        <!-- all requests of candidates -->
         <script>
             let tbl = document.querySelector("#tbl");
             let requests = async () => {
@@ -1332,11 +1344,11 @@
                             cell = row.insertCell(j++);
                             cell.innerText = obj.status.name;
                             cell = row.insertCell(j++);
-                            cell.innerHTML = '<img src=static/media/images/approve.png width = 20 class="approve_img" id=' + obj.user.userId + '></img>';
+                            cell.innerHTML = '<img src=static/media/images/approve.png width = 20 class="approve" id=' + obj.user.userId + '></img>';
 
                             cell = row.insertCell(j++);
 
-                            cell.innerHTML = '<img src=static/media/images/cancel.png width=20 class="cancel_img" id=' + obj.user.userId + '></img>';
+                            cell.innerHTML = '<img src=static/media/images/cancel.png width=20 class="reject" id=' + obj.user.userId + '></img>';
                         }
 
                     }
@@ -1352,9 +1364,9 @@
                     });
                 });
 
-                let approve_imgs = document.querySelectorAll('.approve_img');
-                let cancel_imgs = document.querySelectorAll('.cancel_img');
-                console.log(cancel_imgs);
+                let approve_imgs = document.querySelectorAll('.approve');
+                let cancel_imgs = document.querySelectorAll('.reject');
+                // console.log(cancel_imgs);
 
                 approve_imgs.forEach((approve_img) => {
                     approve_img.addEventListener('mouseover', () => {
@@ -1377,6 +1389,28 @@
                     });
                 });
             };
+
+        </script>
+        <!-- approving and rejecting events -->
+        <script>
+            async function checking(url) {
+                console.log(url + "$$$$$$$")
+                let response = await fetch(url);
+                let data = await response.json();
+                console.log(data + "########3");
+            };
+            window.addEventListener('click', (e) => {
+                // console.log(e.target.parentNode)
+                
+                if (e.target.classList[0] === 'approve') {
+                    let url = "approve_reject.do?status_id=9&user_id=" + e.target.id;
+                    checking(url);
+                } else if (e.target.classList[0] === 'reject') {
+                    let url = "approve_reject.do?status_id=10&user_id=" + e.target.id;
+                    checking(url);
+                }
+            });
+
 
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

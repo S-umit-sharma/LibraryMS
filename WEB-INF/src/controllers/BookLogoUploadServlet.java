@@ -42,18 +42,21 @@ public class BookLogoUploadServlet extends HttpServlet {
                         switch (fieldName) {
                             case "book_id":
                                 book.setBookId(fieldValue);
+                                book.findTitle();
                                 break;
                         }
                     } else {
+                        // int i =0;
                         String fileName = book.getBookId() + "." + fileItem.getName().split("\\.")[1];
-
-                        String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/" + pub.getEmail() + "/book_image/");
+                        String bookTitle = book.getTitle();
+                        String newTitle = bookTitle.replace(" ","_");
+                        String uploadPath = context.getRealPath("/WEB-INF/uploads/publishers/" + pub.getEmail() + "/"+ newTitle+"/");
 
                         File folder = new File(uploadPath);
-
+                        
                         folder.mkdir();
 
-                        book.setBookPic(pub.getEmail()+"/book_image/"+fileName);
+                        book.setBookPic(pub.getEmail() + "/"+ newTitle+"/"+fileName);
 
                         File file = new File(uploadPath, fileName);
 

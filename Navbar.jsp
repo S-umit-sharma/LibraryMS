@@ -6,10 +6,10 @@
 
 
 
-  <nav class="navbar  navbar-expand-lg bg-body-lg ">
-    <div class="container-fluid" style="background-color: rgb(232, 238, 234);" id="con">
+  <nav class="navbar  navbar-expand-lg bg-body-lg my-1">
+    <div class="container-fluid" style="background-color: rgb(36, 35, 35);" id="con">
       <abbr title="Library Management System" id="abbr"><a href="index.jsp" class="navbar-brand"
-          class="text-decoration-none fs-5 text-dark margin-auto"><strong>LMS</strong></a></abbr>
+          class="text-decoration-none fs-5 margin-auto" style="color:white"><strong>LMS</strong></a></abbr>
           
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

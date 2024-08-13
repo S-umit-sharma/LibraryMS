@@ -18,7 +18,7 @@ public class BookEdition {
     private Date publishedOn;
     private Integer price;
     private String details;
-    private String bookEditionPic;
+    private Boolean imgStatus;
 
     // ################ constructor ################
 
@@ -26,23 +26,21 @@ public class BookEdition {
 
     }
 
-    public BookEdition(Integer bookEditionId, Book book, String bookEditionPic, Integer edition,Integer isbnNo) {
+    public BookEdition(Integer bookEditionId, Book book, Integer edition, Integer isbnNo) {
         this.bookEditionId = bookEditionId;
         this.book = book;
-        this.bookEditionPic = bookEditionPic;
         this.edition = edition;
         this.isbnNo = isbnNo;
     }
 
     // --------------------
     public BookEdition(Integer bookEditionId, Integer edition, Date publishedOn, Integer price, String details,
-            String bookEditionPic, Book book) {
+            Book book) {
         this.bookEditionId = bookEditionId;
         this.edition = edition;
         this.publishedOn = publishedOn;
         this.price = price;
         this.details = details;
-        this.bookEditionPic = bookEditionPic;
         this.book = book;
     }
 
@@ -67,15 +65,15 @@ public class BookEdition {
     }
 
     public BookEdition(Integer bookEditionId, Integer edition, Date publishedOn,
-            Integer price, Integer isbnNo, String details, String bookEditionPic, Book book) {
+            Integer price, Integer isbnNo, String details, Book book, Boolean imgStatus) {
         this.bookEditionId = bookEditionId;
         this.isbnNo = isbnNo;
         this.edition = edition;
         this.publishedOn = publishedOn;
         this.price = price;
         this.details = details;
-        this.bookEditionPic = bookEditionPic;
         this.book = book;
+        this.imgStatus = imgStatus;
     }
 
     public BookEdition(Integer isbnNo, Book book, Integer edition, Date publishedOn, Integer price, String details) {
@@ -115,6 +113,48 @@ public class BookEdition {
         }
 
     }
+
+    // -----------------------------------------------------------------------------------------------------------------------------
+    public void changeImageStatus() {
+        try {
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "update book_editions set img_status=1 where book_edition_id=?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1,bookEditionId);
+            ps.executeUpdate();
+
+        }catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------------------
+    public ArrayList<BookEdition> collectAllEditions() {
+        ArrayList<BookEdition> list = new ArrayList<>();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select book_edition_id,edition,published_on,price,isbn_no,details,be.book_id,title,img_status from book_editions as be inner join books as b where be.book_id=b.book_id and be.book_id=?";
+
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, book.getBookId());
+            // System.out.println(book.getBookId() + "###############");
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new BookEdition(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getInt(4), rs.getInt(5),
+                        rs.getString(6), new Book(rs.getInt(7), rs.getString(8)), rs.getBoolean(9)));
+
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
     // -----------------------------------------------------------------------------------------------------------------------------
 
     public void fetchAllDetails() {
@@ -140,8 +180,31 @@ public class BookEdition {
         }
     }
 
-    // -------------------------------------------------------delete book edition
-    // and All book
+    // --------------------------------------delete book edition and All book
+    public String collectTitle() {
+        String title = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
+            String query = "select b.title,edition from books as b inner join book_editions as be where be.book_edition_id=? and be.book_id=b.book_id";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, bookEditionId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                title = rs.getString(1);
+                setEdition(rs.getInt(2));
+            }
+
+            con.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return title;
+    }
+
     // Edition----------------------------------------------------------------------
     public void deleteAllBookEdition(Integer num) {
         try {
@@ -166,56 +229,6 @@ public class BookEdition {
         }
 
     }
-
-    // -----------------------------------------------save edition image
-    // ------------------------------------------------------------------------------
-    public void saveEditionImage() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "update book_editions set book_edition_pic=? where book_edition_id=?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1, bookEditionPic);
-            ps.setInt(2, bookEditionId);
-
-            ps.executeUpdate();
-
-            con.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    // -----------------------------------------------collect All book Editions
-    // method
-    // start------------------------------------------------------------------------------
-
-    public ArrayList<BookEdition> collectAllEditions() {
-        ArrayList<BookEdition> list = new ArrayList<>();
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        String query = "select book_edition_id,edition,published_on,price,isbn_no,details,book_edition_pic,be.book_id,title from book_editions as be inner join books as b where be.book_id=b.book_id and be.book_id=?";
-        try (Connection con = DriverManager
-                .getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234")) {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, book.getBookId());
-
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(new BookEdition(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getInt(4), rs.getInt(5),
-                        rs.getString(6), rs.getString(7), new Book(rs.getInt(8), rs.getString(9))));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    // -----------------------------------------------collect All book Editions
-    // method
-    // end------------------------------------------------------------------------------
 
     // -----------------------------------------------save book method
     // start------------------------------------------------------------------------------
@@ -300,12 +313,11 @@ public class BookEdition {
         this.details = details;
     }
 
-    public String getBookEditionPic() {
-        return bookEditionPic;
+    public void setImgStatus(Boolean imgStatus) {
+        this.imgStatus = imgStatus;
     }
 
-    public void setBookEditionPic(String bookEditionPic) {
-        this.bookEditionPic = bookEditionPic;
+    public Boolean getImgStatus() {
+        return imgStatus;
     }
-
 }

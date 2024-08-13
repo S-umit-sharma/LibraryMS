@@ -765,6 +765,7 @@ create table book_editions(
     details varchar(2000) not null,
     isbn_no int not null,
     book_edition_pic varchar(255) null,
+    img_status boolean not null default false,
     constraint fk_books_edition_book foreign key (book_id) references books(book_id)
 
 );
@@ -830,6 +831,13 @@ create table requests(
     constraint fk_request_library foreign key (library_id) references libraries(library_id),
     constraint fk_reques_users foreign key (user_id) references users(user_id),
     constraint fk_request_status_id foreign key (status_id) references status(status_id)
+);
+
+create table book_edition_pic(
+    book_edition_pic_id int not null auto_increment primary key,
+    book_edition_id int not null,
+    edition_img_path varchar(256) not null,
+    constraint fk_edition_pic foreign key (book_edition_id) references book_editions(book_edition_id)
 );
 
 

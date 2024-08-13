@@ -16,8 +16,10 @@ public class ShowBookImageOnTheLibraryServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,HttpServletResponse response)throws IOException,ServletException {
         ServletContext context = getServletContext();
         String path = request.getParameter("img_path");
+        // System.out.println("####"+path+"####");
 
         InputStream is = context.getResourceAsStream("/WEB-INF/uploads/publishers/"+path);
+        System.out.println();
         OutputStream os = response.getOutputStream();
 
         byte[] arr = new byte[256];
