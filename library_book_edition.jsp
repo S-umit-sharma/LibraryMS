@@ -1,3 +1,4 @@
+<%@ taglib prefix="i" uri="http://libraryMS/EditionImage" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -79,9 +80,24 @@
                                             height="250">
                                     </c:when>
                                     <c:otherwise>
-                                        <img src="show_edition_img.do?path=${edition.imgStatus}" width="100"
-                                            height="250" class="card-img-top">
-                                    </c:otherwise>
+                                    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner" style="transform: 0.5s ease-in-out">
+                                            <i:showImages editionId="${edition.bookEditionId}">
+                                                ${img}
+                                            </i:showImages>
+                                        </div>
+                                        <button class="carousel-control-prev" type="button"
+                                            data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button"
+                                            data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                </c:otherwise>
                                 </c:choose>
 
                                 <div class="card-body">

@@ -125,7 +125,7 @@ public class LibraryBooks {
                 b.setBookId(rs.getInt(6));
                 be.setBook(b);
                 be.setEdition(rs.getInt(7));
-                be.setIsbnNo(rs.getInt(9));
+                be.setIsbnNo(rs.getInt(8));
                 
                 list.add(new LibraryBooks(rs.getInt(1), rs.getInt(2), rs.getInt(3),be));
             }

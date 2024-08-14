@@ -42,12 +42,13 @@ public class Book {
         this.category = category;
     }
 
-    public Book(Integer bookId, String title, Category category, Publisher publihser, String bookPic) {
+    public Book(Integer bookId, String title, Category category, Publisher publihser, String bookPic, Status status) {
         this.title = title;
         this.bookId = bookId;
         this.category = category;
         this.publisher = publihser;
         this.bookPic = bookPic;
+        this.status = status;
     }
 
     public Book(Integer bookId, String title, Category category, Publisher publihser) {
@@ -137,7 +138,7 @@ public class Book {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 books.add(new Book(rs.getInt(1), rs.getString(2), new Category(rs.getInt(3)),
-                        new Publisher(rs.getInt(4)), rs.getString(5)));
+                        new Publisher(rs.getInt(4)), rs.getString(5),new Status(rs.getInt(6))));
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
