@@ -590,21 +590,7 @@
                         col_1_row_1.append(col_1_row_1_col_1);
                         // ----------------------------------------------------------------------
 
-                        let carousel = document.createElement('div');
-                        carousel.className = 'carousel slide carousel-fade';
-
-                        let carousel_inner = document.createElement('div');
-                        carousel_inner.className = "carousel-inner";
-
-                        carousel.append(carousel_inner);
-                        let img = document.createElement('img');
-                        img.className = "card-img-top";
-                        let newID = obj.bookEdition.bookEditionId;
                         
-
-                        carousel_inner.append(img);
-
-                        col_1_row_1_col_1.append(carousel);
                         // ----------------------------------------------------------------------
                         let col_1_row_1_col_2 = document.createElement('div');
                         col_1_row_1_col_2.className = 'col-md';
@@ -1333,6 +1319,7 @@
             <script>
                 let tbl = document.querySelector("#tbl");
                 let requests = async () => {
+                    tbl.innerHTML = '';
                     let response = await fetch('get_all_request.do');
                     let data = await response.json();
                     console.log(data)
@@ -1343,7 +1330,6 @@
                         let cell = row.insertCell(j++);
                         cell.innerText = i + 1;
                         for (let prop in obj) {
-                            // console.log(prop );
                             if (prop === 'user') {
                                 for (let p in obj[prop]) {
                                     if (p === 'name') {
@@ -1382,7 +1368,7 @@
 
                     let approve_imgs = document.querySelectorAll('.approve');
                     let cancel_imgs = document.querySelectorAll('.reject');
-                    // console.log(cancel_imgs);
+                    
 
                     approve_imgs.forEach((approve_img) => {
                         approve_img.addEventListener('mouseover', () => {
@@ -1410,20 +1396,23 @@
             <!-- approving and rejecting events -->
             <script>
                 async function checking(url) {
-                    console.log(url + "$$$$$$$")
+                    // console.log(url + "$$$$$$$");
                     let response = await fetch(url);
                     let data = await response.json();
-                    console.log(data + "########3");
+                    if(data)
+                    requests();
                 };
                 window.addEventListener('click', (e) => {
                     // console.log(e.target.parentNode)
-
+                    // console.log(e.target.classList[0] + "########");
                     if (e.target.classList[0] === 'approve') {
                         let url = "approve_reject.do?status_id=9&user_id=" + e.target.id;
                         checking(url);
+                        
                     } else if (e.target.classList[0] === 'reject') {
                         let url = "approve_reject.do?status_id=10&user_id=" + e.target.id;
                         checking(url);
+                        
                     }
                 });
 

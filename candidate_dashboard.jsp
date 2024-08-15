@@ -328,7 +328,7 @@
     </script>
     <!-- script for send request to library -->
     <script>
-        async function sendApproveRequest() {
+        async function sendApproveRequest(par) {
             let response = await fetch('request.do?' + par);
             let flag = await response.text();
             return flag;
@@ -338,8 +338,9 @@
                 let id = e.target.id;
                 let par = 'library_id=' + id;
 
-                sendApproveRequest().then(() => {
-                    if (flag) {
+                sendApproveRequest(par).then((data) => {
+                    console.log(data +"----");
+                    if (data) {
                         e.target.innerText = "requested";
                         e.target.disabled = true;
                     }
