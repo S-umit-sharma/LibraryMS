@@ -216,7 +216,7 @@
                     img_location.style.width = '20px';
 
                     card_body_row_1_col_1_row_col_2.append(img_location);
-                    // console.log(obj);
+                    
 
                     let card_body_row_2 = document.createElement('div');
                     card_body_row_2.className = 'row mt-1';
@@ -286,7 +286,7 @@
                     card_body.append(card_body_row_5);
 
                     let card_body_row_5_col_1 = document.createElement('div');
-                    card_body_row_5_col_1.className = 'col-md';
+                    card_body_row_5_col_1.className = 'col-md-2';
                     card_body_row_5.append(card_body_row_5_col_1);
 
                     let button = document.createElement('button');
@@ -295,11 +295,32 @@
                     button.id = obj.libraryId;
                     card_body_row_5_col_1.append(button);
 
+                    let card_body_row_5_col_2 = document.createElement('div');
+                    card_body_row_5_col_2.innerText = "";
+                    card_body_row_5_col_2.className = "col-md float-left fs-3 fw-bold";
+
+                    card_body_row_5.append(card_body_row_5_col_2);
+
                     checkStatus(obj.libraryId).then((d) => {
-                        console.log(d + "####")
-                        if (d) {
-                            button.innerText = "requested";
-                            button.disabled = true;
+                        console.log(d);
+                        
+                        if (d.flag) {
+                            if(d.request.status === 11){
+                                button.innerText = "requested";
+                                button.disabled = true;
+                                card_body_row_5_col_2.innerText = "pending";
+                            }else if(d.request.status === 9){
+                                button.innerText = "approve";
+                                button.disabled = true;
+                                card_body_row_5_col_2.innerText = "Approved";
+                                card_body_row_5_col_2.style.color = "green";
+                            }else if(d.request.status === 10){
+                                // button.innerText = "Join Now";
+                                button.className = "btn btn-danger button";
+                                card_body_row_5_col_2.innerText = "Rejected";
+                                card_body_row_5_col_2.style.color = "red";
+                                button.disabled = true;
+                            }
                         }
                     }).catch((error) => {
                         console.log(error)
@@ -334,12 +355,11 @@
             return flag;
         }
         window.addEventListener('click', (e) => {
-            if (e.target.className == 'btn btn-info id') {
+            if (e.target.className === 'btn btn-info id') {
                 let id = e.target.id;
                 let par = 'library_id=' + id;
 
                 sendApproveRequest(par).then((data) => {
-                    console.log(data +"----");
                     if (data) {
                         e.target.innerText = "requested";
                         e.target.disabled = true;

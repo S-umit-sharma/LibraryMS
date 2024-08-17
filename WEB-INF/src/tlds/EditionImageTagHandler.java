@@ -37,7 +37,6 @@ public class EditionImageTagHandler extends SimpleTagSupport {
 
         ArrayList<BookEditionPic> list = pic.showAllBookEditionImages();
 
-        System.out.println(list + "#######");
         PageContext context = (PageContext) getJspContext();
         String img = "";
         ServletRequest request =  context.getRequest();

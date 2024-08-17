@@ -54,7 +54,6 @@ public class Library extends User {
             String query = "SELECT u.name, u.dob,u.address,u.contact,u.profile_pic,l.details,l.website,l.open_timing,l.close_timing, l.book_issue_days, l.late_fine,l.deposit_amount,c.city,l.library_id FROM users AS u INNER JOIN libraries AS l inner join cities as c ON l.user_id = u.user_id and c.city_id = u.city_id WHERE u.name LIKE ?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, "%"+ getName() +"%");
-            System.out.println(this.getName() + "######");
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {

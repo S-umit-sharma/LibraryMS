@@ -64,7 +64,7 @@ public class Request {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "select request_id from requests where user_id=? and library_id=?";
+            String query = "select request_id,status_id from requests where user_id=? and library_id=?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, user.getUserId());
             ps.setInt(2, library.getLibraryId());
@@ -72,6 +72,8 @@ public class Request {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+                requestId = rs.getInt(1);
+                status = new Status(rs.getInt(2));
                 flag = true;
             }
 

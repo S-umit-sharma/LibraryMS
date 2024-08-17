@@ -2,6 +2,8 @@ package controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,6 +30,14 @@ public class CheckStatusServlet extends HttpServlet{
         
         Boolean flag = req.collectAllRequestsInfo();
 
-        response.getWriter().print(flag);
+        Map<String,Object> map = new HashMap<>();
+        map.put("flag",flag);
+        if(flag){
+            map.put("request",req);
+        }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(map);
+        response.getWriter().print(json);
     }
 }

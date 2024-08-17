@@ -58,8 +58,6 @@ public class BookLogoUploadServlet extends HttpServlet {
 
                         book.setBookPic(pub.getEmail() + "/"+ newTitle+"/"+fileName);
 
-                        System.out.println(pub.getEmail() + "/"+ newTitle+"/"+fileName +"######");
-
                         File file = new File(uploadPath, fileName);
 
                         try {

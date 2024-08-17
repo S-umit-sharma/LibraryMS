@@ -73,8 +73,6 @@ public class LibraryBooks {
             ps.setInt(1, copy + copies);
             ps.setInt(2, bookEdition.getBookEditionId());
             ps.setInt(3, library.getLibraryId());
-
-            // System.out.println(bookIssued + "##########");
             ps.setInt(2, bookEdition.getBookEditionId());
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -109,7 +107,7 @@ public class LibraryBooks {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
-            String query = "SELECT lb.library_book_id, lb.books_issued, lb.copies, be.book_edition_id, b.title, b.book_id,be.edition,be.isbn_no  FROM library_books AS lb INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id INNER JOIN books AS b ON be.book_id = b.book_id WHERE library_id = ? and  b.title LIKE ?";
+            String query = "SELECT lb.library_book_id, lb.books_issued, lb.copies, be.book_edition_id, b.title, b.book_id,be.edition,be.isbn_no FROM library_books AS lb INNER JOIN book_editions AS be ON lb.book_edition_id = be.book_edition_id INNER JOIN books AS b ON be.book_id = b.book_id  WHERE library_id = ? and  b.title LIKE ?";
             PreparedStatement ps = con.prepareStatement(query);
 
             ps.setInt(1, id);
@@ -144,7 +142,6 @@ public class LibraryBooks {
             String query = "update library_books set books_issued=? where  book_edition_id=? ";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, bookIssued - 1);
-            // System.out.println(bookIssued + "##########");
             ps.setInt(2, bookEdition.getBookEditionId());
             ps.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -170,9 +167,9 @@ public class LibraryBooks {
 
     // ----------------------------Method for getting all
     // books-----------------------------------------
-    public void searchIsbnNo(Integer isbnNo) {
+    public boolean searchIsbnNo(Integer isbnNo) {
         // ArrayList<LibraryBooks> list = new ArrayList<>();
-
+        boolean flag = false;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/lmsdb?user=root&password=1234");
@@ -197,11 +194,12 @@ public class LibraryBooks {
                 b.setTitle(rs.getString(11));
                 be.setBook(b);
                 bookEdition = be;
+                flag = true;
             }
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        return flag;
     }
 
     // ----------------------------Method for savin librayr

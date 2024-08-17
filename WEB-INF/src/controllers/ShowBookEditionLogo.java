@@ -21,7 +21,7 @@ public class ShowBookEditionLogo extends HttpServlet {
         ServletContext context = getServletContext();
 
         InputStream is = context.getResourceAsStream("/WEB-INF/uploads/publishers/" + path);
-        // System.out.println(path + "------");
+        
         OutputStream os = response.getOutputStream();
 
         byte[] arr = new byte[256];

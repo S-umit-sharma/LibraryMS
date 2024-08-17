@@ -97,6 +97,7 @@
                 }
 
 
+
                 img {
                     display: block;
                     transition: transform 0.3s ease;
@@ -566,130 +567,220 @@
                 let library_book_title = document.querySelector('#library_book_title');
                 let book_title_row = document.querySelector('#book_title_row');
 
-                let libBookFunc = async () => {
+                let allBookRequest = async () => {
                     book_title_row.innerHTML = '';
                     let param = 'title=' + library_book_title.value;
                     let response = await fetch('search_books_in_library.do?' + param);
                     let data = await response.json();
+                    return data;
+                };
 
-                    for (let obj of data) {
-                        let col_1 = document.createElement('div');
-                        col_1.className = 'col-md-6';
-                        book_title_row.append(col_1);
+                let imagesFunc = async (id) => {
+                    let res = await fetch('getAllImages.do?edition_id=' + id);
+                    let data = await res.json();
+                    return data;
+                }
 
-                        let card = document.createElement('div');
-                        card.className = 'card';
-                        col_1.append(card);
+                let libBookFunc = () => {
+                    allBookRequest().then((data) => {
 
-                        let col_1_row_1 = document.createElement('div');
-                        col_1_row_1.className = 'row';
-                        card.append(col_1_row_1);
+                        for (let obj of data) {
+                            let col_1 = document.createElement('div');
+                            col_1.className = 'col-md-6';
+                            book_title_row.append(col_1);
 
-                        let col_1_row_1_col_1 = document.createElement('div');
-                        col_1_row_1_col_1.className = 'col';
-                        col_1_row_1.append(col_1_row_1_col_1);
-                        // ----------------------------------------------------------------------
+                            let card = document.createElement('div');
+                            card.className = 'card';
+                            col_1.append(card);
 
-                        
-                        // ----------------------------------------------------------------------
-                        let col_1_row_1_col_2 = document.createElement('div');
-                        col_1_row_1_col_2.className = 'col-md';
-                        col_1_row_1.append(col_1_row_1_col_2);
+                            let col_1_row_1 = document.createElement('div');
+                            col_1_row_1.className = 'row';
+                            card.append(col_1_row_1);
+
+                            let col_1_row_1_col_1 = document.createElement('div');
+                            col_1_row_1_col_1.className = 'col';
+                            col_1_row_1.append(col_1_row_1_col_1);
+                            // <!-- ---------------------------------------------------------------- -->
+                            let ID = obj.bookEdition.bookEditionId;
+
+                            let carousel = document.createElement('div');
+                            carousel.className = "carousel slide carousel-fade";
+                            carousel.setAttribute("data-bs-ride", "carousel");
+                            carousel.id = ID;
+                            col_1_row_1_col_1.append(carousel);
+
+                            let carouselInner = document.createElement("div");
+                            carouselInner.className = "carousel-inner";
+                            carousel.append(carouselInner);
+
+                            // < !-- --------------------------------------loop start-------------------------- -->
+
+                            imagesFunc(ID).then((data) => {
+                                for (let d of data) {
+                                    let carousel_inner_div = document.createElement("div");
+                                    if (data.indexOf(d) === 0) {
+                                        carousel_inner_div.className = "carousel-item active";
+                                    } else {
+                                        carousel_inner_div.className = "carousel-item";
+                                    }
 
 
-                        let card_body = document.createElement('div');
-                        card_body.className = 'card-body';
-                        col_1_row_1_col_2.append(card_body);
+                                    carouselInner.append(carousel_inner_div);
 
-                        let card_body_row_1 = document.createElement('div');
-                        card_body_row_1.className = 'row fs-1 fw-bolder';
-                        card_body.append(card_body_row_1);
-                        card_body_row_1.innerText = obj.bookEdition.book.title;
+                                    let img = document.createElement("img");
+                                    img.className = "d-block myimg";
+                                    img.style.height = "300px";
+                                    img.style.width = "250px";
+
+                                    img.src = "show_edition_img.do?path=" + d.editionImgPath;
+                                    carousel_inner_div.append(img);
+                                }
+
+                            }).catch((error) => {
+                                console.log(error);
+                            });
+
+                            // // < !-- ------------------------------------- loop end--------------------------- -->
+                            let carouselPrevButton = document.createElement("button");
+                            carouselPrevButton.className = "carousel-control-prev";
+                            carouselPrevButton.setAttribute("data-bs-target", "#" + ID);
+                            carouselPrevButton.setAttribute("data-bs-slide", "prev");
+                            carousel.append(carouselPrevButton);
+
+                            let span1 = document.createElement("span");
+                            span1.className = "carousel-control-prev-icon";
+                            span1.setAttribute("aria-hidden", "true");
+
+                            let span2 = document.createElement("span");
+                            span2.className = "visually-hidden";
+                            span2.innerText = "Previous";
+
+                            carouselPrevButton.append(span1);
+                            carouselPrevButton.append(span2);
 
 
-                        let card_body_row_2 = document.createElement('div');
-                        card_body_row_2.className = 'row';
-                        card_body.append(card_body_row_2);
+                            // < !-- ---------------------------------------------------------------- -->
+                            let carouselNextButton = document.createElement("button");
+                            carouselNextButton.className = "carousel-control-next";
+                            carouselNextButton.setAttribute("data-bs-target", "#" + ID);
+                            carouselNextButton.setAttribute("data-bs-slide", "next");
+                            carousel.append(carouselNextButton);
 
-                        let card_body_row_2_col_1 = document.createElement('div');
-                        card_body_row_2_col_1.className = 'col-md fs-3 fw-bold';
-                        card_body_row_2_col_1.innerText = 'ISBN:';
-                        card_body_row_2.append(card_body_row_2_col_1);
+                            let span3 = document.createElement("span");
+                            span3.className = "carousel-control-next-icon";
+                            span3.setAttribute("aria-hidden", "true");
 
-                        let card_body_row_2_col_2 = document.createElement('div');
-                        card_body_row_2_col_2.className = 'col-md fs-2 fw-bolder ';
+                            let span4 = document.createElement("span");
+                            span4.className = "visually-hidden";
+                            span4.innerText = "Next";
 
-                        let span = document.createElement('span');
-                        card_body_row_2_col_2.append(span);
-                        span.className = 'text-bg-dark p-1 m-auto';
-                        span.innerText = obj.bookEdition.isbnNo;
-                        card_body_row_2.append(card_body_row_2_col_2);
+                            carouselNextButton.append(span3);
+                            carouselNextButton.append(span4);
+                            // < !-- ---------------------------------------------------------------- -->
 
-                        let card_body_row_3 = document.createElement('div');
-                        card_body_row_3.className = 'row';
-                        card_body.append(card_body_row_3);
+                            let col_1_row_1_col_2 = document.createElement('div');
+                            col_1_row_1_col_2.className = 'col-md';
+                            col_1_row_1.append(col_1_row_1_col_2);
 
-                        let card_body_row_3_col_1 = document.createElement('div');
-                        card_body_row_3_col_1.className = 'col-md fs-3 fw-bold';
-                        card_body_row_3_col_1.innerText = 'Edition:';
-                        card_body_row_3.append(card_body_row_3_col_1);
 
-                        let card_body_row_3_col_2 = document.createElement('div');
-                        card_body_row_3_col_2.className = 'col-md fs-2 fw-bolder';
-                        card_body_row_3.append(card_body_row_3_col_2);
+                            let card_body = document.createElement('div');
+                            card_body.className = 'card-body';
+                            col_1_row_1_col_2.append(card_body);
 
-                        if (obj.bookEdition.edition === 1) {
-                            card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'st' + '</sup>' + '</span>';
+                            let card_body_row_1 = document.createElement('div');
+                            card_body_row_1.className = 'row fs-1 fw-bolder';
+                            card_body.append(card_body_row_1);
+                            card_body_row_1.innerText = obj.bookEdition.book.title;
+
+
+                            let card_body_row_2 = document.createElement('div');
+                            card_body_row_2.className = 'row';
+                            card_body.append(card_body_row_2);
+
+                            let card_body_row_2_col_1 = document.createElement('div');
+                            card_body_row_2_col_1.className = 'col-md fs-3 fw-bold';
+                            card_body_row_2_col_1.innerText = 'ISBN:';
+                            card_body_row_2.append(card_body_row_2_col_1);
+
+                            let card_body_row_2_col_2 = document.createElement('div');
+                            card_body_row_2_col_2.className = 'col-md fs-2 fw-bolder ';
+
+                            let span = document.createElement('span');
+                            card_body_row_2_col_2.append(span);
+                            span.className = 'text-bg-dark p-1 m-auto';
+                            span.innerText = obj.bookEdition.isbnNo;
+                            card_body_row_2.append(card_body_row_2_col_2);
+
+                            let card_body_row_3 = document.createElement('div');
+                            card_body_row_3.className = 'row';
+                            card_body.append(card_body_row_3);
+
+                            let card_body_row_3_col_1 = document.createElement('div');
+                            card_body_row_3_col_1.className = 'col-md fs-3 fw-bold';
+                            card_body_row_3_col_1.innerText = 'Edition:';
+                            card_body_row_3.append(card_body_row_3_col_1);
+
+                            let card_body_row_3_col_2 = document.createElement('div');
+                            card_body_row_3_col_2.className = 'col-md fs-2 fw-bolder';
+                            card_body_row_3.append(card_body_row_3_col_2);
+
+                            if (obj.bookEdition.edition === 1) {
+                                card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'st' + '</sup>' + '</span>';
+                            }
+                            else if (obj.bookEdition.edition === 2) {
+                                card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'nd' + '</sup>' + '</span>';
+                            }
+                            else if (obj.bookEdition.edition === 3) {
+                                card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'rd' + '</sup>' + '</span>';
+                            } else {
+                                card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'th' + '</sup>' + '</span>';
+                            }
+
+
+
+
+                            let card_body_row_4 = document.createElement('div');
+                            card_body_row_4.className = 'row';
+                            card_body.append(card_body_row_4);
+
+                            let card_body_row_4_col_1 = document.createElement('div');
+                            card_body_row_4_col_1.className = 'col-md fs-3 fw-bold';
+                            card_body_row_4_col_1.innerText = 'Total:';
+                            card_body_row_4.append(card_body_row_4_col_1);
+
+                            let card_body_row_4_col_2 = document.createElement('div');
+                            card_body_row_4_col_2.className = 'col fs-2 fw-bolder';
+                            card_body_row_4_col_2.innerText = obj.copies;
+                            card_body_row_4.append(card_body_row_4_col_2);
+
+
+
+                            let card_body_row_5 = document.createElement('div');
+                            card_body_row_5.className = 'row';
+                            card_body.append(card_body_row_5);
+
+                            let card_body_row_5_col_1 = document.createElement('div');
+                            card_body_row_5_col_1.className = 'col-md fs-3 fw-bold';
+                            card_body_row_5_col_1.innerText = 'Available:';
+                            card_body_row_5.append(card_body_row_5_col_1);
+
+                            let card_body_row_5_col_2 = document.createElement('div');
+                            card_body_row_5_col_2.className = 'col-md fs-3 fw-bolder';
+                            if ((obj.copies - obj.bookIssued) === 0) {
+                                card_body_row_5_col_2.className = 'col-md mt-2 fw-bolder';
+                                card_body_row_5_col_2.innerText = 'out of stock';
+                                card_body_row_5_col_2.style.color = 'red';
+                            } else {
+                                card_body_row_5_col_2.className = 'col-md fs-2 fw-bolder';
+                                card_body_row_5_col_2.innerText = obj.copies - obj.bookIssued;
+                            }
+                            card_body_row_5.append(card_body_row_5_col_2);
+
                         }
-                        else if (obj.bookEdition.edition === 2) {
-                            card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'nd' + '</sup>' + '</span>';
-                        }
-                        else if (obj.bookEdition.edition === 3) {
-                            card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'rd' + '</sup>' + '</span>';
-                        } else {
-                            card_body_row_3_col_2.innerHTML = '<span>' + obj.bookEdition.edition + '<sup>' + 'th' + '</sup>' + '</span>';
-                        }
+                    }).catch((error) => {
+                        console.log(error);
+                    })
 
-
-
-
-                        let card_body_row_4 = document.createElement('div');
-                        card_body_row_4.className = 'row';
-                        card_body.append(card_body_row_4);
-
-                        let card_body_row_4_col_1 = document.createElement('div');
-                        card_body_row_4_col_1.className = 'col-md fs-3 fw-bold';
-                        card_body_row_4_col_1.innerText = 'Total:';
-                        card_body_row_4.append(card_body_row_4_col_1);
-
-                        let card_body_row_4_col_2 = document.createElement('div');
-                        card_body_row_4_col_2.className = 'col fs-2 fw-bolder';
-                        card_body_row_4_col_2.innerText = obj.copies;
-                        card_body_row_4.append(card_body_row_4_col_2);
-
-
-
-                        let card_body_row_5 = document.createElement('div');
-                        card_body_row_5.className = 'row';
-                        card_body.append(card_body_row_5);
-
-                        let card_body_row_5_col_1 = document.createElement('div');
-                        card_body_row_5_col_1.className = 'col-md fs-3 fw-bold';
-                        card_body_row_5_col_1.innerText = 'Available:';
-                        card_body_row_5.append(card_body_row_5_col_1);
-
-                        let card_body_row_5_col_2 = document.createElement('div');
-                        card_body_row_5_col_2.className = 'col-md fs-3 fw-bolder';
-                        if ((obj.copies - obj.bookIssued) === 0) {
-                            card_body_row_5_col_2.className = 'col-md mt-2 fw-bolder';
-                            card_body_row_5_col_2.innerText = 'out of stock';
-                            card_body_row_5_col_2.style.color = 'red';
-                        } else {
-                            card_body_row_5_col_2.className = 'col-md fs-2 fw-bolder';
-                            card_body_row_5_col_2.innerText = obj.copies - obj.bookIssued;
-                        }
-                        card_body_row_5.append(card_body_row_5_col_2);
-                    }
                 }
                 let regex = /[A-Za-z ]{3,}/;
                 let optSearch = debounce_search_title(libBookFunc, 800);
@@ -699,7 +790,21 @@
                     } else {
                         book_title_row.innerHTML = ' ';
                     }
-
+                });
+            </script>
+            <!-- increasing size on mouse over on the images -->
+            <script>
+                window.addEventListener('mouseover', (e) => {
+                    if (e.target.tagName === 'IMG') {
+                        console.log(e.target.tagName === 'IMG')
+                        e.target.style.transform = 'scale(1.2)';
+                    }
+                });
+                window.addEventListener('mouseout', (e) => {
+                    if (e.target.tagName === 'IMG') {
+                        // console.log(e.target.tagName === 'IMG')
+                        e.target.style.transform = 'scale(1)';
+                    }
                 });
             </script>
             <!-- search book by title -->
@@ -766,9 +871,8 @@
 
                 let optimizeSearch = debounce_search_title(search_func, 800);
                 title_value.addEventListener('keyup', () => {
-                    console.log("######1")
+
                     optimizeSearch();
-                    console.log("######2")
                 });
 
             </script>
@@ -806,27 +910,28 @@
                         if (req.readyState == 4 && req.status == 200) {
                             card_div.style.display = 'block';
                             let arr = JSON.parse(req.responseText);
+                            console.log(arr);
+                                
+                                h1.innerText = arr.libBooks.bookEdition.book.title;
+                                
+                                img_path.src = 'show_edition_img.do?path=' + arr.path;
+                                edition.innerText = arr.libBooks.bookEdition.edition;
+                                details.innerText = arr.libBooks.bookEdition.details;
+                                copies.innerText = arr.libBooks.copies;
+                                input_edition.value = arr.libBooks.bookEdition.bookEditionId;
+                                library_book_id.value = arr.libBooks.libraryBookId;
+                                book_issued.value = arr.libBooks.bookIssued;
 
-                            for (let obj in arr) {
-                                h1.innerText = arr.bookEdition.book.title;
-                                img_path.src = 'static/media/images/book.png';
-                                edition.innerText = arr.bookEdition.edition;
-                                details.innerText = arr.bookEdition.details;
-                                copies.innerText = arr.copies;
-                                input_edition.value = arr.bookEdition.bookEditionId;
-                                library_book_id.value = arr.libraryBookId;
-                                book_issued.value = arr.bookIssued;
-
-                                if (arr.copies - arr.bookIssued > 0) {
+                                if (arr.libBooks.copies - arr.libBooks.bookIssued > 0) {
                                     student_col.style.display = 'inline';
-                                    copies_left.innerText = arr.copies - arr.bookIssued;
+                                    copies_left.innerText = arr.libBooks.copies - arr.libBooks.bookIssued;
                                     copies_left.style.color = 'black';
                                 } else {
                                     student_col.style.display = 'none';
                                     copies_left.innerText = "out of stock";
                                     copies_left.style.color = 'red';
                                 }
-                            }
+
                         }
                     });
 
@@ -923,10 +1028,6 @@
                             } else {
                                 member_name.innerText = 'No member found';
                             }
-
-
-
-
                         }
                     });
                     req.send();
@@ -980,20 +1081,19 @@
                             return_card_div.style.display = 'block';
                             let arr = JSON.parse(req.responseText);
 
-                            for (let obj in arr) {
                                 return_find_div.style.display = 'inline';
-                                return_h1.innerText = arr.bookEdition.book.title;
-                                return_img_path.src = 'static/media/images/book.png';
-                                return_edition.innerText = arr.bookEdition.edition;
-                                return_details.innerText = arr.bookEdition.details;
-                                return_copies.innerText = arr.copies;
-                                return_input_edition.value = arr.bookEdition.bookEditionId;
-                                return_library_book_id.value = arr.libraryBookId;
-                                return_book_issued.value = arr.bookIssued;
+                                return_h1.innerText = arr.libBooks.bookEdition.book.title;
+                                return_img_path.src = "show_edition_img.do?path=" + arr.path;
+                                return_edition.innerText = arr.libBooks.bookEdition.edition;
+                                return_details.innerText = arr.libBooks.bookEdition.details;
+                                return_copies.innerText = arr.libBooks.copies;
+                                return_input_edition.value = arr.libBooks.bookEdition.bookEditionId;
+                                return_library_book_id.value = arr.libBooks.libraryBookId;
+                                return_book_issued.value = arr.libBooks.bookIssued;
                                 return_btn.style.display = 'inline';
 
-                                if (arr.copies - arr.bookIssued > 0) {
-                                    return_copies_left.innerText = arr.copies - arr.bookIssued;
+                                if (arr.libBooks.copies - arr.libBooks.bookIssued > 0) {
+                                    return_copies_left.innerText = arr.libBooks.copies - arr.libBooks.bookIssued;
                                     return_copies_left.style.color = 'black';
                                 } else {
                                     return_copies_left.innerText = "out of stock";
@@ -1001,7 +1101,7 @@
                                 }
                             }
                         }
-                    });
+                    );
 
                     req.send();
                 }
@@ -1322,7 +1422,6 @@
                     tbl.innerHTML = '';
                     let response = await fetch('get_all_request.do');
                     let data = await response.json();
-                    console.log(data)
                     let i = 0;
                     for (let obj of data) {
                         let row = tbl.insertRow(i);
@@ -1368,7 +1467,7 @@
 
                     let approve_imgs = document.querySelectorAll('.approve');
                     let cancel_imgs = document.querySelectorAll('.reject');
-                    
+
 
                     approve_imgs.forEach((approve_img) => {
                         approve_img.addEventListener('mouseover', () => {
@@ -1396,28 +1495,26 @@
             <!-- approving and rejecting events -->
             <script>
                 async function checking(url) {
-                    // console.log(url + "$$$$$$$");
                     let response = await fetch(url);
                     let data = await response.json();
-                    if(data)
-                    requests();
+                    if (data)
+                        requests();
                 };
                 window.addEventListener('click', (e) => {
-                    // console.log(e.target.parentNode)
-                    // console.log(e.target.classList[0] + "########");
                     if (e.target.classList[0] === 'approve') {
                         let url = "approve_reject.do?status_id=9&user_id=" + e.target.id;
                         checking(url);
-                        
+
                     } else if (e.target.classList[0] === 'reject') {
                         let url = "approve_reject.do?status_id=10&user_id=" + e.target.id;
                         checking(url);
-                        
+
                     }
                 });
 
 
             </script>
+
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
