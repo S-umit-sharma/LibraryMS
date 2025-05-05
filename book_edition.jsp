@@ -216,7 +216,7 @@
                 const dropzone = new Dropzone('#edition_image_upload', {
                     maxFiles: 1,
                     maxFileSize: 1,
-                    acceptedFiles: '.png,.jpg',
+                    acceptedFiles: '.png,.jpg,.jpeg,.webp',
                     autoProcessQueue: false
                 });
 

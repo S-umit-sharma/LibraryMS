@@ -93,8 +93,8 @@ public class signupServlet extends HttpServlet {
             User user = new User(name, email, password, dob, AppUtils.getCity(cities, city), contact, address,
                     new Gender(gender), new UserType(userTypeId), verificationCode);
 
-            String emailContent = EmailTemplates.genrateWelcomeMail(name, email, verificationCode, userTypeId);
-            EmailSender.sendEmail(email, subject, emailContent);
+            // String emailContent = EmailTemplates.genrateWelcomeMail(name, email, verificationCode, userTypeId);
+            // EmailSender.sendEmail(email, subject, emailContent);
 
             if (user.saveUser()) {
                 String userTypeFolderPath = context

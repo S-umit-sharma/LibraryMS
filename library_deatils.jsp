@@ -113,7 +113,7 @@
         const dropzone = new Dropzone('#library_logo',{
             maxFiles:1,
             maxFileSize:1,
-            acceptedFiles:'.png,.jpg',
+            acceptedFiles:'.png,.jpg,.webp,.jpeg',
             autoProcessQueue:false
         });
         const upload_btn = document.querySelector("#upload_btn");

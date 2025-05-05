@@ -52,7 +52,6 @@ public class AddBookServlet extends HttpServlet {
 
             Book book = new Book(bookTitle, new Category(bookCategory), new Publisher(publisher.getPublisherId()));
             boolean flag = book.saveBook();
-
             request.setAttribute("flag", flag);
             doGet(request, response);
 

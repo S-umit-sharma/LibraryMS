@@ -45,17 +45,17 @@
                             <div>
                                 <label class="form-label fs-4" for="book">Book Category</label>
                                 <select name="book_category" id="book">
-                                    <option value="1">History</option>
-                                    <option value="2">Story</option>
-                                    <option value="3">Novel</option>
-                                    <option value="4">Art</option>
-                                    <option value="5">Psychology</option>
-                                    <option value="6">Philosophy</option>
-                                    <option value="7">economics</option>
-                                    <option value="8">politics</option>
-                                    <option value="9">religion</option>
-                                    <option value="10">Biography</option>
-                                    <option value="11">autobiography</option>
+                                    <option value="2">History</option>
+                                    <option value="3">Story</option>
+                                    <option value="4">Novel</option>
+                                    <option value="5">Art</option>
+                                    <option value="6">Psychology</option>
+                                    <option value="7">Philosophy</option>
+                                    <option value="8">economics</option>
+                                    <option value="9">politics</option>
+                                    <option value="10">religion</option>
+                                    <option value="11">Biography</option>
+                                    <option value="12">autobiography</option>
                                     <option value="13">self-help</option>
                                     <option value="14">Science</option>
                                     <option value="15">Technology</option>
@@ -172,7 +172,7 @@
             const dropzone = new Dropzone('#book_logo', {
                 maxFiles: 1,
                 maxFileSize: 1,
-                acceptedFiles: '.png,.jpg',
+                acceptedFiles: '.png,.jpg,.jpeg,.webp',
                 autoProcessQueue: false
             });
 
